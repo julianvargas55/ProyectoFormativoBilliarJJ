@@ -1,0 +1,103 @@
+// ===========================================
+// 1. ESTRUCTURA DE DATOS (El Carrito)
+// ===========================================
+
+// Array que almacenará todos los objetos de los productos seleccionados.
+let pedidoActual = []; 
+
+// ===========================================
+// 2. INICIALIZACIÓN: ASIGNAR EVENTOS A LAS CARDS
+// ===========================================
+
+document.addEventListener('DOMContentLoaded', () => {
+    // 1. Seleccionar TODAS las tarjetas de productos usando su clase.
+    const productCards = document.querySelectorAll('.product-card');
+
+    // 2. Recorrer cada tarjeta y asignarle un 'escuchador' de clic.
+    productCards.forEach(card => {
+        card.addEventListener('click', agregarItem);
+    });
+
+    // 3. Asignar evento al botón de pago.
+    document.getElementById('pay-button').addEventListener('click', realizarPago);
+});
+
+// ===========================================
+// 3. FUNCIÓN PRINCIPAL: AGREGAR UN ITEM AL PEDIDO
+// ===========================================
+
+function agregarItem(evento) {
+    // evento.currentTarget es la tarjeta de producto en la que se hizo clic.
+    const card = evento.currentTarget; 
+    
+    // 1. Obtener la información del producto de los atributos data-.
+    const nombre = card.getAttribute('data-name');
+    const precio = parseFloat(card.getAttribute('data-price'));
+
+    // 2. Crear el objeto del ítem y agregarlo al array.
+    const item = {
+        nombre: nombre,
+        precio: precio
+    };
+    pedidoActual.push(item);
+    
+    // 3. Actualizar la lista visible y el total.
+    actualizarVistaPedido();
+    
+    console.log(`Producto agregado: ${nombre} ($${precio.toFixed(2)})`);
+}
+
+// ===========================================
+// 4. FUNCIÓN: LISTAR PRODUCTOS Y CALCULAR EL TOTAL
+// ===========================================
+
+function actualizarVistaPedido() {
+    const listaHTML = document.getElementById('order-list');
+    const totalHTML = document.getElementById('total-price');
+    let totalPagar = 0;
+
+    // 1. Limpiar el contenido anterior de la lista visual (Pedido Actual).
+    listaHTML.innerHTML = ''; 
+
+    // 2. Recorrer el array 'pedidoActual' para listarlos y sumarlos.
+    pedidoActual.forEach(item => {
+        // Sumar el precio al total
+        totalPagar += item.precio;
+
+        // Crear el elemento div para el ítem (usará la clase .order-item de tu CSS)
+        const itemDiv = document.createElement('div');
+        itemDiv.classList.add('order-item');
+        
+        // Formato: Nombre del Producto y Precio
+        itemDiv.innerHTML = `
+            <span class="item-name">${item.nombre}</span>
+            <span class="item-price">$${item.precio.toFixed(2)}</span>
+        `;
+        
+        // Insertar el ítem en la lista del HTML.
+        listaHTML.appendChild(itemDiv);
+    });
+
+    // 3. Mostrar el total final en el elemento de resumen.
+    // Usamos toFixed(2) para asegurar dos decimales.
+    totalHTML.textContent = `$${totalPagar.toFixed(2)}`;
+}
+
+// ===========================================
+// 5. FUNCIÓN: REALIZAR PAGO (Para el botón)
+// ===========================================
+
+function realizarPago() {
+    if (pedidoActual.length > 0) {
+        const total = document.getElementById('total-price').textContent;
+        
+        // Mensaje de confirmación con el total
+        alert(`¡Gracias por su compra!\nEl total a pagar es: ${total}`);
+        
+        // Restablecer el carrito después de la compra
+        pedidoActual = [];
+        actualizarVistaPedido(); // Llama a la función para vaciar la lista en la interfaz
+    } else {
+        alert('El pedido está vacío. Por favor, agregue algún producto.');
+    }
+}

@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="#{index.title}">Billar JJ - Acceso</title>
+    <link rel="stylesheet" th:href="@{css/1.css}">
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+</head>
+<body>
+    <div class="header">
+        <div class="logo">
+            <img th:src="@{/images/logo.png}" alt="Logo Billar JJ">
+        </div>
+        <nav class="navbar">
+            <a th:href="@{/contactos}">CONTACTOS</a>
+        </nav>
+    </div>
+
+    <div class="container">
+        <div class="login-panel">
+            <div class="login-form">
+                <i class='bx bx-user-circle' style="font-size: 80px; color: #fff;"></i>
+                
+                <!-- Mensajes de éxito/error -->
+                <div th:if="${param.error}" class="error-message" style="color: red; margin-bottom: 15px; text-align: center;">
+                    Usuario o contraseña incorrectos
+                </div>
+                <div th:if="${param.logout}" class="success-message" style="color: green; margin-bottom: 15px; text-align: center;">
+                    Has cerrado sesión correctamente
+                </div>
+                
+                <div class="access-choice">
+                    <!-- FORMULARIO USUARIO -->
+                    <div class="access-card usuario-card">
+                        <form method="post">
+                            <input type="hidden" name="tipo" value="usuario">
+                            <label class="access-label">
+                                <i class='bx bx-user' style="font-size: 24px; color: var(--accent-color);"></i> Usuario
+                            </label>
+                            <div class="input-group">
+                                <i class='bx bx-user icon'></i>
+                                <input type="text" placeholder="nombre de usuario" name="username" th:value="${username}" required>
+                            </div>
+                            <div class="input-group">
+                                <i class='bx bx-lock-alt icon'></i>
+                                <input type="password" placeholder="contraseña" name="password" required>
+                            </div>
+                            <button type="submit" class="access-btn">Entrar como Usuario</button>
+                            <div class="options">
+                                <label>
+                                    <input type="checkbox" name="remember-me"> Acuérdate de mí
+                                </label>
+                                <span class="separator">|</span>
+                                <a th:href="@{/recuperar-password}">¿Olvidaste tu contraseña?</a>
+                            </div>
+                        </form>
+                    </div>
+
+                    <!-- FORMULARIO ADMINISTRADOR -->
+                    <div class="access-card admin-card">
+                        <form method="post">
+                            <input type="hidden" name="tipo" value="admin">
+                            <label class="access-label">
+                                <i class='bx bx-shield-quarter' style="font-size: 24px; color: var(--accent-color);"></i> Administrador
+                            </label>
+                            <div class="input-group">
+                                <i class='bx bx-user icon'></i>
+                                <input type="text" placeholder="nombre de administrador" name="username" required>
+                            </div>
+                            <div class="input-group">
+                                <i class='bx bx-lock-alt icon'></i>
+                                <input type="password" placeholder="contraseña" name="password" required>
+                            </div>
+                            <button type="submit" class="access-btn">Entrar como Administrador</button>
+                            <div class="options">
+                                <label>
+                                    <input type="checkbox" name="remember-me"> Acuérdate de mí
+                                </label>
+                                <span class="separator">|</span>
+                                <a th:href="@{/recuperar-password}">¿Olvidaste tu contraseña?</a>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="info-panel">
+            <h1>BILLAR JJ</h1>
+            <p class="quote">
+                No se trata de suerte, se trata de precisión. El que domina el taco, domina la mesa.
+            </p>
+			<p class="register-link">
+			    ¿No tienes una cuenta? <a th:href="@{/registro}">Regístrate aquí</a>
+			</p>
+        </div>
+    </div>
+</body>
+</html>

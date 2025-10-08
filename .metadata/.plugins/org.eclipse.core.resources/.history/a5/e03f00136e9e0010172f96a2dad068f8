@@ -1,0 +1,29 @@
+package sena.jj.com.service; // Asegúrate que este package sea correcto
+
+import org.springframework.stereotype.Service;
+import java.util.List;
+import java.util.Map;
+
+@Service 
+public class PedidoService {
+
+    public void procesarYGuardar(List<Map<String, Object>> productos) {
+        
+        
+        double totalCalculado = 0;
+        for (Map<String, Object> producto : productos) {
+        
+            totalCalculado += (double) producto.get("precio");
+        }
+
+        System.out.println("--- Pedido Recibido en el Servidor ---");
+        System.out.println("Total del pedido: $" + String.format("%.2f", totalCalculado));
+        System.out.println("Items a guardar:");
+        productos.forEach(p -> 
+            System.out.println("  - Producto: " + p.get("nombre") + " | Precio: $" + p.get("precio"))
+        );
+        System.out.println("--------------------------------------");
+        
+      
+    }
+}

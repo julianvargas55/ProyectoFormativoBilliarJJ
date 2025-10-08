@@ -1,0 +1,8 @@
+package sena.jj.com.repository;
+
+import org.springframework.data.jpa.repository.JpaRepository;
+import sena.jj.com.model.Usuario;
+
+public interface IUsuarioRepository extends JpaRepository<Usuario, Long> {
+    // Aquí puedes agregar consultas personalizadas si necesitas
+}

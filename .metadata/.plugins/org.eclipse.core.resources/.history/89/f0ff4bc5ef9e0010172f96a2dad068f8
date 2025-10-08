@@ -1,0 +1,31 @@
+package sena.jj.com.controller;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
+
+import sena.jj.com.model.Usuario;
+import sena.jj.com.repository.IUsuarioRepository;
+
+@Controller
+public class UsuarioController {
+
+	@Autowired
+	private IUsuarioRepository UsuarioRepository;
+
+	// Página principal (index)
+	@GetMapping("/")
+	public String index() {
+		return "index"; // templates/index.html
+	}
+
+	 @PostMapping("/usuario/save")
+	public String registrarUsuario(@ModelAttribute Usuario usuario) {
+		// guardar usuario
+		return "redirect:/login";
+	}
+
+}

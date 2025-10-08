@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Panel de Usuario</title>
+    <link rel="stylesheet" th:href="@{/css/usuario.css}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+    <main class="user-panel-container">
+        <header class="panel-header">
+            <h1 class="panel-title">Panel de usuario</h1>
+            <button class="logout-button" onclick="window.location.href='/logout'">Cerrar Sesión</button>
+        </header>
+
+        <section class="content-container">
+            <div class="products-section">
+                <h2>Productos Disponibles</h2>
+                
+                <div class="category">
+                    <h3>Bebidas <i class="fas fa-cocktail"></i></h3>
+                    <div class="product-grid" id="drinks-container">
+                        <div class="product-card" data-name="Coca-Cola" data-price="2.50">
+                            <img th:src="@{/img/imagnes/coca.png}" alt="Coca-Cola">
+                            <h4>Coca-Cola</h4>
+                            <p class="product-price">$2.50</p>
+                        </div>
+                        <div class="product-card" data-name="Jugo Natural" data-price="3.00">
+                            <img th:src="@{/img/imagnes/naranja.png}" alt="Jugo Natural">
+                            <h4>Jugo Natural</h4>
+                            <p class="product-price">$3.00</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="category">
+                    <h3>Comidas <i class="fas fa-hamburger"></i></h3>
+                    <div class="product-grid" id="food-container">
+                        <div class="product-card" data-name="Hamburguesa" data-price="8.00">
+                            <img th:src="@{/img/imagnes/hamb.jpg}" alt="Hamburguesa">
+                            <h4>Hamburguesa</h4>
+                            <p class="product-price">$8.00</p>
+                        </div>
+                        <div class="product-card" data-name="Papas Fritas" data-price="3.00">
+                            <img th:src="@{/img/imagnes/papitas.jpg}" alt="Papas Fritas">
+                            <h4>Papas Fritas</h4>
+                            <p class="product-price">$3.00</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="category">
+                    <h3>Mesas de Billar <i class="fas fa-billiard"></i></h3>
+                    <div class="product-grid" id="pool-container">
+                        <div class="product-card" data-name="Mesa Billar #1" data-price="5.00">
+                            <img th:src="@{/img/imagnes/mesas.jpg}" alt="Mesa Billar #1">
+                            <h4>Mesa Billar #1</h4>
+                            <p class="product-price">$5.00</p>
+                        </div>
+                        <div class="product-card" data-name="Mesa Billar #2" data-price="5.00">
+                            <img th:src="@{/img/imagnes/mesas.jpg}" alt="Mesa Billar #2">
+                            <h4>Mesa Billar #2</h4>
+                            <p class="product-price">$5.00</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="order-section">
+                <h2>Pedido Actual</h2>
+                <div class="order-list" id="order-list">
+                    <!-- Los productos aparecerán aquí dinámicamente -->
+                </div>
+                <div class="order-summary">
+                    <p>Total <span class="total-price" id="total-price">$0.00</span></p>
+                </div>
+                <button class="pay-button" id="pay-button">Realizar Pago</button>
+            </div>
+        </section>
+    </main>
+
+    <script>
+        // Array que almacenará todos los objetos de los productos seleccionados.
+        let pedidoActual = []; 
+
+        document.addEventListener('DOMContentLoaded', () => {
+            // 1. Seleccionar TODAS las tarjetas de productos y asignar el clic.
+            const productCards = document.querySelectorAll('.product-card');
+
+            productCards.forEach(card => {
+                card.addEventListener('click', agregarItem);
+            });
+
+            // 2. Asignar evento al botón de pago.
+            document.getElementById('pay-button').addEventListener('click', realizarPago);
+        });
+
+        function agregarItem(evento) {
+            const card = evento.currentTarget; 
+            
+            // Obtener información de los atributos data-.
+            const nombre = card.getAttribute('data-name');
+            const precio = parseFloat(card.getAttribute('data-price'));
+
+            // Agregar al carrito
+            const item = { nombre: nombre, precio: precio };
+            pedidoActual.push(item);
+            
+            // Actualizar la lista visible y el total.
+            actualizarVistaPedido();
+        }
+
+        function actualizarVistaPedido() {
+            const listaHTML = document.getElementById('order-list');
+            const totalHTML = document.getElementById('total-price');
+            let totalPagar = 0;
+
+            // Limpiar la lista visual.
+            listaHTML.innerHTML = ''; 
+
+            // Recorrer el array 'pedidoActual' para listarlos y sumarlos.
+            pedidoActual.forEach(item => {
+                totalPagar += item.precio;
+
+                // Crear el elemento div para el ítem (usando la clase .order-item de tu CSS)
+                const itemDiv = document.createElement('div');
+                itemDiv.classList.add('order-item');
+                
+                // Mostrar Nombre del Producto y Precio
+                itemDiv.innerHTML = `
+                    <span class="item-name">${item.nombre}</span>
+                    <span class="item-price">$${item.precio.toFixed(2)}</span>
+                `;
+                
+                listaHTML.appendChild(itemDiv);
+            });
+
+            // Mostrar el total final con dos decimales.
+            totalHTML.textContent = `$${totalPagar.toFixed(2)}`;
+        }
+
+        async function realizarPago() {
+            if (pedidoActual.length > 0) {
+                const total = parseFloat(document.getElementById('total-price').textContent.replace('$', ''));
+                
+                try {
+                    // Enviar el pedido al servidor
+                    const response = await fetch('/usuario/realizar-pedido', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({
+                            mesa: 'Mesa 1', // Puedes cambiar esto después
+                            total: total
+                        })
+                    });
+                    
+                    if (response.ok) {
+                        const mensaje = await response.text();
+                        alert(`¡Pedido realizado con éxito!\nTotal: $${total.toFixed(2)}`);
+                        
+                        // Limpiar el carrito
+                        pedidoActual = [];
+                        actualizarVistaPedido();
+                    } else {
+                        alert('Error al realizar el pedido');
+                    }
+                } catch (error) {
+                    console.error('Error:', error);
+                    alert('Error al conectar con el servidor');
+                }
+            } else {
+                alert('El pedido está vacío. Por favor, agregue algún producto.');
+            }
+        }
+    </script>
+</body>
+</html>

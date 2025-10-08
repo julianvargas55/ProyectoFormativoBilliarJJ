@@ -1,0 +1,39 @@
+package sena.jj.com.controller;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
+import java.util.Map;
+
+// 1. Declaración ÚNICA de la clase y sus anotaciones
+@RestController
+@RequestMapping("/api") 
+public class PedidoController {
+
+    // **Inyección del servicio de base de datos**
+    // DEBES DESCOMENTAR ESTAS LÍNEAS UNA VEZ QUE HAYAS CREADO EL PedidoService.java
+    // @Autowired
+    // private PedidoService pedidoService; 
+
+    /**
+     * Endpoint que recibe el JSON del carrito de compras.
+     * La URL es: /api/guardar-pedido
+     */
+    @PostMapping("/guardar-pedido")
+    public ResponseEntity<?> guardarPedido(@RequestBody List<Map<String, Object>> productos) {
+        
+        // 1. LLAMAR AL SERVICIO DE BASE DE DATOS
+        // productos es ahora una lista con: [{"nombre": "Coca-Cola", "precio": 2.50}, ...]
+
+        // **Descomenta esta línea una vez que el Servicio exista:**
+        // pedidoService.procesarYGuardar(productos); 
+        
+        // 2. Devolver una respuesta de éxito al navegador (JavaScript)
+        return ResponseEntity.ok(Map.of("mensaje", "Pedido recibido y procesado"));
+    }
+}

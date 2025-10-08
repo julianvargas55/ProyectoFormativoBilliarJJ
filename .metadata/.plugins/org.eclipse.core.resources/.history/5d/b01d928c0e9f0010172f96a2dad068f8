@@ -1,0 +1,49 @@
+package sena.jj.com.service; 
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import sena.jj.com.model.Pedido;
+import sena.jj.com.model.DetallePedido;
+import sena.jj.com.repository.PedidoRepository;
+
+
+import java.util.List;
+import java.util.Map;
+
+@Service
+public class PedidoService {
+
+    @Autowired
+    private PedidoRepository pedidoRepository;
+    
+    
+
+    @Transactional
+    public void procesarYGuardar(List<Map<String, Object>> productos) {
+        
+
+        double totalCalculado = productos.stream()
+            .mapToDouble(p -> (double) p.get("precio"))
+            .sum();
+
+        
+        Pedido nuevoPedido = new Pedido();
+        nuevoPedido.setTotal(totalCalculado); 
+        
+       
+        Pedido pedidoGuardado = pedidoRepository.save(nuevoPedido); 
+
+       
+        for (Map<String, Object> producto : productos) {
+            DetallePedido detalle = new DetallePedido();
+            
+            detalle.setPedido(pedidoGuardado); 
+            detalle.setNombreProducto((String) producto.get("nombre"));
+            detalle.setPrecioUnitario((double) producto.get("precio"));
+            
+           
+        }
+    }
+}

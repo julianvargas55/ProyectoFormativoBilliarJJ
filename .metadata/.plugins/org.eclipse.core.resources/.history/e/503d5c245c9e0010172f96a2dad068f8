@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Panel de Usuario</title>
+    <link rel="stylesheet" th:href="@{css/usuario.css}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+    <main class="user-panel-container">
+        <header class="panel-header">
+            <h1 class="panel-title">Panel de usuario</h1>
+            <button class="logout-button">Cerrar Sesión</button>
+        </header>
+
+        <section class="content-container">
+            <div class="products-section">
+                <h2>Productos Disponibles</h2>
+                
+                <div class="category">
+                    <h3>Bebidas <i class="fas fa-cocktail"></i></h3>
+                    <div class="product-grid" id="drinks-container">
+                        <div class="product-card" data-name="Coca-Cola" data-price="2.50">
+                            <img th:src="@{/img/imagnes/coca.png}" alt="Coca-Cola">
+                            <h4>Coca-Cola</h4>
+                            <p class="product-price">$2.50</p>
+                        </div>
+                        <div class="product-card" data-name="Jugo Natural" data-price="3.00">
+                            <img th:src="@{/img/imagnes/naranja.png}" alt="Coca-Cola">
+                            <h4>Jugo Natural</h4>
+                            <p class="product-price">$3.00</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="category">
+                    <h3>Comidas <i class="fas fa-hamburger"></i></h3>
+                    <div class="product-grid" id="food-container">
+                        <div class="product-card" data-name="Hamburguesa" data-price="8.00">
+                            <img th:src="@{/img/imagnes/hamb.jpg}" alt="Coca-Cola">
+                            <h4>Hamburguesa</h4>
+                            <p class="product-price">$8.00</p>
+                        </div>
+                        <div class="product-card" data-name="Papas Fritas" data-price="3.00">
+							<img th:src="@{/img/imagnes/papitas.jpg}" alt="Coca-Cola">
+                            <h4>Papas Fritas</h4>
+                            <p class="product-price">$3.00</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="category">
+                    <h3>Mesas de Billar <i class="fas fa-billiard"></i></h3>
+                    <div class="product-grid" id="pool-container">
+                        <div class="product-card" data
+						
+						-name="Mesa Billar #1" data-price="5.00">
+							<img th:src="@{/img/imagnes/mesas.jpg}" alt="Coca-Cola">
+                            <h4>Mesa Billar #1</h4>
+                            <p class="product-price">$5.00</p>
+                        </div>
+                        <div class="product-card" data-name="Mesa Billar #2" data-price="5.00">
+                            <img th:src="@{/img/imagnes/mesas.jpg}" alt="Coca-Cola">
+                            <h4>Mesa Billar #2</h4>
+                            <p class="product-price">$5.00</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="order-section">
+                <h2>Pedido Actual</h2>
+                <div class="order-list" id="order-list">
+                    </div>
+                <div class="order-summary">
+                    <p>Total <span class="total-price" id="total-price">$0.00</span></p>
+                </div>
+                <button class="pay-button" id="pay-button">Realizar Pago</button>
+            </div>
+        </section>
+    </main>
+
+	<script src="usuario"></script>
+	</body>
+	</html>

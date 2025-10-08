@@ -1,0 +1,52 @@
+package sena.jj.com.model;
+
+import jakarta.persistence.*;
+import java.time.LocalDateTime;
+
+@Entity
+@Table(name = "pedidos")
+public class Pedido {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+    
+    @Column(nullable = false)
+    private String mesa;
+    
+    @Column(nullable = false)
+    private Double total;
+    
+    @Column(nullable = false)
+    private String estado;
+    
+    @Column(nullable = false)
+    private LocalDateTime fechaHora;
+    
+    // CONSTRUCTORES
+    public Pedido() {
+        this.fechaHora = LocalDateTime.now();
+        this.estado = "PENDIENTE";
+    }
+    
+    public Pedido(String mesa, Double total) {
+        this();
+        this.mesa = mesa;
+        this.total = total;
+    }
+    
+    // GETTERS Y SETTERS
+    public Long getId() { return id; }
+    public void setId(Long id) { this.id = id; }
+    
+    public String getMesa() { return mesa; }
+    public void setMesa(String mesa) { this.mesa = mesa; }
+    
+    public Double getTotal() { return total; }
+    public void setTotal(Double total) { this.total = total; }
+    
+    public String getEstado() { return estado; }
+    public void setEstado(String estado) { this.estado = estado; }
+    
+    public LocalDateTime getFechaHora() { return fechaHora; }
+    public void setFechaHora(LocalDateTime fechaHora) { this.fechaHora = fechaHora; }
+}

@@ -1,0 +1,30 @@
+package sena.jj.com.controller;
+
+import sena.jj.com.model.Usuario;
+import sena.jj.com.repository.IUsuarioRepository;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.*;
+
+@Controller
+public class RegistroController {
+
+	@Autowired
+	private IUsuarioRepository usuarioRepository;
+
+	// GET -> Mostrar formulario
+	@GetMapping("/registro")
+	public String mostrarFormularioRegistro(Model model) {
+		model.addAttribute("usuario", new Usuario());
+		return "registro"; // busca templates/registro.html
+	}
+
+	// POST -> Guardar en BD
+	@PostMapping("/registro")
+	public String procesarFormularioRegistro(@ModelAttribute Usuario usuario) {
+		usuarioRepository.save(usuario);
+		return "redirect:/"; // vuelve al login (index.html)
+	}
+}

@@ -1,0 +1,296 @@
+:root {
+    --dark-bg: #1A1A1A; /* Fondo muy oscuro, casi negro */
+    --main-dark-green: #254030; /* Verde oscuro principal de los paneles */
+    --secondary-dark-green: #1F3327; /* Un poco más oscuro para diferenciación */
+    --accent-color: #00BCD4; /* Cian/Verde azulado vibrante para botones y enlaces */
+    --light-text: #FFFFFF;
+    --subtle-text: #B0B0B0;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: sans-serif; /* Puedes cambiar la fuente si deseas */
+}
+
+body {
+    background-color: var(--dark-bg);
+    color: var(--light-text);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+/* --- Encabezado (Header) --- */
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 30px;
+    background-color: var(--main-dark-green);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.logo img {
+    height: 40px; /* Ajusta según el tamaño del logo */
+    /* Estilo para el logo cuadrado de la esquina si es necesario */
+    background-color: var(--accent-color); 
+    padding: 5px;
+    border-radius: 5px;
+}
+
+.navbar a {
+    color: var(--subtle-text);
+    text-decoration: none;
+    margin-right: 25px;
+    font-size: 14px;
+    transition: color 0.3s;
+}
+
+.navbar a:hover {
+    color: var(--light-text);
+}
+
+.login-btn {
+    background-color: transparent;
+    color: var(--accent-color);
+    border: 1px solid var(--accent-color);
+    padding: 8px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+.login-btn:hover {
+    background-color: var(--accent-color);
+    color: var(--dark-bg);
+}
+
+/* --- Contenedor Principal (Login + Info) --- */
+.container {
+    flex-grow: 1;
+    display: flex;
+    max-width: 1200px;
+    width: 100%;
+    margin: auto;
+    background: linear-gradient(to right, var(--main-dark-green) 40%, var(--secondary-dark-green) 60%);
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+    /* Puedes añadir un fondo sutil de billar aquí */
+}
+
+/* --- Panel de Login --- */
+.login-panel {
+    flex-basis: 40%;
+    padding: 50px 40px;
+    background-color: var(--main-dark-green);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.login-form {
+    width: 100%;
+    max-width: 350px;
+    padding: 20px;
+}
+
+.access-choice {
+    display: flex;
+    gap: 24px;
+    justify-content: center;
+    margin-top: 10px;
+}
+
+.access-card {
+    background: var(--secondary-dark-green);
+    border-radius: 12px;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.15);
+    padding: 24px 18px 18px 18px;
+    width: 100%;
+    max-width: 320px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    transition: box-shadow 0.3s, transform 0.3s;
+}
+.access-card:hover {
+    box-shadow: 0 4px 24px rgba(0,189,212,0.18);
+    transform: translateY(-4px) scale(1.03);
+}
+.access-label {
+    font-size: 1.3em;
+    font-weight: bold;
+    color: var(--accent-color);
+    margin-bottom: 18px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+.usuario-card {
+    border: 2px solid var(--accent-color);
+}
+.admin-card {
+    border: 2px solid #ff9800;
+}
+.admin-card .access-label {
+    color: #ff9800;
+}
+.admin-card .access-btn {
+    background-color: #ff9800;
+    color: var(--dark-bg);
+}
+.admin-card .access-btn:hover {
+    background-color: #ffc107;
+}
+}
+
+.input-group {
+    position: relative;
+    margin-bottom: 20px;
+}
+
+.input-group input {
+    width: 100%;
+    padding: 12px 12px 12px 40px; /* Espacio para el icono */
+    border: none;
+    background-color: var(--secondary-dark-green);
+    color: var(--light-text);
+    border-radius: 5px;
+    font-size: 16px;
+    outline: none;
+}
+
+.input-group input::placeholder {
+    color: var(--subtle-text);
+}
+
+.input-group .icon {
+    position: absolute;
+    top: 50%;
+    left: 12px;
+    transform: translateY(-50%);
+    color: var(--accent-color);
+    font-size: 20px;
+}
+
+.access-btn {
+    width: 100%;
+    padding: 12px;
+    background-color: var(--accent-color);
+    color: var(--dark-bg);
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 18px;
+    font-weight: bold;
+    margin-top: 10px;
+    transition: background-color 0.3s;
+}
+
+.access-btn:hover {
+    background-color: #00E5FF; /* Un cian más claro al pasar el mouse */
+}
+
+.options {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
+    font-size: 12px;
+}
+
+.options a {
+    color: var(--subtle-text);
+    text-decoration: none;
+}
+
+.options a:hover {
+    text-decoration: underline;
+    color: var(--light-text);
+}
+
+.separator {
+    color: var(--subtle-text);
+}
+
+/* --- Panel de Información (Derecha) --- */
+.info-panel {
+    flex-basis: 60%;
+    padding: 50px 40px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    
+    /* El degradado de color y el brillo en el fondo */
+    background: radial-gradient(circle at 80% 50%, rgba(0, 189, 212, 0.2), transparent 40%),
+                linear-gradient(to right, var(--secondary-dark-green), #102015);
+    
+    /* Efecto de taco/mesa de billar en la imagen de fondo */
+    /* Para replicar el efecto de la imagen, se necesitaría una imagen de fondo (no incluida aquí). */
+}
+
+.info-panel h1 {
+    font-size: 6em;
+    font-weight: 900;
+    margin-bottom: 20px;
+    color: var(--light-text);
+    text-shadow: 0 0 10px rgba(0, 189, 212, 0.5); /* Sombra sutil con color de acento */
+}
+
+.quote {
+    font-style: italic;
+    font-size: 1.2em;
+    color: var(--subtle-text);
+    max-width: 400px;
+    margin-bottom: 40px;
+}
+
+.register-link a {
+    color: var(--accent-color);
+    text-decoration: none;
+    font-weight: bold;
+    font-size: 1.1em;
+    transition: color 0.3s;
+}
+
+.register-link a:hover {
+    color: #00E5FF;
+    text-decoration: underline;
+}
+
+/* Responsive básico (opcional) */
+@media (max-width: 900px) {
+    .container {
+        flex-direction: column;
+    }
+    .login-panel, .info-panel {
+        flex-basis: 100%;
+        padding: 30px;
+    }
+    .info-panel h1 {
+        font-size: 4em;
+    }
+    .header {
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+    .navbar {
+        order: 1;
+        flex-basis: 100%;
+        text-align: center;
+        margin-top: 10px;
+    }
+    .login-btn {
+        margin-top: 10px;
+    }
+
+    .access-choice {
+        flex-direction: column;
+        gap: 18px;
+        align-items: center;
+    }
+}

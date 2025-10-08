@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<session version="1.0">
+<refactoring comment="Rename type &apos;sena.jj.com.controller.IndexInicioController&apos; to &apos;UsuarioPController&apos;&#x0D;&#x0A;- Original project: &apos;test&apos;&#x0D;&#x0A;- Original element: &apos;sena.jj.com.controller.IndexInicioController&apos;&#x0D;&#x0A;- Renamed element: &apos;sena.jj.com.controller.UsuarioPController&apos;&#x0D;&#x0A;- Update references to refactored element&#x0D;&#x0A;- Update textual occurrences in comments and strings" description="Rename type &apos;IndexInicioController&apos;" flags="589830" id="org.eclipse.jdt.ui.rename.type" input="/src\/main\/java=/optional=/true=/=/maven.pomderived=/true=/&lt;sena.jj.com.controller{IndexInicioController.java[IndexInicioController" matchStrategy="1" name="UsuarioPController" qualified="false" references="true" similarDeclarations="false" stamp="1759270735343" textual="false" version="1.0"/>
+</session>
