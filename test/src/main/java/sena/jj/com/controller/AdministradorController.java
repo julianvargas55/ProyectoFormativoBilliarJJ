@@ -1,27 +1,31 @@
 package sena.jj.com.controller;
 
-import sena.jj.com.model.Pedido;
-import sena.jj.com.service.PedidoService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import java.util.List;
 
 @Controller
-@RequestMapping("/administrador")
+@RequestMapping("/admon")
 public class AdministradorController {
-    
-    @Autowired
-    private PedidoService pedidoService;
-    
-    @GetMapping
-    public String administradorPage(Model model) {
-        // Obtener pedidos recientes para mostrar en actividad reciente
-        List<Pedido> pedidosRecientes = pedidoService.obtenerPedidosRecientes();
-        model.addAttribute("pedidosRecientes", pedidosRecientes);
-        
-        return "administrador";
-    }
+	
+	@GetMapping("")
+	public String administrador(){
+		return "administrador/administrador";
+	}
+	
+	@GetMapping("/billar")
+	public String billar(){
+		return "administrador/billar";
+	}
+	
+	@GetMapping("/bolirana")
+	public String bolirana(){
+		return "administrador/bolirana";
+	}
+
+	@GetMapping("/tejo")
+	public String tejo(){
+		return "administrador/indextejo";
+	}
+
 }

@@ -1,0 +1,287 @@
+/* Variables CSS para manejo de colores */
+:root {
+    --primary-bg-color: #1a1a1a; /* Fondo muy oscuro, casi negro */
+    --secondary-bg-color: #2c2c2c; /* Fondo para elementos (paneles, tarjetas) */
+    --accent-color: #00b386; /* Verde esmeralda vibrante para acentos (como el paño de la mesa) */
+    --text-color: #f0f0f0; /* Color de texto claro */
+    --input-bg-color: #444444; /* Fondo oscuro para campos de entrada */
+    --button-hover-color: #00e6a8; /* Verde más claro para hover */
+    --link-color: #a0a0a0; /* Color para enlaces */
+}
+
+/* Estilos Generales */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: sans-serif;
+}
+
+/* 🟢 Centrado principal: Estos cambios centran la interfaz vertical y horizontalmente */
+body {
+    background-color: var(--primary-bg-color);
+    color: var(--text-color);
+    line-height: 1.6;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column; 
+    /* Propiedades de centrado añadidas/modificadas: */
+    justify-content: center; /* Centra el contenido (container) verticalmente */
+    align-items: center; /* Centra el contenido (container) horizontalmente */
+}
+
+/* Estilos del Header */
+.header {
+    background-color: var(--secondary-bg-color);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 5%;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+    width: 100%; /* El header debe ocupar todo el ancho */
+    position: fixed; /* 🟢 Cambiado a fixed para que se mantenga arriba */
+    top: 0;
+    left: 0;
+    z-index: 1000;
+}
+
+.logo img {
+    height: 40px; 
+}
+
+.navbar a {
+    color: var(--text-color);
+    text-decoration: none;
+    margin: 0 15px;
+    font-size: 16px;
+    transition: color 0.3s ease;
+}
+
+.navbar a:hover {
+    color: var(--accent-color);
+}
+
+.login-btn {
+    background-color: var(--accent-color);
+    color: var(--primary-bg-color);
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.login-btn:hover {
+    background-color: var(--button-hover-color);
+}
+
+/* Estilos del Contenedor Principal */
+.container {
+    /* flex-grow: 1; se elimina porque ya no necesitamos que crezca */
+    display: flex;
+    max-width: 1000px; /* Ajustado el ancho para que la imagen se vea mejor */
+    margin-top: 80px; /* 🟢 Agregamos un margen para dejar espacio al header fijo */
+    border-radius: 15px;
+    overflow: hidden;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.4);
+}
+
+/* Panel de Inicio de Sesión */
+.login-panel {
+    flex: 1;
+    background-color: var(--secondary-bg-color);
+    padding: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.login-form {
+    width: 100%;
+    max-width: 400px;
+    text-align: center;
+}
+
+.access-choice {
+    display: flex;
+    gap: 20px;
+    margin-top: 30px;
+}
+
+.access-card {
+    flex: 1;
+    background-color: var(--primary-bg-color);
+    padding: 20px;
+    border-radius: 10px;
+    border: 1px solid var(--input-bg-color);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.access-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 15px rgba(0, 179, 134, 0.2);
+}
+
+.access-label {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    font-weight: bold;
+    margin-bottom: 20px;
+    color: var(--accent-color);
+}
+
+/* Estilos de los Grupos de Input */
+.input-group {
+    display: flex;
+    align-items: center;
+    background-color: var(--input-bg-color);
+    border-radius: 5px;
+    margin-bottom: 15px;
+    padding: 8px 12px;
+}
+
+.input-group .icon {
+    font-size: 20px;
+    color: var(--link-color);
+    margin-right: 10px;
+}
+
+.input-group input {
+    flex-grow: 1;
+    border: none;
+    background: none;
+    color: var(--text-color);
+    padding: 5px 0;
+    font-size: 16px;
+    outline: none; 
+}
+
+.input-group input::placeholder {
+    color: var(--link-color);
+    opacity: 0.7;
+}
+
+/* Estilos de Botones de Acceso */
+.access-btn {
+    width: 100%;
+    background-color: var(--accent-color);
+    color: var(--primary-bg-color);
+    border: none;
+    padding: 12px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: bold;
+    font-size: 16px;
+    margin-top: 10px;
+    transition: background-color 0.3s ease;
+}
+
+.access-btn:hover {
+    background-color: var(--button-hover-color);
+}
+
+/* Opciones y Enlaces */
+.options {
+    margin-top: 15px;
+    font-size: 14px;
+}
+
+.options a {
+    color: var(--link-color);
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+.options a:hover {
+    color: var(--accent-color);
+}
+
+.separator {
+    margin: 0 8px;
+    color: var(--link-color);
+}
+
+/* Panel de Información */
+.info-panel {
+    flex: 1;
+    background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url('billar_bg.jpg') no-repeat center center; 
+    background-size: cover;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    padding: 40px;
+    color: var(--text-color);
+}
+
+.info-panel h1 {
+    font-size: 48px;
+    margin-bottom: 20px;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
+    letter-spacing: 2px;
+}
+
+.info-panel .quote {
+    font-size: 20px;
+    font-style: italic;
+    margin-bottom: 30px;
+    max-width: 400px;
+    border-left: 3px solid var(--accent-color);
+    padding-left: 15px;
+}
+
+.info-panel .register-link a {
+    color: var(--accent-color);
+    text-decoration: none;
+    font-weight: bold;
+    transition: color 0.3s ease;
+}
+
+.info-panel .register-link a:hover {
+    color: var(--button-hover-color);
+    text-decoration: underline;
+}
+
+/* Adaptabilidad (Media Queries) */
+@media (max-width: 900px) {
+    .container {
+        flex-direction: column;
+        margin-top: 80px; /* Mantener espacio para el header */
+        max-width: 100%;
+        border-radius: 0;
+        box-shadow: none;
+    }
+
+    .info-panel {
+        display: none; 
+    }
+
+    .login-panel {
+        padding: 20px;
+    }
+    
+    .header {
+        flex-direction: row; /* Mantenemos el header horizontal si es posible */
+        gap: 0;
+        justify-content: space-around;
+        padding: 15px 10px;
+    }
+
+    .navbar {
+        display: none; /* Ocultar el nav bar para pantallas pequeñas */
+    }
+
+    .login-btn {
+        margin-left: auto;
+    }
+}
+
+@media (max-width: 600px) {
+    .access-choice {
+        flex-direction: column;
+    }
+}

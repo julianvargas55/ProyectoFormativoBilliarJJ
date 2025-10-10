@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Club de Juegos y Billar</title>
+    <link rel="stylesheet" th:href="@{/css/nuevo.css}"> 
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+    
+    <section class="hero-carousel">
+        <div class="carousel-content">
+            <h2>¡Tu Club de Juegos y Diversión!</h2>
+            <p>Billar JJ</p>
+        </div>
+    </section>
+    
+    <nav class="navbar-games">
+        <button onclick="document.getElementById('pool-section').scrollIntoView({ behavior: 'smooth' });">
+            <i class="fas fa-billiard"></i> Billar
+        </button>
+        <button onclick="document.getElementById('games-section').scrollIntoView({ behavior: 'smooth' });">
+            <i class="fas fa-bowling-ball"></i> Bolirana y Tejo
+        </button>
+        <button onclick="document.getElementById('food-beverages-section').scrollIntoView({ behavior: 'smooth' });">
+            <i class="fas fa-utensils"></i> Alimentos
+        </button>
+        <button onclick="document.getElementById('about-us-section').scrollIntoView({ behavior: 'smooth' });">
+            <i class="fas fa-info-circle"></i> Acerca de Nosotros
+        </button>
+    </nav>
+
+    <section class="games-info" id="games-section">
+        <h2>Conoce Nuestros Deportes Tradicionales</h2>
+        <div class="game-cards-container">
+            
+            <div class="game-card">
+                <h3>Tejo <i class="fas fa-fire"></i></h3>
+                <div class="game-video-container">
+                    <iframe width="100%" height="100%" src="URL_VIDEO_TEJO" 
+                            frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen>
+                    </iframe>
+                </div>
+                <p>El **Tejo** (o Turmequé) es el deporte nacional de Colombia. Consiste en lanzar un disco metálico (tejo) para explotar pequeñas mechas (mechas) que contienen pólvora. ¡Un juego explosivo y divertido!</p>
+            </div>
+            
+            <div class="game-card">
+                <h3>Billar <i class="fas fa-billiard"></i></h3>
+                <div class="game-video-container">
+                    <iframe width="100%" height="100%" src="URL_VIDEO_BILLAR" 
+                            frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen>
+                    </iframe>
+                </div>
+                <p>El **Billar** es un clásico atemporal. Ofrecemos mesas de Pool (Bola 8) y Billar a Tres Bandas. Perfecciona tu puntería y disfruta de una buena partida con amigos.</p>
+            </div>
+            
+            <div class="game-card">
+                <h3>Bolirana <i class="fas fa-bullseye"></i></h3>
+                <div class="game-video-container">
+                    <iframe width="100%" height="100%" src="URL_VIDEO_BOLIRANA" 
+                            frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen>
+                    </iframe>
+                </div>
+                <p>La **Bolirana** es un juego tradicional donde se lanzan pequeñas bolas metálicas para que caigan en los orificios numerados de una mesa inclinada (rana). Es un juego de precisión, suerte y mucha emoción.</p>
+            </div>
+        </div>
+    </section>
+    
+    <hr>
+
+    <main class="user-panel-container" id="food-beverages-section">
+        <header class="panel-header">
+            <h1 class="panel-title">Panel de pedidos <i class="fas fa-shopping-cart"></i></h1>
+            <button class="logout-button" th:onclick="'window.location.href=\'' + @{/logout} + '\''">Cerrar Sesión</button>
+        </header>
+
+        <section class="content-container">
+            <div class="products-section">
+                <h2>Productos Disponibles</h2>
+                
+                <div class="category" id="food-section">
+                    <h3>Alimentos <i class="fas fa-hamburger"></i></h3>
+                    <div class="product-grid" id="food-container">
+                        <div class="product-card" data-name="Hamburguesa" data-price="8.00">
+                            <img th:src="@{/img/imagnes/hamb.jpg}" alt="Hamburguesa">
+                            <h4>Hamburguesa</h4>
+                            <p class="product-price">$8.00</p>
+                        </div>
+                        <div class="product-card" data-name="Papas Fritas" data-price="3.00">
+                            <img th:src="@{/img/imagnes/papitas.jpg}" alt="Papas Fritas">
+                            <h4>Papas Fritas</h4>
+                            <p class="product-price">$3.00</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="category">
+                    <h3>Bebidas <i class="fas fa-cocktail"></i></h3>
+                    <div class="product-grid" id="drinks-container">
+                        <div class="product-card" data-name="Coca-Cola" data-price="2.50">
+                            <img th:src="@{/img/imagnes/coca.png}" alt="Coca-Cola">
+                            <h4>Coca-Cola</h4>
+                            <p class="product-price">$2.50</p>
+                        </div>
+                        <div class="product-card" data-name="Jugo Natural" data-price="3.00">
+                            <img th:src="@{/img/imagnes/naranja.png}" alt="Jugo Natural">
+                            <h4>Jugo Natural</h4>
+                        </div>
+                        <div class="product-card" data-name="Cerveza Artesanal" data-price="4.50">
+                            <img th:src="@{/img/imagnes/cerveza.png}" alt="Cerveza Artesanal">
+                            <h4>Cerveza Artesanal</h4>
+                            <p class="product-price">$4.50</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="category" id="pool-section">
+                    <h3>Mesas de Billar <i class="fas fa-billiard"></i></h3>
+                    <div class="product-grid" id="pool-container">
+                        <div class="product-card" data-name="Mesa Billar #1" data-price="5.00">
+                            <img th:src="@{/img/imagnes/mesas.jpg}" alt="Mesa Billar #1">
+                            <h4>Mesa Billar #1 (Por Hora)</h4>
+                            <p class="product-price">$5.00</p>
+                        </div>
+                        <div class="product-card" data-name="Mesa Billar #2" data-price="5.00">
+                            <img th:src="@{/img/imagnes/mesas.jpg}" alt="Mesa Billar #2">
+                            <h4>Mesa Billar #2 (Por Hora)</h4>
+                            <p class="product-price">$5.00</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="order-section">
+                    <h2>Tu Pedido</h2>
+                    <div class="order-list">
+                        <p style="text-align: center; color: #777;">Aún no hay ítems en tu pedido.</p>
+                    </div>
+                    <div class="order-summary">
+                        <span>Total:</span>
+                        <span class="total-price">$0.00</span>
+                    </div>
+                    <button class="pay-button" disabled>Pagar Pedido</button>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <section class="about-us" id="about-us-section">
+        <div class="about-us-content">
+            <h2>Acerca de Nosotros <i class="fas fa-handshake"></i></h2>
+            <p>Somos el punto de encuentro perfecto para los amantes de la cultura del juego tradicional y la diversión familiar. Desde nuestra apertura, nos hemos dedicado a ofrecer un ambiente seguro, vibrante y lleno de energía para que disfrutes de los mejores momentos con tus amigos y familiares.</p>
+            
+            <div class="info-grid">
+                <div class="info-item">
+                    <h4><i class="fas fa-map-marker-alt"></i> Ubicación</h4>
+                    <p>Calle Ficticia #123, Ciudad de la Diversión</p>
+                </div>
+                <div class="info-item">
+                    <h4><i class="fas fa-clock"></i> Horario</h4>
+                    <p>Mar. - Dom.: 4:00 PM - 1:00 AM</p>
+                </div>
+                <div class="info-item">
+                    <h4><i class="fas fa-phone-alt"></i> Contacto</h4>
+                    <p>(+57) 300 123 4567</p>
+                </div>
+            </div>
+        </div>
+    </section>
+</body>
+</html>

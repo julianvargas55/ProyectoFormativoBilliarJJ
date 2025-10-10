@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="htt://thymLeaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Billar JJ - Acceso Administrador</title>
+    <link rel="stylesheet" th:href="@{/assets/css/login.css}">
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+</head>
+<body>
+    <div class="header">
+        <div class="logo">
+            <img src="logo.png" alt="Logo Billar JJ"> </div>
+        <nav class="navbar">
+            <a href="#">Inicio</a>
+            <a href="#">PRECIOS</a>
+            <a href="#">FACTURAS</a>
+            <a href="#">CONTACTOS</a>
+        </nav>
+        <button class="login-btn">Iniciar sesión</button>
+    </div>
+
+    <div class="container">
+        <div class="login-panel">
+            <div class="login-form">
+                <i class='bx bx-user-circle' style="font-size: 80px; color: #fff;"></i>
+                <form>
+                    <label class="access-label" for="tipo"><i class='bx bx-user' style="font-size: 24px; color: var(--accent-color);"></i> Ingresar como:</label>
+                    <div class="input-group">
+                        <select name="tipo" id="tipo" required style="width:100%;background:var(--input-bg-color);color:var(--text-color);border-radius:5px;padding:10px;">
+                            <option value="usuario">Usuario</option>
+                            <option value="administrador">Administrador</option>
+                        </select>
+                    </div>
+                    <div class="input-group">
+                        <i class='bx bx-user icon'></i>
+                        <input type="text" placeholder="nombre de usuario o administrador" name="username" required>
+                    </div>
+                    <div class="input-group">
+                        <i class='bx bx-lock-alt icon'></i>
+                        <input type="password" placeholder="contraseña" name="password" required>
+                    </div>
+                    <button type="submit" class="access-btn">Acceder</button>
+                    <div class="options">
+                        <a href="#">Acuérdate de mí</a>
+                        <span class="separator">|</span>
+                        <a href="#">¿Olvidaste tu contraseña?</a>
+                    </div>
+					<div>
+						<p>Registrar: <a th:href="@{/admon}"></a></p>
+					</div>
+                </form>
+            </div>
+        </div>
+
+        <div class="info-panel">
+            <h1>BILLAR JJ</h1>
+            <p class="quote">
+                No se trata de suerte, se trata de precisión. El que domina el taco, domina la mesa.
+            </p>
+            <p class="register-link">
+                ¿No tienes una cuenta? <a href="#">Regístrate aquí</a>
+            </p>
+        </div>
+        
+    </div>
+
+</body>
+</html>

@@ -61,7 +61,7 @@
 		</dependency>
 		<dependency>
 			<groupId>sena.jj.com</groupId>
-			<artifactId>ProyectoJJ</artifactId>
+			<artifactId>test</artifactId>
 			<version>0.0.1-SNAPSHOT</version>
 		</dependency>
 	</dependencies>

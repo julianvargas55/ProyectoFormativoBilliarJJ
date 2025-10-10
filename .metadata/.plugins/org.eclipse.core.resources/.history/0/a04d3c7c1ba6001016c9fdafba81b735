@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="htt://thymLeaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard Billar JJ - Administrador</title>
+    <link rel="stylesheet" th:href="@{/assets/css/administrador.css}">
+    <link th:href="@{/='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'}">
+</head>
+<body>
+
+    <div class="dashboard-container">
+        
+        <div class="sidebar">
+            <div class="logo-area">
+                <i class='bx bxs-user-circle' style="font-size: 50px;"></i>
+                <div class="app-name">Dashboard</div>
+            </div>
+            <nav class="sidebar-nav">
+                <a th:href="@{/=#" class="nav-item active">
+                    <i class='bx bxs-dashboard icon'></i>
+                    <span>Inicio</span>
+                </a>
+                <a th:href="@{/=#" class="nav-item}">
+                    <i class='bx bxs-group icon'></i>
+                    <span>Mesas y Tiempo</span>
+                </a>
+                <a th:href="@{/=#" class="nav-item}">
+                    <i class='bx bxs-drink icon'></i>
+                    <span>Alimentos y Bebidas</span>
+                </a>
+                <a th:href="@{/=#" class="nav-item}">
+                    <i class='bx bxs-receipt icon'></i>
+                    <span>Facturas</span>
+                </a>
+            </nav>
+            <div class="logout-btn">
+                <i class='bx bx-log-out-circle icon'></i>
+                <span>Cerrar Sesión</span>
+            </div>
+        </div>
+
+        <div class="main-content">
+            
+            <div class="topbar">
+                <div class="greeting">Bienvenido de nuevo, <span class="user-name">Dueño JJ</span></div>
+                <div class="profile-info">
+                    <img src="https://i.ibb.co/5c9s2T7/avatar.png" alt="Perfil" class="profile-pic">
+                </div>
+            </div>
+
+            <div class="content-section dashboard-overview">
+                <h2>Resumen General</h2>
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <i class='bx bx-dollar icon'></i>
+                        <div class="stat-info">
+                            <span class="stat-value">$ 1,560.000</span>
+                            <span class="stat-label">Ingresos del Día</span>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <i class='bx bx-timer icon'></i>
+                        <div class="stat-info">
+                            <span class="stat-value">6</span>
+                            <span class="stat-label">Mesas Activas</span>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <i class='bx bx-food-menu icon'></i>
+                        <div class="stat-info">
+                            <span class="stat-value">24</span>
+                            <span class="stat-label">Pedidos del Día</span>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <i class='bx bxs-file-plus icon'></i>
+                        <div class="stat-info">
+                            <span class="stat-value">12</span>
+                            <span class="stat-label">Facturas Pendientes</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="recent-activity">
+                    <h3>Actividad Reciente</h3>
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Factura #</th>
+                                <th>Mesa</th>
+                                <th>Fecha</th>
+                                <th>Total</th>
+                                <th>Estado</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>#FCT-0045</td>
+                                <td>Mesa 4</td>
+                                <td>24/08/2025</td>
+                                <td>$ 85.000</td>
+                                <td class="status paid">Pagado</td>
+                            </tr>
+                            <tr>
+                                <td>#FCT-0044</td>
+                                <td>Mesa 7</td>
+                                <td>24/08/2025</td>
+                                <td>$ 120.000</td>
+                                <td class="status pending">Pendiente</td>
+                            </tr>
+                            <tr>
+                                <td>#FCT-0043</td>
+                                <td>Mesa 2</td>
+                                <td>24/08/2025</td>
+                                <td>$ 55.000</td>
+                                <td class="status paid">Pagado</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            
+        </div>
+    </div>
+
+</body>
+</html>

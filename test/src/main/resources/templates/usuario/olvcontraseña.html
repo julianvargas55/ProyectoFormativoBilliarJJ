@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Recuperar Contraseña - Estilo Moderno</title>
+     <link rel="stylesheet" href="/assets/css/olvcontraseña.css">
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
+    </style>
+</head>
+<body>
+    <div class="main-container">
+        <!-- Sección Izquierda: Formulario de Olvidar Contraseña -->
+        <div class="left-section">
+            <div class="user-icon-bg">
+                <svg class="user-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M15 7a2 2 0 012 2v5a2 2 0 01-2 2h-2a2 2 0 01-2-2V9a2 2 0 012-2h2z"></path>
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 14v4m0 0l-4-4m4 4l4-4"></path>
+                </svg>
+            </div>
+            <h2 class="text-3xl md:text-4xl font-extrabold mb-4 text-center">
+                ¿Olvidaste tu <span style="color: #0EA5E9;">Contraseña</span>?
+            </h2>
+            <p class="text-gray-400 mb-8 text-center text-sm md:text-base max-w-xs">
+                Ingresa tu correo electrónico y te enviaremos un enlace para restablecerla.
+            </p>
+
+            <form id="resetPasswordForm" class="w-full max-w-xs space-y-6">
+                <div>
+                    <input
+                        type="email"
+                        id="email"
+                        name="email"
+                        required
+                        placeholder="Correo Electrónico"
+                        class="input-field"
+                    >
+                </div>
+
+                <button
+                    type="submit"
+                    id="submitButton"
+                    class="action-button"
+                >
+                    <span id="buttonText">Enviar Enlace</span>
+                    <div id="loadingSpinner" class="loading-spinner ml-3 hidden"></div>
+                </button>
+
+                <div class="text-center text-sm mt-4">
+                    <a href="#" class="font-medium text-gray-400 hover:text-gray-200 transition duration-200">
+                        ¿Recordaste tu contraseña? Inicia Sesión
+                    </a>
+                </div>
+            </form>
+        </div>
+
+        <!-- Sección Derecha: Mensaje o Ilustración -->
+        <div class="right-section">
+            <h1 class="text-5xl md:text-6xl font-extrabold mb-6 tracking-tight z-10">
+                ¡Aquí estamos para <span style="color: #22C55E;">Ayudarte!</span>
+            </h1>
+            <p class="text-gray-300 text-lg md:text-xl max-w-sm z-10">
+                Tu seguridad es nuestra prioridad. Sigue las instrucciones que recibirás en tu bandeja de entrada.
+            </p>
+            <!-- Puedes añadir un SVG o una ilustración temática aquí -->
+             <svg class="absolute bottom-4 right-4 w-24 h-24 opacity-20 transform rotate-45" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <circle cx="50" cy="50" r="45" fill="#0EA5E9" opacity="0.8"/>
+                <text x="50" y="58" text-anchor="middle" fill="#FFFFFF" font-size="40" font-weight="bold">?</text>
+            </svg>
+        </div>
+    </div>
+
+    <!-- Message Box -->
+    <div id="messageBox" class="message-box">
+        <p id="messageText"></p>
+        <button id="closeMessage" class="mt-4 px-4 py-2 bg-sky-600 hover:bg-sky-700 text-white rounded-md">Cerrar</button>
+    </div>
+
+    <script type="module">
+        // Polyfill para crypto.randomUUID si no está disponible (para uso local sin auth)
+        if (typeof crypto.randomUUID === 'undefined') {
+            crypto.randomUUID = function() {
+                return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+                    var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
+                    return v.toString(16);
+                });
+            };
+        }
+
+        // --- Firebase Imports and Initialization ---
+        // Estas variables globales son proporcionadas por el entorno Canvas.
+        const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
+        const firebaseConfig = typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : null;
+        const initialAuthToken = typeof __initial_auth_token !== 'undefined' ? __initial_auth_token : null;
+
+        let app, db, auth;
+        let currentUserId = null; // Para almacenar el ID de usuario autenticado
+
+        // Función para mostrar el cuadro de mensaje personalizado
+        function showMessageBox(message, isSuccess = true) {
+            const messageBox = document.getElementById('messageBox');
+            const messageText = document.getElementById('messageText');
+            messageText.textContent = message;
+            messageBox.style.backgroundColor = isSuccess ? 'rgba(76, 175, 80, 0.9)' : 'rgba(244, 67, 54, 0.9)'; /* Verde para éxito, rojo para error */
+            messageBox.classList.add('show');
+            setTimeout(() => {
+                messageBox.classList.remove('show');
+            }, 5000); // Ocultar después de 5 segundos
+        }
+
+        // Función para cerrar el cuadro de mensaje personalizado
+        document.getElementById('closeMessage').addEventListener('click', () => {
+            document.getElementById('messageBox').classList.remove('show');
+        });
+
+        window.onload = async function () {
+            // Verificar si la configuración de Firebase está disponible
+            if (firebaseConfig) {
+                try {
+                    // Importar dinámicamente los módulos de Firebase
+                    const firebaseAppModule = await import("https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js");
+                    const firebaseAuthModule = await import("https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js");
+                    // const firebaseFirestoreModule = await import("https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js"); // No se necesita para solo restablecer contraseña
+
+                    const { initializeApp } = firebaseAppModule;
+                    const { getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged, sendPasswordResetEmail } = firebaseAuthModule;
+                    // const { getFirestore } = firebaseFirestoreModule;
+
+                    app = initializeApp(firebaseConfig);
+                    auth = getAuth(app);
+                    // db = getFirestore(app); // No se usa getFirestore para esta funcionalidad específica
+
+                    // Iniciar sesión con token personalizado si está disponible, de lo contrario de forma anónima
+                    if (initialAuthToken) {
+                        await signInWithCustomToken(auth, initialAuthToken);
+                    } else {
+                        await signInAnonymously(auth);
+                    }
+
+                    // Escuchar cambios en el estado de autenticación
+                    onAuthStateChanged(auth, (user) => {
+                        if (user) {
+                            currentUserId = user.uid;
+                            console.log("Usuario autenticado:", currentUserId);
+                        } else {
+                            currentUserId = crypto.randomUUID(); // Fallback a un ID aleatorio si no está autenticado
+                            console.log("Usuario no autenticado, usando ID aleatorio:", currentUserId);
+                        }
+                    });
+
+                } catch (error) {
+                    console.error("Error al inicializar Firebase:", error);
+                    showMessageBox("Hubo un problema al inicializar el sistema de autenticación. Inténtalo de nuevo más tarde.", false);
+                }
+            } else {
+                console.warn("Configuración de Firebase no encontrada. La aplicación se ejecutará sin funcionalidad de backend.");
+                currentUserId = crypto.randomUUID(); // Asignar un ID aleatorio para pruebas locales
+            }
+
+            const form = document.getElementById('resetPasswordForm');
+            const emailInput = document.getElementById('email');
+            const submitButton = document.getElementById('submitButton');
+            const buttonText = document.getElementById('buttonText');
+            const loadingSpinner = document.getElementById('loadingSpinner');
+
+            form.addEventListener('submit', async function(event) {
+                event.preventDefault(); // Prevenir el envío predeterminado del formulario
+
+                const email = emailInput.value.trim();
+                if (!email) {
+                    showMessageBox("Por favor, ingresa tu correo electrónico.", false);
+                    return;
+                }
+
+                submitButton.disabled = true;
+                buttonText.classList.add('hidden');
+                loadingSpinner.classList.remove('hidden');
+
+                if (auth && typeof sendPasswordResetEmail === 'function') {
+                    try {
+                        await sendPasswordResetEmail(auth, email);
+                        showMessageBox(`Se ha enviado un enlace de restablecimiento a ${email}. Revisa tu bandeja de entrada.`, true);
+                    } catch (error) {
+                        console.error("Error al enviar correo de restablecimiento de contraseña:", error);
+                        let errorMessage = "Ocurrió un error al intentar restablecer la contraseña.";
+                        switch (error.code) {
+                            case 'auth/user-not-found':
+                                errorMessage = "No hay ningún usuario registrado con ese correo electrónico.";
+                                break;
+                            case 'auth/invalid-email':
+                                errorMessage = "El formato del correo electrónico es inválido.";
+                                break;
+                            case 'auth/missing-email':
+                                errorMessage = "Por favor, ingresa un correo electrónico.";
+                                break;
+                            default:
+                                errorMessage = `Error: ${error.message}`;
+                                break;
+                        }
+                        showMessageBox(errorMessage, false);
+                    } finally {
+                        submitButton.disabled = false;
+                        buttonText.classList.remove('hidden');
+                        loadingSpinner.classList.add('hidden');
+                    }
+                } else {
+                    // Fallback para pruebas locales o si Firebase no está inicializado
+                    setTimeout(() => {
+                        showMessageBox(`(DEMO) Si el correo existe, se enviaría un enlace de restablecimiento a ${email}.`, true);
+                        submitButton.disabled = false;
+                        buttonText.classList.remove('hidden');
+                        loadingSpinner.classList.add('hidden');
+                    }, 2000);
+                }
+            });
+        };
+    </script>
+</body>
+</html>

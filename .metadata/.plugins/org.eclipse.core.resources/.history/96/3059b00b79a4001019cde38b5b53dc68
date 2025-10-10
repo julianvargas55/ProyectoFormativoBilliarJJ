@@ -1,0 +1,10 @@
+package sena.jj.com.repository;
+
+import sena.jj.com.model.Admin;
+import org.springframework.data.jpa.repository.JpaRepository;
+import java.util.Optional;
+
+public interface AdminRepository extends JpaRepository<Admin, Long> {
+    // Método clave para buscar al administrador por su nombre de usuario
+    Optional<Admin> findByNombreDeAdmin(String nombreDeAdmin);
+}

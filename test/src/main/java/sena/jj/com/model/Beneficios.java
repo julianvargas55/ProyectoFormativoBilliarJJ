@@ -10,7 +10,7 @@ import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 
 @Entity
-@Table(name = "Beneficios")
+@Table(name = "beneficios")
 public class Beneficios {
 
 	@Id
@@ -22,8 +22,7 @@ public class Beneficios {
 	private List<Cliente> cliente;
 
 	public Beneficios() {
-		super();
-		// TODO Auto-generated constructor stub
+
 	}
 
 	public Beneficios(Integer id, String nomBeneficio, List<Cliente> cliente) {

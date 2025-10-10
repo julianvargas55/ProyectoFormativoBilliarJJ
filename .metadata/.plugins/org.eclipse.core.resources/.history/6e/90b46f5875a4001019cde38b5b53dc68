@@ -1,0 +1,14 @@
+package sena.jj.com.controller;
+
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
+
+@Controller // 🔑 ¡Debe ser un @Controller!
+public class LoginController {
+
+    @GetMapping("/login") // 🔑 Mapea la URL a la que Spring Security intenta redirigir
+    public String login() {
+        // Asegúrate de que tu archivo de login (index.html) esté en src/main/resources/templates/
+        return "index"; 
+    }
+}

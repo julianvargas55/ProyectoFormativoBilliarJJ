@@ -1,0 +1,18 @@
+package sena.jj.com.controller;
+
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
+
+@Controller
+public class LoginController {
+
+    /**
+     * Mapea la URL '/login' que usamos en Spring Security.
+     * Simplemente devuelve la plantilla 'index.html' que contiene el formulario.
+     */
+    @GetMapping("/login")
+    public String login() {
+        // Retorna la plantilla Thymeleaf que contiene tu formulario de login (image_de65e5.jpg)
+        return "index"; 
+    }
+}

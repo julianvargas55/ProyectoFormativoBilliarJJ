@@ -4,19 +4,30 @@
 	<section name="java.lang.Class">
 		<item key="replaceBarOpen" value="true"/>
 		<list key="replacehistory">
-			<item value="administrador"/>
+			<item value="Integer"/>
 			<item value="th:href=&quot;@{/"/>
+			<item value="href=&quot;@{/"/>
+			<item value="href"/>
+			<item value="th:href@{/"/>
+			<item value="th:href"/>
+			<item value="th:href=@{/"/>
+			<item value="th:href=&quot;@{/assets"/>
+			<item value="administrador"/>
 			<item value="reserva"/>
 			<item value="cliente"/>
 			<item value="beneficio"/>
 			<item value="rol"/>
 		</list>
 		<list key="findhistory">
+			<item value="Long"/>
+			<item value="th:href=&quot;@{/"/>
+			<item value="href"/>
+			<item value="th:href=&quot;@{/assets"/>
+			<item value="href=&quot;assets"/>
 			<item value="img"/>
 			<item value="admin"/>
 			<item value="usuario"/>
 			<item value="href=&quot;"/>
-			<item value="href"/>
 			<item value="Beneficio"/>
 			<item value="Reserva"/>
 			<item value="Cliente"/>

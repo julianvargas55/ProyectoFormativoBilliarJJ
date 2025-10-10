@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard Integral | BOLIRANA JJ</title>
+    <link rel="stylesheet" href="/assets/css/bolirana.css"> 
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+    <div class="main-dashboard-container">
+        
+        <aside class="sidebar-menu">
+            <div class="logo-sidebar">
+                <i class="fas fa-bowling-ball"></i> BOLIRANA JJ
+            </div>
+            <nav>
+                <ul>
+                    <li class="active"><a href="#"><i class="fas fa-home"></i> Resumen Operacional</a></li>
+                    
+                    <li><a href="#"><i class="fas fa-bezier-curve"></i> Gestión de Pistas</a></li>
+                    
+                    <li><a href="#"><i class="fas fa-stopwatch"></i> Tiempos de Alquiler</a></li>
+                    
+                    <li><a href="#"><i class="fas fa-baseball-ball"></i> Inventario (Bolas/Tacos)</a></li>
+                    
+                    <li><a href="#"><i class="fas fa-chart-line"></i> Reportes y Puntuaciones</a></li>
+                    <li><a href="#"><i class="fas fa-users-cog"></i> Configuraciones</a></li>
+                </ul>
+            </nav>
+            <div class="sidebar-footer">
+                <a href="#"><i class="fas fa-sign-out-alt"></i> Cerrar Sesión</a>
+            </div>
+        </aside>
+
+        <main class="dashboard-content">
+            
+            <header class="dashboard-header">
+                <h1>Panel de Control de Bolirana</h1>
+                <div class="user-info">
+                    <i class="fas fa-user-circle"></i> 
+                    <span style="color: var(--color-acento-principal);">Administrador</span>
+                </div>
+            </header>
+
+            <section class="metrics-grid">
+                
+                <div class="metric-card">
+                    <i class="fas fa-bezier-curve card-icon green"></i>
+                    <h2>Pistas Ocupadas</h2>
+                    <p class="value">5 / 8</p>
+                </div>
+                
+                <div class="metric-card">
+                    <i class="fas fa-stopwatch card-icon blue"></i>
+                    <h2>Alquileres por Hora</h2>
+                    <p class="value">3</p>
+                </div>
+                
+                <div class="metric-card">
+                    <i class="fas fa-bullseye card-icon yellow"></i>
+                    <h2>Mejor Puntuación</h2>
+                    <p class="value">350 Pts</p>
+                </div>
+                
+                <div class="metric-card">
+                    <i class="fas fa-dollar-sign card-icon red"></i>
+                    <h2>Ingresos del Día</h2>
+                    <p class="value">$1,850 MXN</p>
+                </div>
+            </section>
+
+            <section class="live-tables">
+                <h2>Pistas y Tiempos en Curso</h2>
+                
+                <div class="table-list">
+                    
+                    <div class="table-item occupied">
+                        <span class="table-number">Pista N° 3 (Templo)</span>
+                        <span class="time-elapsed"><i class="fas fa-hourglass-half"></i> Transcurrido: 00:55:00</span>
+                        <span class="action-btn">Terminar Alquiler</span>
+                    </div>
+
+                    <div class="table-item reserved">
+                        <span class="table-number">Pista N° 7 (Volcán)</span>
+                        <span class="time-elapsed"><i class="fas fa-user-clock"></i> Reserva a las 20:00</span>
+                        <span class="action-btn">Preparar Pista</span>
+                    </div>
+                    
+                     <div class="table-item available">
+                        <span class="table-number">Pista N° 1 (Clásica)</span>
+                        <span class="time-elapsed">Disponible</span>
+                        <span class="action-btn">Iniciar Juego</span>
+                    </div>
+                </div>
+            </section>
+            
+            <section class="live-tables" style="margin-top: 40px;">
+                <h2>Puntuaciones Altas Recientes</h2>
+                <div class="table-list">
+                    
+                    <div class="table-item" style="background-color: #31404d;">
+                        <span class="table-number"><i class="fas fa-trophy"></i> Equipo "Los Maestros"</span>
+                        <span class="time-elapsed">Pista 3 - Puntuación: 350 pts</span>
+                        <span class="action-btn">Ver Historial</span>
+                    </div>
+
+                    <div class="table-item" style="background-color: #31404d;">
+                        <span class="table-number"><i class="fas fa-star"></i> Jugador: Sofía M.</span>
+                        <span class="time-elapsed">Pista 5 - Puntuación: 280 pts</span>
+                        <span class="action-btn">Ver Historial</span>
+                    </div>
+                </div>
+            </section>
+
+        </main>
+    </div>
+</body>
+</html>

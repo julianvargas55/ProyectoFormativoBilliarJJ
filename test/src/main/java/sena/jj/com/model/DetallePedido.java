@@ -1,4 +1,4 @@
-package sena.jj.com.model; 
+package sena.jj.com.model;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -12,35 +12,32 @@ import jakarta.persistence.Table;
 @Table(name = "detalle_pedido")
 public class DetallePedido {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long id;
 
-   
-    @ManyToOne 
-    @JoinColumn(name = "pedido_id")
-    private Pedido pedido;
+	@ManyToOne
+	@JoinColumn(name = "pedido_id")
+	private Pedido pedido;
 
-    private String nombreProducto;
-    
-    private double precioUnitario;
-    
-   
-    private int cantidad = 1;
+	private String nombreProducto;
+
+	private Double precioUnitario;
+
+	private int cantidad = 1;
 
 	public void setPedido(Pedido pedidoGuardado) {
-		// TODO Auto-generated method stub
-		
+
 	}
 
 	public void setNombreProducto(String string) {
-		// TODO Auto-generated method stub
 		
+
 	}
 
 	public void setPrecioUnitario(double d) {
-		// TODO Auto-generated method stub
 		
+
 	}
 
 	public int getCantidad() {
@@ -49,7 +46,6 @@ public class DetallePedido {
 
 	public void setCantidad(int cantidad) {
 		this.cantidad = cantidad;
-	} 
+	}
 
-   
 }

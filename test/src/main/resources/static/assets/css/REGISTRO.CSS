@@ -1,0 +1,237 @@
+:root {
+    --primary-bg: #0F1F14; /* Fondo profundo verde oscuro (paño) */
+    --secondary-bg: #123A29; /* Paneles en verde oscuro */
+    --text-color: #E6E3D6; /* Marfil suave para textos */
+    --white: #FFFFFF;
+    --accent-pink: #0EA5E9; /* Usado como botón principal: tiza azul */
+}
+
+body {
+    margin: 0;
+    font-family: 'Poppins', sans-serif;
+    background: var(--primary-bg);
+    color: var(--text-color);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+.container {
+    background: var(--secondary-bg);
+    border-radius: 20px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    display: flex;
+    flex-direction: column;
+    width: 80vw;
+    max-width: 1200px;
+    height: 80vh;
+    max-height: 800px;
+    overflow: hidden;
+}
+
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 40px;
+    background: var(--secondary-bg);
+}
+
+.navbar .logo span {
+    color: var(--white);
+    font-weight: 600;
+    font-size: 1.2rem;
+}
+
+.navbar nav ul {
+    list-style: none;
+    display: flex;
+    margin: 0;
+    padding: 0;
+}
+
+.navbar nav ul li {
+    margin: 0 15px;
+}
+
+.navbar nav ul li a {
+    text-decoration: none;
+    color: var(--text-color);
+    font-weight: 400;
+    transition: color 0.3s;
+}
+
+.navbar nav ul li a:hover {
+    color: var(--white);
+}
+
+.sign-up-btn {
+    background-color: transparent;
+    border: 1px solid var(--text-color);
+    color: var(--text-color);
+    padding: 10px 20px;
+    border-radius: 20px;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.sign-up-btn:hover {
+    background-color: var(--text-color);
+    color: var(--secondary-bg);
+}
+
+.main-content {
+    display: flex;
+    flex-grow: 1;
+}
+
+.register-panel {
+    flex-basis: 35%;
+    background: #0F2A1E;
+    padding: 5px 40px 40px 40px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+}
+
+.profile-icon svg {
+    width: 80px;
+    height: 80px;
+    color: var(--text-color);
+    margin-bottom: 20px;
+}
+
+.register-form {
+    width: 100%;
+}
+
+.input-group {
+    margin-bottom: 25px;
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+}
+
+.input-group input {
+    width: 100%;
+    padding: 15px;
+    border: none;
+    background: #1C3B2A;
+    border-radius: 10px;
+    color: var(--white);
+    font-size: 16px;
+    outline: none;
+}
+
+.tipo-label {
+    color: #0EA5E9;
+    font-weight: 600;
+    margin-bottom: 8px;
+    font-size: 1rem;
+}
+
+.tipo-select {
+    width: 100%;
+    padding: 15px;
+    border-radius: 10px;
+    border: none;
+    background: #1C3B2A;
+    color: var(--white);
+    font-size: 16px;
+    outline: none;
+    margin-bottom: 5px;
+}
+
+.input-group input::placeholder {
+    color: var(--text-color);
+    opacity: 0.7;
+}
+
+.register-btn {
+    width: 100%;
+    padding: 15px;
+    background: var(--accent-pink);
+    color: var(--white);
+    border: none;
+    border-radius: 10px;
+    font-size: 18px;
+    font-weight: 600;
+    cursor: pointer;
+    margin-top: 8px;
+    transition: background 0.3s;
+}
+
+.register-btn:hover {
+    background: #0284C7; /* Azul tiza más profundo */
+}
+
+.options {
+    display: flex;
+    justify-content: center;
+    margin-top: 15px;
+    font-size: 12px;
+}
+
+.options a {
+    color: var(--text-color);
+    text-decoration: none;
+    transition: color 0.3s;
+}
+
+.options a:hover {
+    color: var(--white);
+}
+
+.welcome-section {
+    flex-basis: 65%;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    padding: 40px;
+}
+
+.gradient-bg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg,
+        rgba(22, 101, 52, 0.7),  /* Verde paño */
+        rgba(14, 165, 233, 0.6), /* Tiza azul */
+        rgba(139, 94, 60, 0.55)  /* Madera */
+    );
+    filter: blur(80px);
+    z-index: 0;
+    opacity: 0.6;
+}
+
+.welcome-section .text-content {
+    position: relative;
+    z-index: 1;
+    color: var(--white);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+}
+
+.welcome-section h1 {
+    font-size: 6rem;
+    font-weight: 600;
+    margin: 0;
+    color: var(--white);
+}
+
+.welcome-section p {
+    max-width: 400px;
+    margin: 20px 0;
+    font-size: 1rem;
+    line-height: 1.6;
+}

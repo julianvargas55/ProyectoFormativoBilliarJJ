@@ -1,41 +1,21 @@
-// src/main/java/send/ji/com/controller/UsuarioController.java
 package sena.jj.com.controller;
 
-import sena.jj.com.model.Pedido;
-import sena.jj.com.service.PedidoService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.*;
-import java.util.Map;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
-@RequestMapping("/usuario")
+@RequestMapping("/")
 public class UsuarioController {
-    
-    @Autowired
-    private PedidoService pedidoService;
-    
-    @GetMapping
-    public String usuarioPage() {
-        return "usuario";
-    }
-    
-    @PostMapping("/realizar-pedido")
-    @ResponseBody
-    public ResponseEntity<String> realizarPedido(@RequestBody Map<String, Object> pedidoData) {
-        try {
-            // Obtener datos del pedido
-            String mesa = (String) pedidoData.get("mesa");
-            Double total = Double.valueOf(pedidoData.get("total").toString());
-            
-            // Crear y guardar el pedido
-            Pedido pedido = new Pedido(mesa, total);
-            pedidoService.guardarPedido(pedido);
-            
-            return ResponseEntity.ok("Pedido realizado con éxito");
-        } catch (Exception e) {
-            return ResponseEntity.badRequest().body("Error al procesar el pedido");
-        }
-    }
+
+	@GetMapping("")
+	public String index() {
+		return "index";
+	}
+
+	@GetMapping("/registro")
+	public String registro() {
+		return "usuario/REGISTRO";
+	}
+
 }

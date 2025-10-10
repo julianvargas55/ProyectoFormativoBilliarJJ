@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<section name="Workbench">
+	<section name="org.eclipse.egit.ui.internal.staging.StagingView">
+		<item key="MAIN_SASH_FORM_ORIENTATION_VERTICAL" value="false"/>
+		<item key="HORIZONTAL_SASH_FORM_WEIGHT" value="500,500"/>
+		<item key="STAGING_SASH_FORM_WEIGHT" value="500,500"/>
+		<item key="sortItemState" value="false"/>
+	</section>
+	<section name="GitCommitMessageComponent">
+		<list key="C:\Users\Admin\OneDrive\Desktop\Fproyect\ProyectoJJ\.git">
+			<item value="false"/>
+			<item value="Admin &lt;Admin@JulianVargas&gt;"/>
+			<item value="Merge branch &apos;master&apos; of https://github.com/Gemelito0315/ProyectoJJ&#x0A;# Please enter a commit message to explain why this merge is necessary,&#x0A;# especially if it merges an updated upstream into a topic branch.&#x0A;#&#x0A;# Lines starting with &apos;#&apos; will be ignored, and an empty message aborts&#x0A;# the commit.&#x0A;"/>
+			<item value="Admin &lt;Admin@JulianVargas&gt;"/>
+			<item value="d5718ee68e571d90f75a97e2ee85c1ff01b652cc"/>
+			<item value="0"/>
+			<item value="false"/>
+			<item value=""/>
+		</list>
+	</section>
+</section>

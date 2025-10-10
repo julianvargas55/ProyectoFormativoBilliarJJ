@@ -11,44 +11,48 @@ import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 
 @Entity
-@Table(name =" Parqueaderos")
+@Table(name = " parqueaderos")
 public class Parqueadero {
-@Id
-@GeneratedValue (strategy = GenerationType.IDENTITY)
-public Integer id;
-public String estado;
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	public Integer id;
+	public String estado;
 
-@ManyToOne
-private Servicios servicios;
+	@ManyToOne
+	private Servicios servicios;
 
-@OneToMany(mappedBy = "parqueadero")
-private List<Tiempos>tiempos;
-public Parqueadero() {
-	super();
-	// TODO Auto-generated constructor stub
-}
-public Parqueadero(Integer id, String estado) {
-	super();
-	this.id = id;
-	this.estado = estado;
-}
-public Integer getId() {
-	return id;
-}
-public void setId(Integer id) {
-	this.id = id;
-}
-public String getEstado() {
-	return estado;
-}
-public void setEstado(String estado) {
-	this.estado = estado;
-}
-@Override
-public String toString() {
-	return "Parqueadero [id=" + id + ", estado=" + estado + "]";
-}
+	@OneToMany(mappedBy = "parqueadero")
+	private List<Tiempos> tiempos;
 
-	
+	public Parqueadero() {
+		
+	}
+
+	public Parqueadero(Integer id, String estado) {
+		super();
+		this.id = id;
+		this.estado = estado;
+	}
+
+	public Integer getId() {
+		return id;
+	}
+
+	public void setId(Integer id) {
+		this.id = id;
+	}
+
+	public String getEstado() {
+		return estado;
+	}
+
+	public void setEstado(String estado) {
+		this.estado = estado;
+	}
+
+	@Override
+	public String toString() {
+		return "Parqueadero [id=" + id + ", estado=" + estado + "]";
+	}
 
 }

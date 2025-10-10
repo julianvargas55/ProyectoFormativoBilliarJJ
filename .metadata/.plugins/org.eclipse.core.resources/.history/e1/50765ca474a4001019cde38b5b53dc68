@@ -1,0 +1,32 @@
+package sena.jj.com.config;
+
+import sena.jj.com.model.Pedido;
+import sena.jj.com.service.PedidoService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import java.util.List;
+
+@Controller
+// Mapeo base: /administrador
+@RequestMapping("/administrador") 
+public class AdministradorController {
+    
+    @Autowired
+    private PedidoService pedidoService;
+    
+    // 🔑 CAMBIO CLAVE: Mapeamos el GET al subpath "/dashboard"
+    // URL completa que atiende: /administrador/dashboard
+    @GetMapping("/dashboard") 
+    public String administradorPage(Model model) {
+        // Lógica para obtener datos del dashboard (Ingresos, Mesas Activas, Pedidos, etc.)
+        // La lógica de Pedidos que ya tenías:
+        List<Pedido> pedidosRecientes = pedidoService.obtenerPedidosRecientes();
+        model.addAttribute("pedidosRecientes", pedidosRecientes);
+        
+        // Retorna la vista del dashboard (administrador.html, que corresponde a image_deb8be.png)
+        return "administrador"; 
+    }
+}

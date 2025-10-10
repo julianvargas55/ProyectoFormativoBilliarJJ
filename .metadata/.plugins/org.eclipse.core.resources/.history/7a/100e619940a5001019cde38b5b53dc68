@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Billar JJ - Administrador</title>
+    <link rel="stylesheet" th:href="@{/css/administrador.css}">
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+</head>
+<body>
+
+    <div class="dashboard-container">
+        
+        <!-- SIDEBAR -->
+        <div class="sidebar">
+            <div class="logo-area">
+                <i class='bx bxs-user-circle' style="font-size: 50px;"></i>
+                <div class="app-name">Billar JJ</div>
+            </div>
+            <nav class="sidebar-nav">
+                <a th:href="@{/administrador}" class="nav-item">
+                    <i class='bx bxs-dashboard icon'></i>
+                    <span>Inicio</span>
+                </a>
+                <a th:href="@{/administrador/mesas}" class="nav-item">
+                    <i class='bx bxs-group icon'></i>
+                    <span>Mesasde Billar</span>
+                </a>
+				</a>
+				               <a th:href="@{/administrador/mesas}" class="nav-item">
+				                   <i class='bx bxs-group icon'></i>
+				                   <span>Mesas de Bolirana</span>
+				               </a>
+							   </a>
+							                  <a th:href="@{/administrador/mesas}" class="nav-item">
+							                      <i class='bx bxs-group icon'></i>
+							                      <span>canchas de tejo</span>
+							                  </a>
+                <a th:href="@{/administrador/alimentos}" class="nav-item">
+                    <i class='bx bxs-drink icon'></i>
+                    <span>Alimentos y Bebidas</span>
+                </a>
+                <a th:href="@{/administrador/facturas}" class="nav-item">
+                    <i class='bx bxs-receipt icon'></i>
+                    <span>Facturas</span>
+                </a>
+            </nav>
+            <div class="logout-btn" th:onclick="|window.location.href='@{/logout}'|">
+                <i class='bx bx-log-out-circle icon'></i>
+                <span>Cerrar Sesión</span>
+            </div>
+        </div>
+
+        <!-- CONTENIDO PRINCIPAL -->
+        <div class="main-content">
+            
+            <!-- TOP BAR -->
+            <div class="topbar">
+                <div class="greeting">
+                    Bienvenido de nuevo, 
+                    <span class="user-name">Dueño JJ</span>
+                </div>
+                <div class="profile-info">
+                    <img th:src="@{/img/imagnes/.png}" alt="Usuario">
+                </div>
+            </div>
+
+            <!-- CONTENIDO DASHBOARD -->
+            <div class="content-section dashboard-overview">
+                <h2>Resumen General</h2>
+                
+                <!-- ESTADÍSTICAS DINÁMICAS -->
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <i class='bx bx-dollar icon'></i>
+                        <div class="stat-info">
+                            <span class="stat-value">$ 1,560.000</span>
+                            <span class="stat-label">Ingresos del Día</span>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <i class='bx bx-timer icon'></i>
+                        <div class="stat-info">
+                            <span class="stat-value">6</span>
+                            <span class="stat-label">Mesas Activas</span>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <i class='bx bx-food-menu icon'></i>
+                        <div class="stat-info">
+                            <span class="stat-value">24</span>
+                            <span class="stat-label">Pedidos del Día</span>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <i class='bx bxs-file-plus icon'></i>
+                        <div class="stat-info">
+                            <span class="stat-value">12</span>
+                            <span class="stat-label">Facturas Pendientes</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ACTIVIDAD RECIENTE DINÁMICA -->
+                <div class="recent-activity">
+                    <h3>Actividad Reciente</h3>
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Pedido ID</th>
+                                <th>Mesa</th>
+                                <th>Fecha</th>
+                                <th>Total</th>
+                                <th>Estado</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr th:each="pedido : ${pedidosRecientes}">
+                                <td th:text="'#PED-' + ${pedido.id}">#PED-0001</td>
+                                <td th:text="${pedido.mesa}">Mesa 1</td>
+                                <td th:text="${#temporals.format(pedido.fechaHora, 'dd/MM/yyyy HH:mm')}">24/08/2025 14:30</td>
+                                <td th:text="'$ ' + ${pedido.total}">$ 15.50</td>
+                                <td th:class="${'status ' + pedido.estado}" th:text="${pedido.estado}">PENDIENTE</td>
+                            </tr>
+                            
+                            <tr th:if="${pedidosRecientes.empty}">
+                                <td colspan="5" style="text-align: center;">No hay pedidos recientes</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script th:src="@{/js/administrador.js}"></script>
+</body>
+</html>

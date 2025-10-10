@@ -1,0 +1,21 @@
+package sena.jj.com.controller;
+
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+
+@Controller
+@RequestMapping("/admon")
+public class AdministradorController {
+	
+	@GetMapping("")
+	public String administrador(){
+		return "administrador/administrador";
+	}
+	
+	@GetMapping("/billar")
+	public String billar(){
+		return "administrador/billar";
+	}
+
+}
