@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registro - BILLAR JJ</title>
+    <link rel="stylesheet" th:href="@{/assets/css/registro.css}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <header class="navbar">
+            <div class="logo">
+                <span>BILLAR JJ</span>
+            </div>
+            <nav>
+                <ul>
+                    <!-- Menú vacío como en tu original -->
+                </ul>
+            </nav>
+            <button><a th:href="@{/index}">Iniciar Sesión</a></button>
+        </header>
+        
+        <div class="main-content">
+            <!-- Mensajes de éxito/error -->
+            <div th:if="${exito}" class="mensaje-exito">
+                <p th:text="${exito}"></p>
+            </div>
+            <div th:if="${error}" class="mensaje-error">
+                <p th:text="${error}"></p>
+            </div>
+
+            <div class="register-panel">
+                <div class="profile-icon">
+                    <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M12 4a4 4 0 100 8 4 4 0 000-8zM12 14a8 8 0 00-8 8h16a8 8 0 00-8-8z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                </div>
+                
+                <!-- FORMULARIO CORREGIDO -->
+                <form class="register-form" th:action="@{/registro}" method="post">
+                    <div class="input-group">
+                        <input type="text" name="nombre" placeholder="Nombre Completo" required>
+                    </div>
+                    <div class="input-group">
+                        <input type="email" name="email" placeholder="Email" required>
+                    </div>
+                    <div class="input-group">
+                        <input type="password" name="password" placeholder="Contraseña" required>
+                    </div>
+                    <button type="submit" class="register-btn">Registrarse</button>
+                    
+                    <div class="options">
+                        <a th:href="@{/index}">¿Ya tienes una cuenta?</a>
+                    </div>
+                </form>
+            </div>
+            
+            <div class="welcome-section">
+                <div class="gradient-bg"></div>
+                <div class="text-content">
+                    <h1>REGÍSTRATE</h1>
+                    <p>Crea tu cuenta para explorar todas las funciones que tenemos para ofrecer.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <style>
+        /* Estilos básicos para que funcione */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+        
+        .container {
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+        
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 2rem;
+            background: rgba(255, 255, 255, 0.1);
+        }
+        
+        .logo span {
+            color: white;
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+        
+        .navbar button a {
+            color: white;
+            text-decoration: none;
+            padding: 0.5rem 1rem;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 5px;
+        }
+        
+        .main-content {
+            display: flex;
+            flex: 1;
+            align-items: center;
+            justify-content: center;
+            gap: 2rem;
+            padding: 2rem;
+        }
+        
+        .register-panel {
+            background: white;
+            padding: 2rem;
+            border-radius: 10px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            width: 100%;
+            max-width: 400px;
+        }
+        
+        .profile-icon {
+            text-align: center;
+            margin-bottom: 1.5rem;
+            color: #667eea;
+        }
+        
+        .input-group {
+            margin-bottom: 1rem;
+        }
+        
+        .input-group input {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 1rem;
+        }
+        
+        .register-btn {
+            width: 100%;
+            padding: 0.75rem;
+            background: #667eea;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 1rem;
+            cursor: pointer;
+            margin-bottom: 1rem;
+        }
+        
+        .options {
+            text-align: center;
+        }
+        
+        .options a {
+            color: #667eea;
+            text-decoration: none;
+        }
+        
+        .welcome-section {
+            color: white;
+            text-align: center;
+            max-width: 400px;
+        }
+        
+        .welcome-section h1 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+        
+        /* Estilos para mensajes */
+        .mensaje-exito {
+            background-color: #d4edda;
+            color: #155724;
+            padding: 12px;
+            border-radius: 5px;
+            margin-bottom: 1rem;
+            border: 1px solid #c3e6cb;
+        }
+        
+        .mensaje-error {
+            background-color: #f8d7da;
+            color: #721c24;
+            padding: 12px;
+            border-radius: 5px;
+            margin-bottom: 1rem;
+            border: 1px solid #f5c6cb;
+        }
+    </style>
+</body>
+</html>

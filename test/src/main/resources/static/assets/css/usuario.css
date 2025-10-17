@@ -49,8 +49,8 @@ h3 {
 
 /* Sección Hero (Carousel) */
 .hero-carousel {
-    height: 60vh; /* Altura de la vista */
-    background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.5)), url('ruta/a/tu/imagen-de-fondo.jpg') no-repeat center center/cover;
+    height: 30vh; /* Altura de la vista */
+	background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);, url('ruta/a/tu/imagen-de-fondo.jpg') no-repeat center center/cover;
     display: flex;
     align-items: center;
     justify-content: center;

@@ -1,0 +1,60 @@
+package sena.jj.com.controller;
+
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+
+// Si tienes una clase Usuario, impórtala
+// import sena.jj.com.model.Usuario;
+
+@Controller
+public class RegistroController {
+
+    @GetMapping("/registro")
+    public String mostrarRegistro(Model model) {
+        // SOLUCIÓN: Agregar el objeto usuario al modelo
+        // Si tienes la clase Usuario, usa:
+        // model.addAttribute("usuario", new Usuario());
+        
+        // Si no tienes la clase Usuario, crea un objeto simple:
+        model.addAttribute("usuario", new Object() {
+            public String getNombre() { return ""; }
+            public String getEmail() { return ""; }
+            public String getPassword() { return ""; }
+        });
+        
+        return "usuario/registro";
+    }
+
+    @PostMapping("/registro")
+    public String procesarRegistro(
+            @RequestParam String nombre,
+            @RequestParam String email,
+            @RequestParam String password,
+            Model model) {
+        
+        // Validaciones
+        if (nombre == null || nombre.trim().isEmpty()) {
+            model.addAttribute("error", "El nombre es requerido");
+            return "usuario/registro";
+        }
+        
+        if (email == null || email.trim().isEmpty()) {
+            model.addAttribute("error", "El email es requerido");
+            return "usuario/registro";
+        }
+        
+        if (password == null || password.length() < 6) {
+            model.addAttribute("error", "La contraseña debe tener al menos 6 caracteres");
+            return "usuario/registro";
+        }
+        
+        // Aquí iría la lógica para guardar en la base de datos
+        System.out.println("Registrando usuario: " + nombre + ", " + email);
+        
+        model.addAttribute("exito", "¡Registro exitoso! Ahora puedes iniciar sesión.");
+        return "redirect:/";
+    }
+}

@@ -1,9 +1,9 @@
 package sena.jj.com.repository;
 
-import sena.jj.com.model.DetallePedido; // ✅ Importa tu modelo DetallePedido
+import sena.jj.com.model.DetallePedido;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.stereotype.Repository;
+import java.util.List;
 
-@Repository
-public interface DetallePedidoRepository extends JpaRepository<DetallePedido, Long> {
+public interface DetallePedidoRepository extends JpaRepository<DetallePedido, Integer> {
+    List<DetallePedido> findByPedidoId(Integer pedidoId);
 }

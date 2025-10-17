@@ -1,0 +1,23 @@
+package sena.jj.com.service;
+
+import sena.jj.com.model.Usuario;
+import sena.jj.com.repository.IUsuarioRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+@Service
+public class UsuarioServiceImplement implements IUsuarioService {
+
+    @Autowired
+    private IUsuarioRepository usuarioRepository;
+
+    @Override
+    public Usuario guardarUsuario(Usuario usuario) {
+        // Verificar si el email ya existe - QUITÉ EL PUNTO EXTRA
+        if (usuarioRepository.existsByEmail(usuario.getEmail())) {
+            throw new RuntimeException("El email ya está registrado");
+        }
+
+        return usuarioRepository.save(usuario);
+    }
+}

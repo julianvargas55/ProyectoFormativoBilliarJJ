@@ -1,0 +1,28 @@
+package sena.jj.com.controller;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+
+import jakarta.servlet.http.HttpSession;
+import sena.jj.com.service.IProductoService;
+
+@Controller
+@RequestMapping("/usuario")
+public class UsuarioController {
+
+	@Autowired
+	private IProductoService productoService;
+
+	@GetMapping("")
+	public String usuario(Model model, HttpSession session) {
+		if (session.getAttribute("usuario") == null) {
+			return "redirect:/login";
+		}
+
+		model.addAttribute("productos", productoService.findActivos());
+		return "usuario";
+	}
+}

@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard Billar JJ - Administrador</title>
+    <link rel="stylesheet" th:href="@{/assets/css/administrador.css}">
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+</head>
+<body>
+
+    <div class="dashboard-container">
+        
+        <div class="sidebar">
+            <div class="logo-area">
+                <i class='bx bxs-user-circle' style="font-size: 50px;"></i>
+                <div class="app-name">Dashboard</div>
+            </div>
+            <nav class="sidebar-nav">
+                <a href="#" class="nav-item active">
+                    <i class='bx bxs-dashboard icon'></i>
+                    <span>Inicio</span>
+                </a>
+                <a href="#" class="nav-item">
+                    <i class='bx bxs-group icon'></i>
+                    <a th:href="@{/tejo}">¿tejo?</a>
+                </a>
+                <a href="#" class="nav-item">
+                    <i class='bx bxs-drink icon'></i>
+                    <span><a th:href="@{/tejo}">¿tejo?</a></span>
+                </a>
+                <a href="#" class="nav-item">
+                    <i class='bx bxs-receipt icon'></i>
+                    <span>Bolirana</span>
+                </a>
+            </nav>
+            <a th:href="@{/logout}" class="logout-btn">
+                <i class='bx bx-log-out-circle icon'></i>
+                <span>Cerrar Sesión</span>
+            </a>
+        </div>
+
+        <div class="main-content">
+            
+            <div class="topbar">
+                <div class="greeting">
+                    Bienvenido de nuevo, 
+                    <span class="user-name" th:text="${usuario != null ? usuario.nombre : 'Administrador'}">Dueño JJ</span>
+                </div>
+                <div class="profile-info">
+                    <img th:src="@{/assets/images/avatar.png}" 
+                         src="https://i.ibb.co/5c9s2T7/avatar.png" 
+                         alt="Perfil" 
+                         class="profile-pic"
+                         onerror="this.src='https://i.ibb.co/5c9s2T7/avatar.png'">
+                </div>
+            </div>
+
+            <div class="content-section dashboard-overview">
+                <h2>Resumen General</h2>
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <i class='bx bx-dollar icon'></i>
+                        <div class="stat-info">
+                            <span class="stat-value">$<span th:text="${ingresosDia != null ? ingresosDia : '0'}">0</span></span>
+                            <span class="stat-label">Ingresos del Día</span>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <i class='bx bx-timer icon'></i>
+                        <div class="stat-info">
+                            <span class="stat-value" th:text="${mesasActivas != null ? mesasActivas : '0'}">0</span>
+                            <span class="stat-label">Mesas Activas</span>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <i class='bx bx-food-menu icon'></i>
+                        <div class="stat-info">
+                            <span class="stat-value" th:text="${pedidosDia != null ? pedidosDia : '0'}">0</span>
+                            <span class="stat-label">Pedidos del Día</span>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <i class='bx bxs-file-plus icon'></i>
+                        <div class="stat-info">
+                            <span class="stat-value" th:text="${facturasPendientes != null ? facturasPendientes : '0'}">0</span>
+                            <span class="stat-label">Facturas Pendientes</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="recent-activity">
+                    <h3>Pedidos Recientes</h3>
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Pedido #</th>
+                                <th>Cliente</th>
+                                <th>Fecha</th>
+                                <th>Total</th>
+                                <th>Estado</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody th:if="${pedidos != null and !pedidos.empty}">
+                            <tr th:each="pedido : ${pedidos}">
+                                <td th:text="'#PED-' + ${pedido.id}">#PED-001</td>
+                                <td th:text="${pedido.usuario.nombre}">Cliente</td>
+                                <td th:text="${#temporals.format(pedido.fechaCreacion, 'dd/MM/yyyy HH:mm')}">24/08/2025</td>
+                                <td th:text="'$' + ${#numbers.formatDecimal(pedido.total, 1, 2)}">$0.00</td>
+                                <td>
+                                    <span class="status" th:classappend="${pedido.estado == 'PENDIENTE'} ? 'pending' : 'paid'" 
+                                          th:text="${pedido.estado}">Pendiente</span>
+                                </td>
+                                <td>
+                                    <button th:if="${pedido.estado == 'PENDIENTE'}" 
+                                            class="btn-completar" 
+                                            th:onclick="'completarPedido(' + ${pedido.id} + ')'"
+                                            title="Marcar como completado">
+                                        <i class='bx bx-check'></i>
+                                    </button>
+                                    <button class="btn-ver-detalle" 
+                                            th:onclick="'verDetallePedido(' + ${pedido.id} + ')'"
+                                            title="Ver detalles">
+                                        <i class='bx bx-show'></i>
+                                    </button>
+                                </td>
+                            </tr>
+                        </tbody>
+                        <tbody th:if="${pedidos == null or pedidos.empty}">
+                            <tr>
+                                <td colspan="6" style="text-align: center; padding: 20px; color: #666;">
+                                    <i class='bx bx-info-circle'></i> No hay pedidos registrados aún
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            
+        </div>
+    </div>
+
+    <style>
+        /* Estilos para botones de acción */
+        .btn-completar, .btn-ver-detalle {
+            background: none;
+            border: none;
+            padding: 5px;
+            margin: 0 2px;
+            border-radius: 3px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-completar {
+            color: #28a745;
+        }
+        
+        .btn-completar:hover {
+            background: #28a745;
+            color: white;
+        }
+        
+        .btn-ver-detalle {
+            color: #007bff;
+        }
+        
+        .btn-ver-detalle:hover {
+            background: #007bff;
+            color: white;
+        }
+        
+        /* Mejorar estilos de estado */
+        .status.pending {
+            background: #fff3cd;
+            color: #856404;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+        
+        .status.paid {
+            background: #d4edda;
+            color: #155724;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+        
+        /* Responsive para tabla */
+        .data-table {
+            width: 100%;
+            overflow-x: auto;
+        }
+    </style>
+
+    <script>
+        function completarPedido(pedidoId) {
+            if (confirm('¿Marcar este pedido como completado?')) {
+                // Aquí podrías hacer una llamada AJAX para actualizar el estado
+                fetch(`/administrador/completar-pedido/${pedidoId}`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    }
+                })
+                .then(response => {
+                    if (response.ok) {
+                        location.reload(); // Recargar para ver cambios
+                    } else {
+                        alert('Error al completar el pedido');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('Error al completar el pedido');
+                });
+            }
+        }
+        
+        function verDetallePedido(pedidoId) {
+            // Abrir modal o ventana con detalles del pedido
+            alert('Ver detalles del pedido #' + pedidoId + '\n\nEsta funcionalidad se puede expandir para mostrar:\n- Productos del pedido\n- Información del cliente\n- Historial de estados');
+        }
+        
+        // Auto-refresh cada 30 segundos para ver nuevos pedidos
+        setInterval(() => {
+            location.reload();
+        }, 30000);
+    </script>
+
+</body>
+</html>

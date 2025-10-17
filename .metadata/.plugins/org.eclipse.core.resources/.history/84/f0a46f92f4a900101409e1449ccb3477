@@ -1,0 +1,47 @@
+package sena.jj.com.controller;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.*;
+import sena.jj.com.model.Usuario;
+import sena.jj.com.service.IUsuarioService;
+
+@Controller
+public class LoginController {
+
+    @Autowired
+    private IUsuarioService usuarioService;
+
+    @GetMapping("/")
+    public String index(Model model) {
+        return "index";
+    }
+
+    @PostMapping("/login")
+    public String procesarLogin(
+            @RequestParam String email,
+            @RequestParam String password,
+            Model model) {
+        
+        try {
+            // Autenticar usuario
+            Usuario usuario = usuarioService.buscarForEmailYPassword(email, password);
+            
+            // Redirigir según el rol
+            if ("ADMIN".equals(usuario.getRol())) {
+                return "redirect:/administrador/administrador";
+            } else if ("USUARIO".equals(usuario.getRol())) {
+                return "redirect:/usuario/Usuario";
+            } else {
+                // Rol no reconocido - redirigir a página por defecto
+                model.addAttribute("error", "Rol no válido");
+                return "index";
+            }
+            
+        } catch (RuntimeException e) {
+            model.addAttribute("error", "Credenciales incorrectas: " + e.getMessage());
+            return "index";
+        }
+    }
+}

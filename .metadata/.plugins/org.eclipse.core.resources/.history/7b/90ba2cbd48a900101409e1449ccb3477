@@ -1,0 +1,42 @@
+package sena.jj.com.service;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import sena.jj.com.model.Producto;
+import sena.jj.com.repository.IProductoRepository;
+import java.util.List;
+
+@Service
+public class ProductoService {
+
+    @Autowired
+    private IProductoRepository productoRepo;
+
+    public List<Producto> findAll() {
+        return productoRepo.findAll();
+    }
+
+    public List<Producto> findByCategoria(String categoria) {
+        return productoRepo.findByCategoria(categoria);
+    }
+
+    public List<Producto> findActivos() {
+        return productoRepo.findByActivoTrue();
+    }
+
+    public Producto save(Producto producto) {
+        return productoRepo.save(producto);
+    }
+
+    public void deleteById(Integer id) {
+        productoRepo.deleteById(id);
+    }
+
+    public long contarProductosBajoStock(Integer stockMinimo) {
+        return productoRepo.countByStockLessThan(stockMinimo);
+    }
+
+    public List<Producto> encontrarProductosBajoStock(Integer stockMinimo) {
+        return productoRepo.findByStockLessThan(stockMinimo);
+    }
+}

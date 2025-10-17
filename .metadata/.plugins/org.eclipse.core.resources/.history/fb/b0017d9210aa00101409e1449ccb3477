@@ -1,0 +1,15 @@
+package sena.jj.com.repository;
+
+import org.springframework.data.jpa.repository.JpaRepository;
+import sena.jj.com.model.Pedido;
+
+import java.util.List;
+
+public interface PedidoRepository extends JpaRepository<Pedido, Integer> {
+    
+    // CORREGIDO: Cambia 'fechaPedido' por 'fechaCreacion'
+    List<Pedido> findByUsuarioIdOrderByFechaCreacionDesc(Integer usuarioId);
+    
+    // Otros métodos básicos
+    List<Pedido> findByEstado(String estado);
+}

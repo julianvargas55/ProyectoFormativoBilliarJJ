@@ -1,0 +1,80 @@
+package sena.jj.com.controller;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
+import jakarta.servlet.http.HttpSession;
+import sena.jj.com.model.Usuario;
+import sena.jj.com.service.IUsuarioService;
+
+import java.util.List;
+
+@Controller
+@RequestMapping("/administrador")
+public class AdministradorController {
+
+    @Autowired
+    private IUsuarioService usuarioService;
+
+    @GetMapping("")
+    public String administrador(Model model, HttpSession session) {
+        // DEBUG - Ver qué hay en sesión
+        System.out.println("=== DEBUG ADMINISTRADOR ===");
+        Usuario usuario = (Usuario) session.getAttribute("usuario");
+        
+        if (usuario == null) {
+            System.out.println("❌ No hay usuario en sesión - Redirigiendo a /");
+            return "redirect:/";
+        }
+        
+        System.out.println("Usuario en sesión: " + usuario.getEmail());
+        System.out.println("Rol en sesión: " + usuario.getRol());
+        System.out.println("¿Es ADMIN? " + "ADMIN".equals(usuario.getRol()) + " o ¿Es 1? " + "1".equals(usuario.getRol()));
+
+        // Verificar que es administrador
+        if (!"ADMIN".equals(usuario.getRol()) && !"1".equals(usuario.getRol())) {
+            System.out.println("❌ No es administrador - Redirigiendo a /usuario");
+            return "redirect:/usuario";
+        }
+
+        System.out.println("✅ Es administrador - Mostrando panel");
+        
+        try {
+            // Solo cargar usuarios (esto SÍ funciona)
+            List<Usuario> usuarios = usuarioService.findAll();
+            model.addAttribute("usuarios", usuarios);
+            model.addAttribute("totalUsuarios", usuarios.size());
+            
+            // Datos simulados para las secciones que no funcionan
+            model.addAttribute("totalPedidos", 0);
+            model.addAttribute("pedidosPendientes", 0);
+            model.addAttribute("totalProductos", 0);
+            model.addAttribute("productosBajoStock", 0);
+            model.addAttribute("ingresosDia", 0);
+            model.addAttribute("mesasActivas", 0);
+            model.addAttribute("pedidos", List.of()); // Lista vacía
+            model.addAttribute("productos", List.of()); // Lista vacía
+            
+        } catch (Exception e) {
+            // Si hay error, mostrar datos vacíos
+            model.addAttribute("error", "Error al cargar datos: " + e.getMessage());
+            model.addAttribute("usuarios", List.of());
+            model.addAttribute("totalUsuarios", 0);
+            model.addAttribute("totalPedidos", 0);
+            model.addAttribute("pedidosPendientes", 0);
+            model.addAttribute("totalProductos", 0);
+            model.addAttribute("productosBajoStock", 0);
+            model.addAttribute("ingresosDia", 0);
+            model.addAttribute("mesasActivas", 0);
+            model.addAttribute("pedidos", List.of());
+            model.addAttribute("productos", List.of());
+        }
+        
+        return "administrador/administrador";
+    }
+
+    // ... resto de tus métodos
+}

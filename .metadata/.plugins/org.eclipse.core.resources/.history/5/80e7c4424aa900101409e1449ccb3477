@@ -1,0 +1,139 @@
+package sena.jj.com.controller;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
+import jakarta.servlet.http.HttpSession;
+import sena.jj.com.model.*;
+import sena.jj.com.service.*;
+
+import java.util.List;
+
+@Controller
+@RequestMapping("/administrador")
+public class AdministradorController {
+
+    @Autowired
+    private PedidoService pedidoService;
+    
+    @Autowired
+    private IProductoService productoService;
+    
+    @Autowired
+    private IUsuarioService usuarioService;
+
+    @GetMapping("")
+    public String administrador(Model model, HttpSession session) {
+        // Verificar sesión
+        Usuario usuario = (Usuario) session.getAttribute("usuario");
+        if (usuario == null) {
+            return "redirect:/index";
+        }
+
+        // Verificar que es administrador
+        if (!"ADMIN".equals(usuario.getRol())) {
+            return "redirect:/usuario";
+        }
+
+        try {
+            // Cargar datos reales
+            List<Pedido> pedidos = pedidoService.findAll();
+            List<Producto> productos = productoService.findAll();
+            List<Usuario> usuarios = usuarioService.findAll();
+
+            // Estadísticas
+            model.addAttribute("totalPedidos", pedidos.size());
+            model.addAttribute("pedidosPendientes", contarPedidosPendientes(pedidos));
+            model.addAttribute("totalProductos", productos.size());
+            model.addAttribute("productosBajoStock", contarProductosBajoStock(productos, 10));
+            model.addAttribute("totalUsuarios", usuarios.size());
+            
+            // Datos simulados (reemplaza con datos reales cuando tengas los servicios)
+            model.addAttribute("ingresosDia", 1560000);
+            model.addAttribute("mesasActivas", 6);
+
+            // Datos para las tablas
+            model.addAttribute("pedidos", pedidos);
+            model.addAttribute("productos", productos);
+            model.addAttribute("usuarios", usuarios);
+            
+        } catch (Exception e) {
+            // En caso de error, usar datos vacíos
+            model.addAttribute("totalPedidos", 0);
+            model.addAttribute("pedidosPendientes", 0);
+            model.addAttribute("totalProductos", 0);
+            model.addAttribute("productosBajoStock", 0);
+            model.addAttribute("totalUsuarios", 0);
+            model.addAttribute("ingresosDia", 0);
+            model.addAttribute("mesasActivas", 0);
+            model.addAttribute("pedidos", List.of());
+            model.addAttribute("productos", List.of());
+            model.addAttribute("usuarios", List.of());
+            
+            model.addAttribute("error", "Error al cargar datos: " + e.getMessage());
+        }
+        
+        return "administrador";
+    }
+
+    @PostMapping("/pedido/actualizar-estado")
+    public String actualizarEstadoPedido(@RequestParam Integer pedidoId, 
+                                        @RequestParam String estado,
+                                        RedirectAttributes redirect) {
+        try {
+            Pedido pedido = pedidoService.findById(pedidoId);
+            if (pedido != null) {
+                pedido.setEstado(estado);
+                pedidoService.save(pedido);
+                redirect.addFlashAttribute("exito", "Estado actualizado exitosamente");
+            } else {
+                redirect.addFlashAttribute("error", "Pedido no encontrado");
+            }
+        } catch (Exception e) {
+            redirect.addFlashAttribute("error", "Error al actualizar estado: " + e.getMessage());
+        }
+        return "redirect:/administrador";
+    }
+
+    @PostMapping("/producto/guardar")
+    public String guardarProducto(@ModelAttribute Producto producto,
+                                 RedirectAttributes redirect) {
+        try {
+            productoService.save(producto);
+            redirect.addFlashAttribute("exito", "Producto guardado exitosamente");
+        } catch (Exception e) {
+            redirect.addFlashAttribute("error", "Error al guardar producto: " + e.getMessage());
+        }
+        return "redirect:/administrador";
+    }
+
+    @PostMapping("/producto/eliminar")
+    public String eliminarProducto(@RequestParam Integer productoId,
+                                  RedirectAttributes redirect) {
+        try {
+            productoService.deleteById(productoId);
+            redirect.addFlashAttribute("exito", "Producto eliminado exitosamente");
+        } catch (Exception e) {
+            redirect.addFlashAttribute("error", "Error al eliminar producto: " + e.getMessage());
+        }
+        return "redirect:/administrador";
+    }
+
+    // Métodos auxiliares
+    private int contarPedidosPendientes(List<Pedido> pedidos) {
+        if (pedidos == null) return 0;
+        return (int) pedidos.stream()
+                .filter(p -> p != null && "PENDIENTE".equals(p.getEstado()))
+                .count();
+    }
+
+    private int contarProductosBajoStock(List<Producto> productos, int stockMinimo) {
+        if (productos == null) return 0;
+        return (int) productos.stream()
+                .filter(p -> p != null && p.getStock() < stockMinimo)
+                .count();
+    }
+}

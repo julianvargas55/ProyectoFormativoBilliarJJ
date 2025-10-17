@@ -1,76 +1,38 @@
 package sena.jj.com.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 
 @Entity
 @Table(name = "productos")
 public class Producto {
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Integer id;
-	private String descripcion;
-	private String precio;
-	private String Categoria;
-	
-
-	@ManyToOne
-	private Trabajador trabajador;
-	@ManyToOne
-	private Servicios servicios;
-
-	public Producto() {
-		super();
-	}
-
-	public Producto(Integer id, String descripcion, String precio, String categoria) {
-		super();
-		this.id = id;
-		this.descripcion = descripcion;
-		this.precio = precio;
-		Categoria = categoria;
-	}
-
-	public Integer getId() {
-		return id;
-	}
-
-	public void setId(Integer id) {
-		this.id = id;
-	}
-
-	public String getDescripcion() {
-		return descripcion;
-	}
-
-	public void setDescripcion(String descripcion) {
-		this.descripcion = descripcion;
-	}
-
-	public String getPrecio() {
-		return precio;
-	}
-
-	public void setPrecio(String precio) {
-		this.precio = precio;
-	}
-
-	public String getCategoria() {
-		return Categoria;
-	}
-
-	public void setCategoria(String categoria) {
-		Categoria = categoria;
-	}
-
-	@Override
-	public String toString() {
-		return "Producto [id=" + id + ", descripcion=" + descripcion + ", precio=" + precio + ", Categoria=" + Categoria
-				+ "]";
-	}
-
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer id;
+    
+    private String nombre;
+    private String descripcion;
+    private String categoria;
+    private Double precio;
+    private Integer stock;
+    private Boolean activo;
+    
+    public Producto() {
+        this.activo = true;
+    }
+    
+    // Getters y setters
+    public Integer getId() { return id; }
+    public void setId(Integer id) { this.id = id; }
+    public String getNombre() { return nombre; }
+    public void setNombre(String nombre) { this.nombre = nombre; }
+    public String getDescripcion() { return descripcion; }
+    public void setDescripcion(String descripcion) { this.descripcion = descripcion; }
+    public String getCategoria() { return categoria; }
+    public void setCategoria(String categoria) { this.categoria = categoria; }
+    public Double getPrecio() { return precio; }
+    public void setPrecio(Double precio) { this.precio = precio; }
+    public Integer getStock() { return stock; }
+    public void setStock(Integer stock) { this.stock = stock; }
+    public Boolean getActivo() { return activo; }
+    public void setActivo(Boolean activo) { this.activo = activo; }
 }

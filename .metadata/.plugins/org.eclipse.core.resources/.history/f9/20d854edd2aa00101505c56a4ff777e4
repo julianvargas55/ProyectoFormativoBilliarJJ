@@ -1,0 +1,573 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Club de Juegos y Billar</title>
+    <link rel="stylesheet" th:href="@{/assets/css/usuario.css}"> 
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        /* Estilos para mensajes */
+        .mensaje-exito {
+            background-color: #d4edda;
+            color: #155724;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 15px 0;
+            border: 1px solid #c3e6cb;
+            text-align: center;
+        }
+        
+        .mensaje-error {
+            background-color: #f8d7da;
+            color: #721c24;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 15px 0;
+            border: 1px solid #f5c6cb;
+            text-align: center;
+        }
+
+        /* Estilos para contenedor de imágenes de juegos */
+        .game-cards-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            padding: 20px 0;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .game-card {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+            overflow: hidden;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            border: 1px solid #e2e8f0;
+        }
+
+        .game-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 15px 35px rgba(0,0,0,0.15);
+        }
+
+        .game-card h3 {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            margin: 0;
+            padding: 20px;
+            font-size: 1.3rem;
+            font-weight: bold;
+            text-align: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .game-image-container {
+            width: 100%;
+            height: 250px;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #f8fafc;
+            position: relative;
+        }
+
+        .game-image-container img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            object-position: center;
+            transition: transform 0.3s ease;
+        }
+
+        .game-card:hover .game-image-container img {
+            transform: scale(1.05);
+        }
+
+        .game-card p {
+            padding: 20px;
+            margin: 0;
+            line-height: 1.6;
+            color: #4a5568;
+            font-size: 1rem;
+        }
+
+        .game-card a {
+            display: block;
+            background: linear-gradient(135deg, #10B981, #059669);
+            color: white;
+            text-align: center;
+            padding: 12px 20px;
+            text-decoration: none;
+            font-weight: bold;
+            transition: background 0.3s ease;
+            margin: 0 20px 20px 20px;
+            border-radius: 8px;
+        }
+
+        .game-card a:hover {
+            background: linear-gradient(135deg, #059669, #047857);
+        }
+
+        /* Mejoras para el carrito */
+        .order-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .order-item button {
+            background: #dc3545;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 3px;
+            cursor: pointer;
+        }
+
+        .add-to-cart-btn {
+            background: #28a745;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 10px;
+            width: 100%;
+        }
+
+        .add-to-cart-btn:hover {
+            background: #218838;
+        }
+
+        .pay-button {
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: 12px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 15px;
+            width: 100%;
+            font-size: 16px;
+        }
+
+        .pay-button:disabled {
+            background: #6c757d;
+            cursor: not-allowed;
+        }
+
+        .pay-button:not(:disabled):hover {
+            background: #0056b3;
+        }
+
+        /* Estilos para pedidos históricos */
+        .pedido-historial {
+            margin-top: 20px;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 5px;
+        }
+
+        .pedido-item {
+            border: 1px solid #ddd;
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 5px;
+            background: white;
+        }
+
+        .pedido-header {
+            display: flex;
+            justify-content: space-between;
+            font-weight: bold;
+        }
+
+        .pedido-productos {
+            margin-top: 10px;
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+    
+    <!-- Mensajes de éxito/error -->
+    <div th:if="${exito}" class="mensaje-exito">
+        <p th:text="${exito}"></p>
+    </div>
+    <div th:if="${error}" class="mensaje-error">
+        <p th:text="${error}"></p>
+    </div>
+
+    <section class="hero-carousel">
+        <div class="carousel-content">
+            <h2>¡Tu Club de Juegos y Diversión!</h2>
+            <p>Billar JJ</p>
+        </div>
+    </section>
+    
+    <nav class="navbar-games">
+        <button onclick="document.getElementById('pool-section').scrollIntoView({ behavior: 'smooth' });">
+            <i class="fas fa-billiard"></i> Billar
+        </button>
+        <button onclick="document.getElementById('games-section').scrollIntoView({ behavior: 'smooth' });">
+            <i class="fas fa-bowling-ball"></i> Bolirana y Tejo
+        </button>
+        <button onclick="document.getElementById('food-beverages-section').scrollIntoView({ behavior: 'smooth' });">
+            <i class="fas fa-utensils"></i> Alimentos
+        </button>
+        <button onclick="document.getElementById('about-us-section').scrollIntoView({ behavior: 'smooth' });">
+            <i class="fas fa-info-circle"></i> Acerca de Nosotros
+        </button>
+        <button onclick="window.location.href='/usuario/mis-pedidos'">
+            <i class="fas fa-list-alt"></i> Mis Pedidos
+        </button>
+    </nav>
+
+    <section class="games-info" id="games-section">
+        <h2>Conoce Nuestros Deportes Tradicionales</h2>
+        <div class="game-cards-container">
+            
+            <div class="game-card">
+                <h3>Tejo <i class="fas fa-fire"></i></h3>
+                <div class="game-image-container">
+                    <img th:src="@{/assets/imagenes/Tejo-Bogota.jpg}" 
+                         alt="Tejo - Deporte Nacional de Colombia" 
+                         onerror="this.src='https://via.placeholder.com/400x250?text=Tejo'">
+                </div>
+                <p>El **Tejo** (o Turmequé) es el deporte nacional de Colombia. Consiste en lanzar 
+					un disco metálico (tejo) para explotar pequeñas mechas (mechas) que contienen pólvora.
+					 ¡Un juego explosivo y divertido!</p>
+					 <a th:href="@{/tejo}">¿Qué es el Tejo?</a>
+            </div>
+            
+            <div class="game-card">
+                <h3>Billar <i class="fas fa-billiard"></i></h3>
+                <div class="game-image-container">
+                    <img th:src="@{/assets/imagenes/chico-tiro-medio-traje-jugando-juego_23-2148299245.jpg}" 
+                         alt="Billar - Juego de Precisión" 
+                         onerror="this.src='https://via.placeholder.com/400x250?text=Billar'">
+                </div>
+                <p>El **Billar** es un clásico atemporal. Ofrecemos mesas de Pool (Bola 8) y Billar a Tres Bandas.
+					 Perfecciona tu puntería y disfruta de una buena partida con amigos.</p>
+					 <a th:href="@{/billar}">Ver Mesas de Billar</a>
+            </div>
+            
+            <div class="game-card">
+                <h3>Bolirana <i class="fas fa-bullseye"></i></h3>
+                <div class="game-image-container">
+                    <img th:src="@{/assets/imagenes/images.jpg}" 
+                         alt="Bolirana - Juego de Precisión" 
+                         onerror="this.src='https://via.placeholder.com/400x250?text=Bolirana'">
+                </div>
+                <p>La **Bolirana** es un juego tradicional donde se lanzan pequeñas bolas metálicas
+					 para que caigan en los orificios numerados de una mesa inclinada (rana). Es un juego d
+					 e precisión, suerte y mucha emoción.</p>
+					 <a th:href="@{/boli}">Jugar Bolirana</a>
+            </div>
+        </div>
+    </section>
+    
+    <hr>
+
+    <main class="user-panel-container" id="food-beverages-section">
+        <header class="panel-header">
+            <h1 class="panel-title">Panel de pedidos <i class="fas fa-shopping-cart"></i></h1>
+            <div class="user-info">
+                <span class="user-welcome" th:if="${session.usuario != null}">
+                    Bienvenido, <strong th:text="${session.usuario.nombre}">Usuario</strong>
+                </span>
+                <a th:href="@{/usuario/mis-pedidos}" class="my-orders-btn">
+                    <i class="fas fa-list-alt"></i> Mis Pedidos
+                </a>
+                <a th:href="@{/logout}" class="logout-button">Cerrar Sesión</a>
+            </div>
+        </header>
+
+        <section class="content-container">
+            <div class="products-section">
+                <h2>Productos Disponibles</h2>
+                
+                <div class="category" id="food-section">
+                    <h3>Alimentos <i class="fas fa-hamburger"></i></h3>
+                    <div class="product-grid" id="food-container">
+                        <div class="product-card" data-name="Hamburguesa" data-price="8.00">
+                            <img th:src="@{/assets/imagenes/hamburger.jpg}" alt="Hamburguesa" onerror="this.src='https://via.placeholder.com/200x150?text=Hamburguesa'">
+                            <h4>Hamburguesa</h4>
+                            <p class="product-price">$8.00</p>
+                            <button class="add-to-cart-btn" onclick="agregarAlCarrito('Hamburguesa', 8.00)">
+                                Agregar al Carrito
+                            </button>
+                        </div>
+                        <div class="product-card" data-name="Papas Fritas" data-price="3.00">
+                            <img th:src="@{/assets/imagenes/papas.jpg}" alt="Papas Fritas" onerror="this.src='https://via.placeholder.com/200x150?text=Papas+Fritas'">
+                            <h4>Papas Fritas</h4>
+                            <p class="product-price">$3.00</p>
+                            <button class="add-to-cart-btn" onclick="agregarAlCarrito('Papas Fritas', 3.00)">
+                                Agregar al Carrito
+                            </button>
+                        </div>
+                        <div class="product-card" data-name="Perro Caliente" data-price="5.00">
+                            <img th:src="@{/assets/imagenes/perro.jpg}" alt="Perro Caliente" onerror="this.src='https://via.placeholder.com/200x150?text=Perro+Caliente'">
+                            <h4>Perro Caliente</h4>
+                            <p class="product-price">$5.00</p>
+                            <button class="add-to-cart-btn" onclick="agregarAlCarrito('Perro Caliente', 5.00)">
+                                Agregar al Carrito
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="category">
+                    <h3>Bebidas <i class="fas fa-cocktail"></i></h3>
+                    <div class="product-grid" id="drinks-container">
+                        <div class="product-card" data-name="Coca-Cola" data-price="2.50">
+                            <img th:src="@{/assets/imagenes/coca.png}" alt="Coca-Cola" onerror="this.src='https://via.placeholder.com/200x150?text=Coca+Cola'">
+                            <h4>Coca-Cola</h4>
+                            <p class="product-price">$2.50</p>
+                            <button class="add-to-cart-btn" onclick="agregarAlCarrito('Coca-Cola', 2.50)">
+                                Agregar al Carrito
+                            </button>
+                        </div>
+                        <div class="product-card" data-name="Jugo Natural" data-price="3.00">
+                            <img th:src="@{/assets/imagenes/jugo.png}" alt="Jugo Natural" onerror="this.src='https://via.placeholder.com/200x150?text=Jugo+Natural'">
+                            <h4>Jugo Natural</h4>
+                            <p class="product-price">$3.00</p>
+                            <button class="add-to-cart-btn" onclick="agregarAlCarrito('Jugo Natural', 3.00)">
+                                Agregar al Carrito
+                            </button>
+                        </div>
+                        <div class="product-card" data-name="Cerveza Artesanal" data-price="4.50">
+                            <img th:src="@{/assets/imagenes/pola.jpg}" alt="Cerveza Artesanal" onerror="this.src='https://via.placeholder.com/200x150?text=Cerveza+Artesanal'">
+                            <h4>Cerveza Artesanal</h4>
+                            <p class="product-price">$4.50</p>
+                            <button class="add-to-cart-btn" onclick="agregarAlCarrito('Cerveza Artesanal', 4.50)">
+                                Agregar al Carrito
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="category" id="pool-section">
+                    <h3>Mesas de Billar <i class="fas fa-billiard"></i></h3>
+                    <div class="product-grid" id="pool-container">
+                        <div class="product-card" data-name="Mesa Billar #1" data-price="5.00">
+                            <img th:src="@{/assets/imagenes/mesas.jpg}" alt="Mesa Billar #1" onerror="this.src='https://via.placeholder.com/200x150?text=Mesa+Billar'">
+                            <h4>Mesa Billar #1 (Por Hora)</h4>
+                            <p class="product-price">$5.00</p>
+                            <button class="add-to-cart-btn" onclick="agregarAlCarrito('Mesa Billar #1', 5.00)">
+                                Reservar
+                            </button>
+                        </div>
+                        <div class="product-card" data-name="Mesa Billar #2" data-price="5.00">
+                            <img th:src="@{/assets/imagenes/mesas.jpg}" alt="Mesa Billar #2" onerror="this.src='https://via.placeholder.com/200x150?text=Mesa+Billar'">
+                            <h4>Mesa Billar #2 (Por Hora)</h4>
+                            <p class="product-price">$5.00</p>
+                            <button class="add-to-cart-btn" onclick="agregarAlCarrito('Mesa Billar #2', 5.00)">
+                                Reservar
+                            </button>
+                        </div>
+                        <div class="product-card" data-name="Bolirana" data-price="4.00">
+                            <img th:src="@{/assets/imagenes/images.jpg}" alt="Bolirana" onerror="this.src='https://via.placeholder.com/200x150?text=Bolirana'">
+                            <h4>Bolirana (Por Hora)</h4>
+                            <p class="product-price">$4.00</p>
+                            <button class="add-to-cart-btn" onclick="agregarAlCarrito('Bolirana', 4.00)">
+                                Reservar
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="order-section">
+                    <h2>Tu Pedido <i class="fas fa-shopping-cart"></i></h2>
+                    <div class="order-list" id="order-list">
+                        <p style="text-align: center; color: #777;">Aún no hay ítems en tu pedido.</p>
+                    </div>
+                    <div class="order-summary">
+                        <span><strong>Total:</strong></span>
+                        <span class="total-price"><strong>$0.00</strong></span>
+                    </div>
+                    <button class="pay-button" id="pay-button" disabled onclick="procesarPedido()">
+                        <i class="fas fa-credit-card"></i> Pagar Pedido
+                    </button>
+                    <form th:action="@{/usuario/procesar-pedido}" method="post" id="order-form">
+                        <input type="hidden" name="pedidoData" id="pedido-data">
+                    </form>
+                </div>
+
+                <!-- Sección de pedidos históricos -->
+                <div class="pedido-historial" th:if="${pedidos != null and !pedidos.empty}">
+                    <h3><i class="fas fa-history"></i> Tus Pedidos Anteriores</h3>
+                    <div th:each="pedido : ${pedidos}">
+                        <div class="pedido-item">
+                            <div class="pedido-header">
+                                <span>Pedido #<span th:text="${pedido.id}"></span></span>
+                                <span th:text="${pedido.estado}"></span>
+                                <span>$<span th:text="${#numbers.formatDecimal(pedido.total, 1, 2)}"></span></span>
+                            </div>
+                            <div class="pedido-productos">
+                                <strong>Productos:</strong> 
+                                <span th:text="${pedido.productos}"></span>
+                            </div>
+                            <div>
+                                <small>Fecha: <span th:text="${#temporals.format(pedido.fechaCreacion, 'dd/MM/yyyy HH:mm')}"></span></small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <section class="about-us" id="about-us-section">
+        <div class="about-us-content">
+            <h2>Acerca de Nosotros <i class="fas fa-handshake"></i></h2>
+            <p>Somos el punto de encuentro perfecto para los amantes de la cultura del juego tradicional y la diversión familiar. Desde nuestra apertura, nos hemos dedicado a ofrecer un ambiente seguro, vibrante y lleno de energía para que disfrutes de los mejores momentos con tus amigos y familiares.</p>
+            
+            <div class="info-grid">
+                <div class="info-item">
+                    <h4><i class="fas fa-map-marker-alt"></i> Ubicación</h4>
+                    <p>Calle Ficticia #123, Ciudad de la Diversión</p>
+                </div>
+                <div class="info-item">
+                    <h4><i class="fas fa-clock"></i> Horario</h4>
+                    <p>Mar. - Dom.: 4:00 PM - 1:00 AM</p>
+                </div>
+                <div class="info-item">
+                    <h4><i class="fas fa-phone-alt"></i> Contacto</h4>
+                    <p>(+57) 300 123 4567</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <script>
+        let carrito = [];
+        let total = 0;
+
+        function agregarAlCarrito(nombre, precio) {
+            carrito.push({ nombre: nombre, precio: precio });
+            total += precio;
+            actualizarCarrito();
+            
+            // Mostrar notificación
+            mostrarNotificacion(`✅ ${nombre} agregado al carrito`);
+        }
+
+        function eliminarDelCarrito(index) {
+            total -= carrito[index].precio;
+            const productoEliminado = carrito[index].nombre;
+            carrito.splice(index, 1);
+            actualizarCarrito();
+            
+            // Mostrar notificación
+            mostrarNotificacion(`❌ ${productoEliminado} eliminado del carrito`);
+        }
+
+        function actualizarCarrito() {
+            const orderList = document.getElementById('order-list');
+            const totalPrice = document.querySelector('.total-price');
+            const payButton = document.getElementById('pay-button');
+            
+            if (carrito.length === 0) {
+                orderList.innerHTML = '<p style="text-align: center; color: #777;">Aún no hay ítems en tu pedido.</p>';
+                payButton.disabled = true;
+            } else {
+                orderList.innerHTML = '';
+                carrito.forEach((item, index) => {
+                    const itemElement = document.createElement('div');
+                    itemElement.className = 'order-item';
+                    itemElement.innerHTML = `
+                        <span>${item.nombre}</span>
+                        <span>$${item.precio.toFixed(2)}</span>
+                        <button onclick="eliminarDelCarrito(${index})" title="Eliminar">❌</button>
+                    `;
+                    orderList.appendChild(itemElement);
+                });
+                payButton.disabled = false;
+            }
+            
+            totalPrice.textContent = `$${total.toFixed(2)}`;
+        }
+
+        function procesarPedido() {
+            if (carrito.length === 0) {
+                alert('El carrito está vacío');
+                return;
+            }
+            
+            if (confirm(`¿Confirmar pedido por $${total.toFixed(2)}?\n\nTotal de productos: ${carrito.length}`)) {
+                // Preparar datos para enviar
+                const pedidoData = {
+                    productos: carrito,
+                    total: total,
+                    timestamp: new Date().toISOString()
+                };
+                
+                document.getElementById('pedido-data').value = JSON.stringify(pedidoData);
+                document.getElementById('order-form').submit();
+            }
+        }
+
+        function mostrarNotificacion(mensaje) {
+            // Crear notificación temporal
+            const notificacion = document.createElement('div');
+            notificacion.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                background: #28a745;
+                color: white;
+                padding: 15px 20px;
+                border-radius: 5px;
+                box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+                z-index: 1000;
+                font-weight: bold;
+                animation: slideIn 0.3s ease-out;
+            `;
+            notificacion.textContent = mensaje;
+            
+            document.body.appendChild(notificacion);
+            
+            // Remover después de 3 segundos
+            setTimeout(() => {
+                notificacion.style.animation = 'slideOut 0.3s ease-in';
+                setTimeout(() => {
+                    document.body.removeChild(notificacion);
+                }, 300);
+            }, 3000);
+        }
+
+        // Estilos para animaciones
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes slideIn {
+                from { transform: translateX(100%); opacity: 0; }
+                to { transform: translateX(0); opacity: 1; }
+            }
+            @keyframes slideOut {
+                from { transform: translateX(0); opacity: 1; }
+                to { transform: translateX(100%); opacity: 0; }
+            }
+        `;
+        document.head.appendChild(style);
+
+        // Limpiar mensajes después de 5 segundos
+        setTimeout(() => {
+            const mensajes = document.querySelectorAll('.mensaje-exito, .mensaje-error');
+            mensajes.forEach(msg => {
+                msg.style.opacity = '10';
+                msg.style.transition = 'opacity 0.5s';
+                setTimeout(() => msg.remove(), 500);
+            });
+        }, 5000);
+    </script>
+</body>
+</html>

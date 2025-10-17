@@ -1,0 +1,52 @@
+package sena.jj.com.controller;
+
+import sena.jj.com.model.Pedido;
+import sena.jj.com.service.PedidoService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+
+@Controller
+@RequestMapping("/administrador")
+public class AdministradorController {
+    
+    @Autowired
+    private PedidoService pedidoService;
+    
+    @GetMapping("/pedidos")
+    public String verTodosLosPedidos(Model model) {
+        List<Pedido> pedidos = pedidoService.obtenerTodosLosPedidos();
+        Long pendientes = pedidoService.contarPedidosPendientes();
+        
+        model.addAttribute("pedidos", pedidos);
+        model.addAttribute("pendientes", pendientes);
+        
+        return "administrador/pedidos"; // Crear esta vista después
+    }
+    
+    @GetMapping("/pedidos-pendientes")
+    public String verPedidosPendientes(Model model) {
+        List<Pedido> pedidos = pedidoService.obtenerPedidosPendientes();
+        model.addAttribute("pedidos", pedidos);
+        
+        return "administrador/pedidos-pendientes";
+    }
+    
+    @PostMapping("/actualizar-estado")
+    public String actualizarEstadoPedido(@RequestParam Integer pedidoId,
+                                       @RequestParam String estado,
+                                       Model model) {
+        Pedido pedido = pedidoService.actualizarEstado(pedidoId, estado);
+        
+        if (pedido != null) {
+            model.addAttribute("exito", "Estado del pedido actualizado a: " + estado);
+        } else {
+            model.addAttribute("error", "Error al actualizar el pedido");
+        }
+        
+        return "redirect:/administrador/pedidos";
+    }
+}

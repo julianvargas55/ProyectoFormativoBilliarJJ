@@ -1,62 +1,40 @@
 package sena.jj.com.model;
 
-import java.util.List;
-
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
+import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "facturaciones")
+@Table(name = "facturacion")
 public class Facturacion {
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Integer id;
-	private String TipoFacturacion;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer id;
 
-	@ManyToOne
-	private Cliente cliente;
+    private String numeroFactura;
+    private Double monto;
+    private String estado;
+    private LocalDateTime fechaEmision;
 
-	@OneToMany(mappedBy = "facturacion")
-	private List<Servicios> servicios;
+    @ManyToOne
+    @JoinColumn(name = "trabajador_id")
+    private Trabajador trabajador;
 
-	@ManyToOne
-	private Trabajador trabajador;
+    public Facturacion() {
+        this.estado = "PENDIENTE";
+        this.fechaEmision = LocalDateTime.now();
+    }
 
-	public Facturacion() {
-		super();
-		// TODO Auto-generated constructor stub
-	}
-
-	public Facturacion(Integer id, String tipoFacturacion) {
-		super();
-		this.id = id;
-		TipoFacturacion = tipoFacturacion;
-	}
-
-	public Integer getId() {
-		return id;
-	}
-
-	public void setId(Integer id) {
-		this.id = id;
-	}
-
-	public String getTipoFacturacion() {
-		return TipoFacturacion;
-	}
-
-	public void setTipoFacturacion(String tipoFacturacion) {
-		TipoFacturacion = tipoFacturacion;
-	}
-
-	@Override
-	public String toString() {
-		return "Facturacion [id=" + id + ", TipoFacturacion=" + TipoFacturacion + "]";
-	}
-
+    // Getters y setters
+    public Integer getId() { return id; }
+    public void setId(Integer id) { this.id = id; }
+    public String getNumeroFactura() { return numeroFactura; }
+    public void setNumeroFactura(String numeroFactura) { this.numeroFactura = numeroFactura; }
+    public Double getMonto() { return monto; }
+    public void setMonto(Double monto) { this.monto = monto; }
+    public String getEstado() { return estado; }
+    public void setEstado(String estado) { this.estado = estado; }
+    public LocalDateTime getFechaEmision() { return fechaEmision; }
+    public void setFechaEmision(LocalDateTime fechaEmision) { this.fechaEmision = fechaEmision; }
+    public Trabajador getTrabajador() { return trabajador; }
+    public void setTrabajador(Trabajador trabajador) { this.trabajador = trabajador; }
 }

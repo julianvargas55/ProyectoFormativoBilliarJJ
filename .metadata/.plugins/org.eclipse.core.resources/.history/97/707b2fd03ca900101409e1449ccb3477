@@ -1,0 +1,67 @@
+package sena.jj.com.controller;
+
+import sena.jj.com.model.Pedido;
+import sena.jj.com.model.Usuario;
+import sena.jj.com.service.PedidoService;
+import sena.jj.com.service.IUsuarioService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.*;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+import jakarta.servlet.http.HttpSession;
+import java.util.List;
+import java.util.Map;
+
+@Controller
+@RequestMapping("/usuario")
+public class UsuarioController {
+    
+    @Autowired
+    private PedidoService pedidoService;
+    
+    @Autowired
+    private IUsuarioService usuarioService;
+    
+    @PostMapping("/procesar-pedido")
+    public String procesarPedido(@RequestParam String pedidoData, 
+                               HttpSession session,
+                               Model model) {
+        try {
+            Usuario usuario = (Usuario) session.getAttribute("usuario");
+            
+            if (usuario == null) {
+                return "redirect:/index";
+            }
+            
+            // Convertir JSON a lista de items
+            ObjectMapper mapper = new ObjectMapper();
+            List<Map<String, Object>> items = mapper.readValue(pedidoData, List.class);
+            
+            // Crear pedido
+            Pedido pedido = pedidoService.crearPedido(usuario, items);
+            
+            model.addAttribute("exito", "¡Pedido realizado con éxito! Número de pedido: " + pedido.getId());
+            return "usuario/Usuario";
+            
+        } catch (Exception e) {
+            model.addAttribute("error", "Error al procesar el pedido: " + e.getMessage());
+            return "usuario/Usuario";
+        }
+    }
+    
+    @GetMapping("/mis-pedidos")
+    public String verMisPedidos(HttpSession session, Model model) {
+        Usuario usuario = (Usuario) session.getAttribute("usuario");
+        
+        if (usuario == null) {
+            return "redirect:/index";
+        }
+        
+        List<Pedido> pedidos = pedidoService.obtenerPedidosPorUsuario(usuario.getId());
+        model.addAttribute("pedidos", pedidos);
+        
+        return "usuario/mis-pedidos"; // Crear esta vista después
+    }
+}

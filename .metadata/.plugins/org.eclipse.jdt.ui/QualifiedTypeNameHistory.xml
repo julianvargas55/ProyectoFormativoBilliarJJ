@@ -25,7 +25,6 @@
     <fullyQualifiedTypeName name="sena.jj.com.controller.RegistroController"/>
     <fullyQualifiedTypeName name="sena.jj.com.model.Usuario"/>
     <fullyQualifiedTypeName name="sena.jj.com.service.UsuarioServiceImplement"/>
-    <fullyQualifiedTypeName name="sena.jj.com.repository.IUsuarioRepository"/>
     <fullyQualifiedTypeName name="org.springframework.web.bind.annotation.RestControllerAdvice"/>
     <fullyQualifiedTypeName name="org.springframework.web.bind.annotation.RestController"/>
     <fullyQualifiedTypeName name="jakarta.persistence.ManyToOne"/>
@@ -41,7 +40,9 @@
     <fullyQualifiedTypeName name="org.springframework.web.bind.annotation.GetMapping"/>
     <fullyQualifiedTypeName name="jakarta.persistence.OneToMany"/>
     <fullyQualifiedTypeName name="java.util.List"/>
-    <fullyQualifiedTypeName name="org.springframework.web.bind.annotation.RequestMapping"/>
     <fullyQualifiedTypeName name="jakarta.persistence.Table"/>
+    <fullyQualifiedTypeName name="java.lang.String"/>
     <fullyQualifiedTypeName name="org.springframework.stereotype.Controller"/>
+    <fullyQualifiedTypeName name="org.springframework.web.bind.annotation.RequestMapping"/>
+    <fullyQualifiedTypeName name="sena.jj.com.repository.IUsuarioRepository"/>
 </qualifiedTypeNameHistroy>

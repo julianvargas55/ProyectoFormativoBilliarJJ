@@ -1,0 +1,46 @@
+package sena.jj.com.controller;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.*;
+
+import sena.jj.com.model.Usuario;
+import sena.jj.com.service.IUsuarioService;
+
+@Controller
+public class RegistroController {
+
+    @Autowired
+    private IUsuarioService usuarioService;
+
+    // ENDPOINT DE PRUEBA - elimina después
+    @GetMapping("/test-registro")
+    public String testRegistro() {
+        System.out.println("=== TEST: Accediendo a /test-registro ===");
+        return "registro"; // Esto debería cargar registro.html
+    }
+
+    @GetMapping("/registro")
+    public String mostrarRegistro(Model model) {
+        System.out.println("=== Accediendo a /registro ===");
+        // Agregar usuario vacío para el formulario
+        model.addAttribute("usuario", new Usuario());
+        return "usuario/registro";
+    }
+
+    @PostMapping("/registro")
+    public String registrarUsuario(@ModelAttribute Usuario usuario, Model model) {
+        try {
+            System.out.println("=== Procesando registro: " + usuario.getEmail() + " ===");
+            usuario.setRol("USER");
+            usuarioService.guardarUsuario(usuario);
+            model.addAttribute("exito", "Usuario registrado exitosamente. Ahora puedes iniciar sesión.");
+        } catch (RuntimeException e) {
+            model.addAttribute("error", e.getMessage());
+        }
+        // Agregar usuario vacío para el formulario
+        model.addAttribute("usuario", new Usuario());
+        return "registro";
+    }
+}

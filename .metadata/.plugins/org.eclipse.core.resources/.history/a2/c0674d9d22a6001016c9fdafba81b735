@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register</title>
+    <link rel="stylesheet" href="/assets/css/REGISTRO.CSS">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <header class="navbar">
+            <div class="logo">
+                <span>BILLAR JJ</span>
+            </div>
+            <nav>
+                <ul>
+                    
+                </ul>
+            </nav>
+            <button> <a th:href="@{}"> Iniciar Sesion </a></button>
+        </header>
+        <div class="main-content">
+            <div class="register-panel">
+                <div class="profile-icon">
+                    <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M12 4a4 4 0 100 8 4 4 0 000-8zM12 14a8 8 0 00-8 8h16a8 8 0 00-8-8z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                </div>
+                <form class="register-form">
+                    
+                    <div class="input-group">
+                        <input type="text" placeholder="Full Name">
+                    </div>
+                    <div class="input-group">
+                        <input type="email" placeholder="Email">
+                    </div>
+                    <div class="input-group">
+                        <input type="password" placeholder="Password">
+                    </div>
+                    <button type="submit" class="register-btn">Register</button>
+                    <div class="options">
+                        <a href="">Already have an account?</a>
+                    </div>
+                </form>
+            </div>
+            <div class="welcome-section">
+                <div class="gradient-bg"></div>
+                <div class="text-content">
+                    <h1>REGISTRATE</h1>
+                    <p>Crea tu cuenta para explorar todas las funciones que tenemos para ofrecer.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

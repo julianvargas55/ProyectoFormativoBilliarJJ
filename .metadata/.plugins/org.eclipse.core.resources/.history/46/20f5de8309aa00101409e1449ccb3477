@@ -1,0 +1,54 @@
+package sena.jj.com.controller;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
+import jakarta.servlet.http.HttpSession;
+import sena.jj.com.model.Pedido;
+import sena.jj.com.model.Usuario;
+import sena.jj.com.service.IUsuarioService;
+import sena.jj.com.service.PedidoService;
+
+@Controller
+@RequestMapping("/usuario")
+public class UsuarioController {
+
+    @Autowired
+    private PedidoService pedidoService;
+
+    @GetMapping("/mis-pedidos")
+    public String misPedidos(HttpSession session, Model model) {
+        Usuario usuario = (Usuario) session.getAttribute("usuario");
+        if (usuario == null) {
+            return "redirect:/";
+        }
+
+        // Cargar pedidos del usuario - MANTENIENDO TU CÓDIGO ORIGINAL
+        try {
+            List<Pedido> pedidosUsuario = pedidoService.findByUsuarioId(usuario.getId());
+            model.addAttribute("pedidos", pedidosUsuario);
+            model.addAttribute("usuario", usuario);
+        } catch (Exception e) {
+            model.addAttribute("error", "Error al cargar pedidos: " + e.getMessage());
+            model.addAttribute("pedidos", new ArrayList<>());
+        }
+
+        return "mis-pedidos";
+    }
+
+    @GetMapping("/perfil")
+    public String perfilUsuario(HttpSession session, Model model) {
+        Usuario usuario = (Usuario) session.getAttribute("usuario");
+        if (usuario == null) {
+            return "redirect:/";
+        }
+        model.addAttribute("usuario", usuario);
+        return "perfil-usuario";
+    }
+}}

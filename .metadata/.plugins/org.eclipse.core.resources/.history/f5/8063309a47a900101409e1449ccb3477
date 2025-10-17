@@ -1,0 +1,54 @@
+package sena.jj.com.controller;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+
+import jakarta.servlet.http.HttpSession;
+import sena.jj.com.model.Pedido;
+import sena.jj.com.model.Producto;
+import sena.jj.com.model.Usuario;
+import sena.jj.com.repository.IPedidoRepository;
+import sena.jj.com.repository.IProductoRepository;
+import sena.jj.com.repository.IUsuarioRepository;
+
+import java.util.List;
+
+@Controller
+@RequestMapping("/administrador")
+public class AdministradorController {
+
+    @Autowired
+    private IPedidoRepository pedidoRepo;
+    
+    @Autowired
+    private IProductoRepository productoRepo;
+    
+    @Autowired
+    private IUsuarioRepository usuarioRepo;
+
+    @GetMapping("")
+    public String administrador(Model model, HttpSession session) {
+        // Verificar sesión y permisos
+        if (session.getAttribute("usuario") == null) {
+            return "redirect:/login";
+        }
+        
+        if (!"ADMIN".equals(session.getAttribute("rol"))) {
+            return "redirect:/usuario";
+        }
+        
+        List<Pedido> pedidos = pedidoRepo.findAll();
+        model.addAttribute("pedidos", pedidos);
+        
+        List<Producto> productos = productoRepo.findAll();
+        model.addAttribute("productos", productos);
+        
+        List<Usuario> usuarios = usuarioRepo.findAll();
+        model.addAttribute("usuarios", usuarios);
+        
+        return "administrador";
+    }
+}

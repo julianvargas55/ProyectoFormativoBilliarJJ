@@ -1,0 +1,109 @@
+package sena.jj.com.controller;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
+import jakarta.servlet.http.HttpSession;
+import sena.jj.com.model.Pedido;
+import sena.jj.com.model.Usuario;
+import sena.jj.com.service.IUsuarioService;
+import sena.jj.com.service.PedidoService;
+
+import java.util.List;
+import java.util.ArrayList;
+
+@Controller
+@RequestMapping("/administrador")
+public class AdministradorController {
+
+    @Autowired
+    private IUsuarioService usuarioService;
+
+    @Autowired
+    private PedidoService pedidoService;
+
+    @GetMapping("")
+    public String administrador(Model model, HttpSession session) {
+        // Verificar sesión
+        Usuario usuario = (Usuario) session.getAttribute("usuario");
+        if (usuario == null) {
+            return "redirect:/";
+        }
+
+        // Verificar que es administrador
+        if (!"1".equals(usuario.getRol())) {
+            return "redirect:/usuario";
+        }
+
+        try {
+            // Cargar usuarios
+            List<Usuario> usuarios = usuarioService.findAll();
+            model.addAttribute("usuarios", usuarios);
+            model.addAttribute("totalUsuarios", usuarios.size());
+            
+            // CARGAR PEDIDOS REALES
+            List<Pedido> pedidosRecientes = pedidoService.findAllOrderByFechaDesc();
+            List<Pedido> pedidosPendientes = pedidoService.findByEstado("PENDIENTE");
+            
+            model.addAttribute("pedidos", pedidosRecientes);
+            model.addAttribute("pedidosPendientes", pedidosPendientes);
+            model.addAttribute("totalPedidos", pedidosRecientes.size());
+            model.addAttribute("pedidosPendientesCount", pedidosPendientes.size());
+            
+            // Datos simulados para otras secciones
+            model.addAttribute("totalProductos", 0);
+            model.addAttribute("productosBajoStock", 0);
+            model.addAttribute("ingresosDia", 0);
+            model.addAttribute("mesasActivas", 0);
+            model.addAttribute("productos", new ArrayList<>());
+            
+        } catch (Exception e) {
+            // Si hay error, mostrar datos vacíos
+            model.addAttribute("error", "Error al cargar datos: " + e.getMessage());
+            model.addAttribute("usuarios", new ArrayList<>());
+            model.addAttribute("totalUsuarios", 0);
+            model.addAttribute("pedidos", new ArrayList<>());
+            model.addAttribute("totalPedidos", 0);
+            model.addAttribute("pedidosPendientesCount", 0);
+            model.addAttribute("totalProductos", 0);
+            model.addAttribute("productosBajoStock", 0);
+            model.addAttribute("ingresosDia", 0);
+            model.addAttribute("mesasActivas", 0);
+            model.addAttribute("productos", new ArrayList<>());
+        }
+        
+        return "administrador/administrador";
+    }
+
+    @PostMapping("/pedido/completar")
+    public String completarPedido(@RequestParam Integer pedidoId, RedirectAttributes redirect) {
+        try {
+            // SOLUCIÓN SIN NECESIDAD DE findById:
+            // Buscar el pedido manualmente en todos los pedidos
+            List<Pedido> todosPedidos = pedidoService.findAll();
+            Pedido pedidoEncontrado = null;
+            
+            for (Pedido pedido : todosPedidos) {
+                if (pedido.getId().equals(pedidoId)) {
+                    pedidoEncontrado = pedido;
+                    break;
+                }
+            }
+            
+            if (pedidoEncontrado != null) {
+                pedidoEncontrado.setEstado("COMPLETADO");
+                pedidoService.save(pedidoEncontrado);
+                redirect.addFlashAttribute("exito", "Pedido marcado como completado");
+            } else {
+                redirect.addFlashAttribute("error", "Pedido no encontrado");
+            }
+            
+        } catch (Exception e) {
+            redirect.addFlashAttribute("error", "Error al actualizar pedido: " + e.getMessage());
+        }
+        return "redirect:/administrador";
+    }
+}

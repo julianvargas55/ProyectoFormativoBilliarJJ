@@ -1,0 +1,19 @@
+package sena.jj.com.model;
+
+import jakarta.persistence.*;
+import java.time.LocalDate;
+
+@Entity
+@Table(name = "ventas_diarias")
+public class VentaDiaria {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer id;
+    
+    private LocalDate fecha;
+    private Double totalVentas;
+    private Integer totalPedidos;
+    private Double promedioPedido;
+    
+    // Constructores, getters y setters
+}

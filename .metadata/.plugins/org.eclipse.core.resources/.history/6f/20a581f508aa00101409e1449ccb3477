@@ -1,0 +1,59 @@
+package sena.jj.com.controller;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
+import jakarta.servlet.http.HttpSession;
+import sena.jj.com.model.Pedido;
+import sena.jj.com.model.Usuario;
+import sena.jj.com.service.IUsuarioService;
+import sena.jj.com.service.PedidoService;
+
+import java.util.List;
+import java.util.ArrayList;
+
+@Controller
+@RequestMapping("/administrador")
+public class AdministradorController {
+
+	@Autowired
+	private IUsuarioService usuarioService;
+
+	@Autowired
+    private PedidoService pedidoService;
+
+	@GetMapping("")
+    public String administrador(Model model, HttpSession session) {
+        Usuario usuario = (Usuario) session.getAttribute("usuario");
+        if (usuario == null) {
+            return "redirect:/";
+        }
+
+        if (!"1".equals(usuario.getRol())) {
+            return "redirect:/usuario";
+        }
+
+        try {
+            // TEMPORAL: Cargar solo usuarios, SIN pedidos
+            List<Usuario> usuarios = usuarioService.findAll();
+            model.addAttribute("usuarios", usuarios);
+            model.addAttribute("totalUsuarios", usuarios.size());
+            
+            // TEMPORAL: Datos vacíos para pedidos
+            model.addAttribute("pedidos", new ArrayList<>());
+            model.addAttribute("totalPedidos", 0);
+            
+        } catch (Exception e) {
+            model.addAttribute("error", "Error al cargar datos: " + e.getMessage());
+            model.addAttribute("usuarios", new ArrayList<>());
+            model.addAttribute("totalUsuarios", 0);
+            model.addAttribute("pedidos", new ArrayList<>());
+            model.addAttribute("totalPedidos", 0);
+        }
+        
+        return "administrador/administrador";
+	}
+	}

@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard Billar JJ - Administrador</title>
+    <link rel="stylesheet" th:href="@{/assets/css/administrador.css}">
+    <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
+</head>
+<body>
+
+    <div class="dashboard-container">
+        
+        <div class="sidebar">
+            <div class="logo-area">
+                <i class='bx bxs-user-circle' style="font-size: 50px;"></i>
+                <div class="app-name">Dashboard</div>
+            </div>
+            <nav class="sidebar-nav">
+                <a th:href="@{/administrador}" class="nav-item active">
+                    <i class='bx bxs-dashboard icon'></i>
+                    <span>Inicio</span>
+                </a>
+                <a th:href="@{/administrador/mesas}" class="nav-item">
+                    <i class='bx bxs-group icon'></i>
+                    <span>Mesas y Tiempo</span>
+                </a>
+                <a th:href="@{/administrador/pedidos}" class="nav-item">
+                    <i class='bx bxs-drink icon'></i>
+                    <span>Pedidos Activos</span>
+                </a>
+                <a th:href="@{/administrador/facturas}" class="nav-item">
+                    <i class='bx bxs-receipt icon'></i>
+                    <span>Facturas</span>
+                </a>
+            </nav>
+            <a th:href="@{/logout}" class="logout-btn">
+                <i class='bx bx-log-out-circle icon'></i>
+                <span>Cerrar Sesión</span>
+            </a>
+        </div>
+
+        <div class="main-content">
+            
+            <div class="topbar">
+                <div class="greeting">
+                    Bienvenido de nuevo, 
+                    <span class="user-name" th:text="${session.usuario != null ? session.usuario.nombre : 'Administrador'}">Dueño JJ</span>
+                </div>
+                <div class="profile-info">
+                    <img th:src="@{/assets/images/avatar.png}" alt="Perfil" class="profile-pic" onerror="this.src='https://i.ibb.co/5c9s2T7/avatar.png'">
+                </div>
+            </div>
+
+            <!-- Mensajes de éxito/error -->
+            <div th:if="${exito}" class="mensaje-exito">
+                <p th:text="${exito}"></p>
+            </div>
+            <div th:if="${error}" class="mensaje-error">
+                <p th:text="${error}"></p>
+            </div>
+
+            <div class="content-section dashboard-overview">
+                <h2>Resumen General en Tiempo Real</h2>
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <i class='bx bx-dollar icon'></i>
+                        <div class="stat-info">
+                            <span class="stat-value" th:text="'$ ' + ${#numbers.formatDecimal(ingresosDia, 0, 'COMMA', 0, 'POINT')}">$ 1,560.000</span>
+                            <span class="stat-label">Ingresos del Día</span>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <i class='bx bx-timer icon'></i>
+                        <div class="stat-info">
+                            <span class="stat-value" th:text="${mesasActivas}">6</span>
+                            <span class="stat-label">Mesas Activas</span>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <i class='bx bx-food-menu icon'></i>
+                        <div class="stat-info">
+                            <span class="stat-value" th:text="${totalPedidos}">24</span>
+                            <span class="stat-label">Pedidos del Día</span>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <i class='bx bxs-file-plus icon'></i>
+                        <div class="stat-info">
+                            <span class="stat-value" th:text="${pedidosPendientes}">12</span>
+                            <span class="stat-label">Pedidos Pendientes</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Pedidos en Tiempo Real -->
+                <div class="recent-activity">
+                    <div class="section-header">
+                        <h3>Pedidos Recientes</h3>
+                        <button class="refresh-btn" onclick="location.reload()">
+                            <i class='bx bx-refresh'></i> Actualizar
+                        </button>
+                    </div>
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Pedido #</th>
+                                <th>Usuario</th>
+                                <th>Productos</th>
+                                <th>Total</th>
+                                <th>Fecha</th>
+                                <th>Estado</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr th:each="pedido : ${pedidos}">
+                                <td th:text="'#' + ${pedido.id}">#P-0045</td>
+                                <td th:text="${pedido.usuario.nombre}">Juan Pérez</td>
+                                <td>
+                                    <span th:each="detalle, iter : ${pedido.detalles}" 
+                                          th:text="${detalle.productoNombre} + (${iter.last} ? '' : ', ')">
+                                        Hamburguesa, Coca-Cola
+                                    </span>
+                                </td>
+                                <td th:text="'$ ' + ${#numbers.formatDecimal(pedido.total, 0, 'COMMA', 0, 'POINT')}">$ 85.000</td>
+                                <td th:text="${#temporals.format(pedido.fechaPedido, 'dd/MM/yyyy HH:mm')}">24/08/2025</td>
+                                <td>
+                                    <span th:classappend="'status ' + ${pedido.estado.toLowerCase()}" 
+                                          th:text="${pedido.estado}">PENDIENTE</span>
+                                </td>
+                                <td>
+                                    <div class="action-buttons">
+                                        <button th:if="${pedido.estado == 'PENDIENTE'}" 
+                                                th:onclick="'confirmarPedido(' + ${pedido.id} + ')'"
+                                                class="btn-confirm">
+                                            <i class='bx bx-check'></i>
+                                        </button>
+                                        <button th:onclick="'verDetalles(' + ${pedido.id} + ')'"
+                                                class="btn-view">
+                                            <i class='bx bx-show'></i>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr th:if="${#lists.isEmpty(pedidos)}">
+                                <td colspan="7" style="text-align: center; color: #777;">
+                                    No hay pedidos recientes
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Estado de Mesas en Tiempo Real -->
+                <div class="mesas-status">
+                    <h3>Estado de Mesas</h3>
+                    <div class="mesas-grid">
+                        <div class="mesa-card" th:each="i : ${#numbers.sequence(1, 8)}">
+                            <div class="mesa-header">
+                                <h4 th:text="'Mesa ' + ${i}">Mesa 1</h4>
+                                <span th:classappend="'mesa-status ' + (${i % 3 == 0} ? 'ocupada' : 'libre')"
+                                      th:text="${i % 3 == 0} ? 'OCUPADA' : 'LIBRE'">
+                                    LIBRE
+                                </span>
+                            </div>
+                            <div class="mesa-info">
+                                <p th:if="${i % 3 == 0}" class="mesa-tiempo">
+                                    <i class='bx bx-time-five'></i>
+                                    Tiempo: 45 min
+                                </p>
+                                <p th:if="${i % 3 == 0}" class="mesa-usuario">
+                                    <i class='bx bx-user'></i>
+                                    Usuario: María López
+                                </p>
+                                <p th:if="${i % 3 != 0}" class="mesa-libre">
+                                    <i class='bx bx-check-circle'></i>
+                                    Disponible
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Funciones para manejar pedidos
+        function confirmarPedido(pedidoId) {
+            if (confirm('¿Confirmar este pedido como completado?')) {
+                window.location.href = '/administrador/actualizar-estado?pedidoId=' + pedidoId + '&estado=COMPLETADO';
+            }
+        }
+        
+        function verDetalles(pedidoId) {
+            alert('Mostrando detalles del pedido #' + pedidoId);
+            // Aquí puedes implementar un modal con los detalles
+        }
+        
+        // Actualización automática cada 30 segundos
+        setInterval(function() {
+            // Solo actualizar si no hay interacción del usuario
+            if (!document.hidden) {
+                console.log('Actualizando datos...');
+                // Puedes implementar AJAX aquí para actualización sin recargar
+            }
+        }, 30000);
+        
+        // Mostrar hora actual
+        function actualizarHora() {
+            const ahora = new Date();
+            document.getElementById('hora-actual').textContent = 
+                ahora.toLocaleTimeString('es-CO', { hour: '2-digit', minute: '2-digit' });
+        }
+        
+        setInterval(actualizarHora, 1000);
+        actualizarHora();
+    </script>
+
+    <style>
+        /* Estilos para mensajes */
+        .mensaje-exito {
+            background-color: #d4edda;
+            color: #155724;
+            padding: 12px;
+            border-radius: 5px;
+            margin: 10px 20px;
+            border: 1px solid #c3e6cb;
+            text-align: center;
+        }
+        
+        .mensaje-error {
+            background-color: #f8d7da;
+            color: #721c24;
+            padding: 12px;
+            border-radius: 5px;
+            margin: 10px 20px;
+            border: 1px solid #f5c6cb;
+            text-align: center;
+        }
+        
+        /* Estados de pedidos */
+        .status.pendiente { background: #fff3cd; color: #856404; }
+        .status.completado { background: #d1edff; color: #004085; }
+        .status.entregado { background: #d4edda; color: #155724; }
+        .status.cancelado { background: #f8d7da; color: #721c24; }
+        
+        /* Botones de acción */
+        .action-buttons {
+            display: flex;
+            gap: 5px;
+        }
+        
+        .btn-confirm, .btn-view {
+            padding: 5px 10px;
+            border: none;
+            border-radius: 3px;
+            cursor: pointer;
+        }
+        
+        .btn-confirm { background: #28a745; color: white; }
+        .btn-view { background: #17a2b8; color: white; }
+        
+        /* Estado de mesas */
+        .mesas-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-top: 15px;
+        }
+        
+        .mesa-card {
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        
+        .mesa-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        
+        .mesa-status {
+            padding: 3px 8px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+        
+        .mesa-status.libre { background: #d4edda; color: #155724; }
+        .mesa-status.ocupada { background: #f8d7da; color: #721c24; }
+        
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        
+        .refresh-btn {
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+    </style>
+</body>
+</html>

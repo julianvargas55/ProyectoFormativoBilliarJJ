@@ -1,0 +1,53 @@
+package sena.jj.com.controller;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.*;
+
+import jakarta.servlet.http.HttpSession;
+import sena.jj.com.model.Pedido;
+import sena.jj.com.model.Usuario;
+import sena.jj.com.service.PedidoService;
+
+@Controller
+@RequestMapping("/usuario")
+public class UsuarioController {
+
+    @Autowired
+    private PedidoService pedidoService;
+
+    @GetMapping("")
+    public String panelUsuario(HttpSession session, Model model) {
+        Usuario usuario = (Usuario) session.getAttribute("usuario");
+        if (usuario == null) {
+            return "redirect:/index";
+        }
+        model.addAttribute("usuario", usuario);
+        return "usuario";
+    }
+
+    @PostMapping("/procesar-pedido")
+    public String procesarPedido(@RequestParam String pedidoData, 
+                                HttpSession session,
+                                RedirectAttributes redirect) {
+        try {
+            Usuario usuario = (Usuario) session.getAttribute("usuario");
+            // Aquí procesas el pedido JSON
+            redirect.addFlashAttribute("exito", "Pedido realizado exitosamente");
+        } catch (Exception e) {
+            redirect.addFlashAttribute("error", "Error al procesar el pedido: " + e.getMessage());
+        }
+        return "redirect:/usuario";
+    }
+
+    @GetMapping("/mis-pedidos")
+    public String misPedidos(HttpSession session, Model model) {
+        Usuario usuario = (Usuario) session.getAttribute("usuario");
+        if (usuario == null) {
+            return "redirect:/index";
+        }
+        // Aquí cargar los pedidos del usuario
+        return "mis-pedidos";
+    }
+}

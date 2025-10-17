@@ -1,0 +1,39 @@
+package sena.jj.com.service;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import sena.jj.com.model.Usuario;
+import sena.jj.com.repository.IUsuarioRepository;
+import java.util.List;
+import java.util.Optional;
+
+@Service
+public class IUsuarioService {
+
+    @Autowired
+    private IUsuarioRepository usuarioRepo;
+
+    public List<Usuario> findAll() {
+        return usuarioRepo.findAll();
+    }
+
+    public Optional<Usuario> findByEmail(String email) {
+        return usuarioRepo.findByEmail(email);
+    }
+
+    public Usuario save(Usuario usuario) {
+        return usuarioRepo.save(usuario);
+    }
+
+    public void deleteById(Integer id) {
+        usuarioRepo.deleteById(id);
+    }
+
+    public boolean validarCredenciales(String email, String password) {
+        return usuarioRepo.findByEmailAndPassword(email, password).isPresent();
+    }
+
+    public long countUsuariosActivos() {
+        return usuarioRepo.countByActivoTrue();
+    }
+}

@@ -1,70 +1,40 @@
 package sena.jj.com.model;
 
-import java.util.List;
-
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "reservas")
 public class Reservas {
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Integer id;
-	private String estado;
-	private String horaReserva;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer id;
 
-	@ManyToOne
-	private Cliente cliente;
-	@OneToMany(mappedBy = "reservas")
-	private List<Mesa> mesa;
+    private LocalDateTime fechaReserva;
+    private String estado;
+    
+    @ManyToOne
+    @JoinColumn(name = "mesa_id")
+    private Mesa mesa;
 
-	@ManyToOne
-	private Servicios servicios;
+    @ManyToOne
+    @JoinColumn(name = "cliente_id")
+    private Cliente cliente;
 
-	public Reservas() {
+    public Reservas() {
+        this.estado = "PENDIENTE";
+        this.fechaReserva = LocalDateTime.now();
+    }
 
-	}
-
-	public Reservas(Integer id, String estado, String horaReserva) {
-		super();
-		this.id = id;
-		this.estado = estado;
-		this.horaReserva = horaReserva;
-	}
-
-	public Integer getId() {
-		return id;
-	}
-
-	public void setId(Integer id) {
-		this.id = id;
-	}
-
-	public String getEstado() {
-		return estado;
-	}
-
-	public void setEstado(String estado) {
-		this.estado = estado;
-	}
-
-	public String getHoraReserva() {
-		return horaReserva;
-	}
-
-	public void setHoraReserva(String horaReserva) {
-		this.horaReserva = horaReserva;
-	}
-
-	@Override
-	public String toString() {
-		return "Reservas [id=" + id + ", estado=" + estado + ", horaReserva=" + horaReserva + "]";
-	}
-
+    // Getters y setters
+    public Integer getId() { return id; }
+    public void setId(Integer id) { this.id = id; }
+    public LocalDateTime getFechaReserva() { return fechaReserva; }
+    public void setFechaReserva(LocalDateTime fechaReserva) { this.fechaReserva = fechaReserva; }
+    public String getEstado() { return estado; }
+    public void setEstado(String estado) { this.estado = estado; }
+    public Mesa getMesa() { return mesa; }
+    public void setMesa(Mesa mesa) { this.mesa = mesa; }
+    public Cliente getCliente() { return cliente; }
+    public void setCliente(Cliente cliente) { this.cliente = cliente; }
 }

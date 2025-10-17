@@ -1,0 +1,70 @@
+package sena.jj.com.controller;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
+import jakarta.servlet.http.HttpSession;
+import sena.jj.com.model.Pedido;
+import sena.jj.com.model.Usuario;
+import sena.jj.com.service.IUsuarioService;
+import sena.jj.com.service.PedidoService;
+
+import java.util.List;
+import java.util.ArrayList;
+
+@Controller
+@RequestMapping("/administrador")
+public class AdministradorController {
+
+    @Autowired
+    private IUsuarioService usuarioService;
+
+    @Autowired
+    private PedidoService pedidoService;
+
+    @GetMapping("")
+    public String administrador(Model model, HttpSession session) {
+        // Verificar sesión
+        Usuario usuario = (Usuario) session.getAttribute("usuario");
+        if (usuario == null) {
+            return "redirect:/";
+        }
+
+        // Verificar que es administrador
+        if (!"1".equals(usuario.getRol())) {
+            return "redirect:/usuario";
+        }
+
+        try {
+            // Cargar usuarios
+            List<Usuario> usuarios = usuarioService.findAll();
+            model.addAttribute("usuarios", usuarios);
+            model.addAttribute("totalUsuarios", usuarios.size());
+            
+            // CARGAR PEDIDOS REALES - SOLO ESTAS LÍNEAS
+            List<Pedido> pedidosRecientes = pedidoService.findAllOrderByFechaDesc();
+            model.addAttribute("pedidos", pedidosRecientes);
+            model.addAttribute("totalPedidos", pedidosRecientes.size());
+            
+        } catch (Exception e) {
+            model.addAttribute("error", "Error al cargar datos: " + e.getMessage());
+            model.addAttribute("usuarios", new ArrayList<>());
+            model.addAttribute("totalUsuarios", 0);
+            model.addAttribute("pedidos", new ArrayList<>());
+            model.addAttribute("totalPedidos", 0);
+        }
+        
+        return "administrador/administrador";
+    }
+
+    // ELIMINA TEMPORALMENTE EL MÉTODO completarPedido HASTA QUE FUNCIONE LO BÁSICO
+    /*
+    @PostMapping("/pedido/completar")
+    public String completarPedido(@RequestParam Integer pedidoId, RedirectAttributes redirect) {
+        return "redirect:/administrador";
+    }
+    */
+}

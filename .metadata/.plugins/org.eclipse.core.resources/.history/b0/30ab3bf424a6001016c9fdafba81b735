@@ -1,0 +1,21 @@
+package sena.jj.com.controller;
+
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+
+@Controller
+@RequestMapping("/user")
+public class UsuarioController {
+
+	@GetMapping("")
+	public String index() {
+		return "index";
+	}
+
+	@GetMapping("/registro")
+	public String registro() {
+		return "usuario/REGISTRO";
+	}
+
+}

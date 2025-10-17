@@ -1,0 +1,50 @@
+package sena.jj.com.controller;
+
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+
+import sena.jj.com.model.Usuario;
+import sena.jj.com.service.IUsuarioService;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import javax.servlet.http.HttpSession;
+
+@Controller
+public class LoginController {
+
+    @Autowired
+    private IUsuarioService usuarioService;
+
+    @GetMapping("/")
+    public String loginForm() {
+        return "login";
+    }
+
+    @PostMapping("/login")
+    public String login(@RequestParam String email, 
+                       @RequestParam String password, 
+                       jakarta.servlet.http.HttpSession session) {
+        
+        Usuario usuario = usuarioService.autenticar(email, password);
+        if (usuario != null) {
+            session.setAttribute("usuario", usuario);
+            
+            // Redirección según rol
+            if ("admin".equals(usuario.getRol())) {
+                return "redirect:/admin/dashboard";
+            } else {
+                return "redirect:/mis-pedidos";
+            }
+        } else {
+            return "redirect:/?error=true";
+        }
+    }
+
+    @GetMapping("/logout")
+    public String logout(jakarta.servlet.http.HttpSession session) {
+        session.invalidate();
+        return "redirect:/";
+    }
+}

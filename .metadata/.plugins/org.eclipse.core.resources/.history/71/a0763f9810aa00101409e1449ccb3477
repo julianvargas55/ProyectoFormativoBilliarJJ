@@ -1,0 +1,46 @@
+package sena.jj.com.service;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import sena.jj.com.model.Pedido;
+import sena.jj.com.repository.IPedidoRepository;
+import java.util.List;
+
+@Service
+public class PedidoService {
+
+    @Autowired
+    private IPedidoRepository pedidoRepo;
+
+    public List<Pedido> findAll() {
+        return pedidoRepo.findAll();
+    }
+
+    public List<Pedido> findAllOrderByFechaDesc() {
+        return pedidoRepo.findAllByOrderByFechaCreacionDesc();
+    }
+
+    public List<Pedido> findByEstado(String estado) {
+        return pedidoRepo.findByEstado(estado);
+    }
+
+    public List<Pedido> findByUsuarioId(Integer usuarioId) {
+        return pedidoRepo.findByUsuarioIdOrderByFechaCreacionDesc(usuarioId);
+    }
+
+    public Pedido save(Pedido pedido) {
+        return pedidoRepo.save(pedido);
+    }
+
+    public void deleteById(Integer id) {
+        pedidoRepo.deleteById(id);
+    }
+
+    public long contarPorEstado(String estado) {
+        return pedidoRepo.countByEstado(estado);
+    }
+
+    public List<Pedido> findPedidosDeHoy() {
+        return pedidoRepo.findPedidosHoy();
+    }
+}

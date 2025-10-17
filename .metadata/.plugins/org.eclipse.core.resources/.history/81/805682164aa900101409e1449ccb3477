@@ -1,0 +1,94 @@
+package sena.jj.com.controller;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
+import jakarta.servlet.http.HttpSession;
+import sena.jj.com.model.*;
+import sena.jj.com.service.*;
+
+import java.util.List;
+
+@Controller
+@RequestMapping("/administrador")
+public class AdministradorController {
+
+    @Autowired
+    private PedidoService pedidoService;
+    
+    @Autowired
+    private IProductoService productoService;
+    
+    @Autowired
+    private IUsuarioService usuarioService;
+
+    @GetMapping("")
+    public String administrador(Model model, HttpSession session) {
+        // Verificar sesión
+        Usuario usuario = (Usuario) session.getAttribute("usuario");
+        if (usuario == null) {
+            return "redirect:/index";
+        }
+
+        // Verificar que es administrador
+        if (!"ADMIN".equals(usuario.getRol())) {
+            return "redirect:/usuario";
+        }
+
+        // Cargar datos reales
+        List<Pedido> pedidos = pedidoService.findAll();
+        List<Producto> productos = productoService.findAll();
+        List<Usuario> usuarios = usuarioService.findAll();
+
+        // Estadísticas
+        model.addAttribute("totalPedidos", pedidos.size());
+        model.addAttribute("pedidosPendientes", contarPedidosPendientes(pedidos));
+        model.addAttribute("totalProductos", productos.size());
+        model.addAttribute("productosBajoStock", contarProductosBajoStock(productos, 10));
+        model.addAttribute("totalUsuarios", usuarios.size());
+        
+        // Datos simulados (reemplaza con datos reales)
+        model.addAttribute("ingresosDia", 1560000);
+        model.addAttribute("mesasActivas", 6);
+
+        // Datos para las tablas
+        model.addAttribute("pedidos", pedidos);
+        model.addAttribute("productos", productos);
+        model.addAttribute("usuarios", usuarios);
+        
+        return "administrador";
+    }
+
+    @PostMapping("/pedido/actualizar-estado")
+    public String actualizarEstadoPedido(@RequestParam Integer pedidoId, 
+                                        @RequestParam String estado,
+                                        RedirectAttributes redirect) {
+        try {
+            Pedido pedido = pedidoService.findById(pedidoId);
+            if (pedido != null) {
+                pedido.setEstado(estado);
+                pedidoService.save(pedido);
+                redirect.addFlashAttribute("exito", "Estado actualizado exitosamente");
+            }
+        } catch (Exception e) {
+            redirect.addFlashAttribute("error", "Error: " + e.getMessage());
+        }
+        return "redirect:/administrador";
+    }
+
+    // Métodos auxiliares
+    private int contarPedidosPendientes(List<Pedido> pedidos) {
+        return (int) pedidos.stream()
+                .filter(p -> "PENDIENTE".equals(p.getEstado()))
+                .count();
+    }
+
+    private int contarProductosBajoStock(List<Producto> productos, int stockMinimo) {
+        return (int) productos.stream()
+                .filter(p -> p.getStock() < stockMinimo)
+                .count();
+    }
+}

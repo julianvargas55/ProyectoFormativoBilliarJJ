@@ -1,0 +1,6 @@
+import sena.jj.com.model.Usuario;
+
+public interface IUsuarioService {
+    Usuario guardarUsuario(Usuario usuario);
+    Usuario buscarForEmailYPassword(String email, String password);
+}

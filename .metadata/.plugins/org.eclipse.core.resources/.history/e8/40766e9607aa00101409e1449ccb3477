@@ -1,0 +1,76 @@
+package sena.jj.com.controller;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
+import jakarta.servlet.http.HttpSession;
+import sena.jj.com.model.Usuario;
+import sena.jj.com.service.IUsuarioService;
+
+@Controller
+@RequestMapping("/usuario")
+public class UsuarioController {
+
+    @Autowired
+    private IUsuarioService usuarioService;
+
+    @GetMapping("")
+    public String panelUsuario(HttpSession session, Model model) {
+        Usuario usuario = (Usuario) session.getAttribute("usuario");
+        if (usuario == null) {
+            return "redirect:/";
+        }
+        model.addAttribute("usuario", usuario);
+        return "usuario/Usuario";  // ← CAMBIADO: con carpeta
+    }
+
+    @PostMapping("/procesar-pedido")
+    public String procesarPedido(@RequestParam String pedidoData, 
+                                HttpSession session,
+                                RedirectAttributes redirect) {
+        try {
+            Usuario usuario = (Usuario) session.getAttribute("usuario");
+            if (usuario == null) {
+                return "redirect:/";
+            }
+            
+            // Simular procesamiento del pedido (sin base de datos por ahora)
+            System.out.println("Pedido recibido de: " + usuario.getEmail());
+            System.out.println("Datos del pedido: " + pedidoData);
+            
+            redirect.addFlashAttribute("exito", "¡Pedido realizado exitosamente! Pronto lo atendremos.");
+            
+        } catch (Exception e) {
+            redirect.addFlashAttribute("error", "Error al procesar el pedido: " + e.getMessage());
+        }
+        return "redirect:/usuario";
+    }
+
+    @GetMapping("/mis-pedidos")
+    public String misPedidos(HttpSession session, Model model) {
+        Usuario usuario = (Usuario) session.getAttribute("usuario");
+        if (usuario == null) {
+            return "redirect:/";
+        }
+        
+        // Mensaje temporal hasta que implementes pedidos
+        model.addAttribute("mensaje", "Funcionalidad en desarrollo. Pronto podrás ver tus pedidos aquí.");
+        model.addAttribute("usuario", usuario);
+        
+        return "mis-pedidos";
+    }
+
+    @GetMapping("/perfil")
+    public String perfilUsuario(HttpSession session, Model model) {
+        Usuario usuario = (Usuario) session.getAttribute("usuario");
+        if (usuario == null) {
+            return "redirect:/";
+        }
+        
+        model.addAttribute("usuario", usuario);
+        return "perfil-usuario";
+    }
+}

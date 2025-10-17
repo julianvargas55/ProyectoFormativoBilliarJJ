@@ -1,0 +1,38 @@
+package sena.jj.com.controller;
+
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+
+@Controller
+public class RegistroController {
+
+    // Mostrar formulario de registro - CORREGIDO
+    @GetMapping("/registro")
+    public String mostrarRegistro(Model model) {
+        return "usuario/registro"; // Ahora busca en templates/usuario/registro.html
+    }
+
+    // Procesar registro
+    @PostMapping("/registro")
+    public String procesarRegistro(
+            @RequestParam String nombre,
+            @RequestParam String email,
+            @RequestParam String password,
+            @RequestParam String confirmPassword,
+            Model model) {
+        
+        // Validaciones
+        if (!password.equals(confirmPassword)) {
+            model.addAttribute("error", "Las contraseñas no coinciden");
+            return "usuario/registro";
+        }
+        
+        // Lógica de registro aquí
+        
+        model.addAttribute("exito", "Registro exitoso");
+        return "redirect:/";
+    }
+}

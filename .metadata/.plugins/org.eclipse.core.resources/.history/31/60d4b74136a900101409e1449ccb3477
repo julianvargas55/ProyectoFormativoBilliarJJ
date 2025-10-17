@@ -1,0 +1,51 @@
+package sena.jj.com.controller;
+
+import sena.jj.com.model.Usuario;
+import sena.jj.com.service.IUsuarioService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
+@Controller
+public class LoginController {
+
+    @Autowired
+    private IUsuarioService usuarioService;
+
+    @GetMapping("/registro")
+    public String mostrarRegistro() {
+        return "REGISTRO";
+    }
+
+    @PostMapping("/registro")
+    public String registrarUsuario(
+            @RequestParam String nombre,
+            @RequestParam String email,
+            @RequestParam String password,
+            RedirectAttributes redirectAttributes) {
+
+        try {
+            // Crear usuario
+            Usuario usuario = new Usuario();
+            usuario.setNombre(nombre);
+            usuario.setEmail(email);
+            usuario.setPassword(password); // Sin encriptar por ahora
+
+            // Guardar usuario
+            usuarioService.guardarUsuario(usuario);
+
+            redirectAttributes.addFlashAttribute("exito", "¡Registro exitoso!");
+            return "redirect:/index";  // CORREGIDO: una sola diagonal
+
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("error", "Error: " + e.getMessage());
+            return "redirect:/registro";  // CORREGIDO: una sola diagonal
+        }
+    }
+
+    @GetMapping("/index")
+    public String mostrarIndex() {
+        return "index";  // AGREGADO: retorno del método
+    }
+}

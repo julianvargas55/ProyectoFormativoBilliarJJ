@@ -1,0 +1,49 @@
+package sena.jj.com.service;
+
+import sena.jj.com.model.Pedido;
+import sena.jj.com.model.DetallePedido;
+import sena.jj.com.model.Usuario;
+import sena.jj.com.repository.PedidoRepository;
+import sena.jj.com.repository.DetallePedidoRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import java.util.List;
+import java.util.Map;
+
+@Service
+public class PedidoService {
+    
+    @Autowired
+    private PedidoRepository pedidoRepository;
+    
+    @Autowired
+    private DetallePedidoRepository detallePedidoRepository;
+    
+    public Pedido crearPedido(Usuario usuario, List<Map<String, Object>> items) {
+        // Calcular total
+        Double total = 0.0;
+        for (Map<String, Object> item : items) {
+            Double precio = Double.parseDouble(item.get("precio").toString());
+            total += precio;
+        }
+        
+        // Crear pedido - se inicializa automáticamente la fecha
+        Pedido pedido = new Pedido(usuario, total);
+        
+        // Agregar detalles
+        for (Map<String, Object> item : items) {
+            String nombre = item.get("nombre").toString();
+            Double precio = Double.parseDouble(item.get("precio").toString());
+            
+            DetallePedido detalle = new DetallePedido(nombre, precio, 1);
+            pedido.agregarDetalle(detalle);
+        }
+        
+        // Guardar pedido y detalles
+        Pedido pedidoGuardado = pedidoRepository.save(pedido);
+        
+        return pedidoGuardado;
+    }
+    
+    // ... resto de métodos igual
+}

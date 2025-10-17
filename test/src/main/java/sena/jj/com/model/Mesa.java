@@ -1,73 +1,35 @@
 package sena.jj.com.model;
 
+import jakarta.persistence.*;
 import java.util.List;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.Table;
-
 @Entity
-@Table(name = "mesa")
+@Table(name = "mesas")
 public class Mesa {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer id;
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Integer id;
-	private String numMesa;
-	private String estado;
-	private String tipoJuego;
-	
-	@ManyToOne
-	private Reservas reservas;
-	@OneToMany(mappedBy =  "mesa")
-	private List<Servicios>servicios;
-	@OneToMany(mappedBy = "mesa")
-	private List<Tiempos>tiempos;
-	
-	
-	public Mesa() {
-		super();
-		// TODO Auto-generated constructor stub
-	}
-	public Mesa(Integer id, String numMesa, String estado, String tipoJuego) {
-		super();
-		this.id = id;
-		this.numMesa = numMesa;
-		this.estado = estado;
-		this.tipoJuego = tipoJuego;
-	}
-	public Integer getId() {
-		return id;
-	}
-	public void setId(Integer id) {
-		this.id = id;
-	}
-	public String getNumMesa() {
-		return numMesa;
-	}
-	public void setNumMesa(String numMesa) {
-		this.numMesa = numMesa;
-	}
-	public String getEstado() {
-		return estado;
-	}
-	public void setEstado(String estado) {
-		this.estado = estado;
-	}
-	public String getTipoJuego() {
-		return tipoJuego;
-	}
-	public void setTipoJuego(String tipoJuego) {
-		this.tipoJuego = tipoJuego;
-	}
-	@Override
-	public String toString() {
-		return "Mesa [id=" + id + ", numMesa=" + numMesa + ", estado=" + estado + ", tipoJuego=" + tipoJuego + "]";
-	}
+    private String numero;
+    private Integer capacidad;
+    private String estado;
 
-	
+    @OneToMany(mappedBy = "mesa")
+    private List<Reservas> reservas;
+
+    public Mesa() {
+        this.estado = "DISPONIBLE";
+    }
+
+    // Getters y setters
+    public Integer getId() { return id; }
+    public void setId(Integer id) { this.id = id; }
+    public String getNumero() { return numero; }
+    public void setNumero(String numero) { this.numero = numero; }
+    public Integer getCapacidad() { return capacidad; }
+    public void setCapacidad(Integer capacidad) { this.capacidad = capacidad; }
+    public String getEstado() { return estado; }
+    public void setEstado(String estado) { this.estado = estado; }
+    public List<Reservas> getReservas() { return reservas; }
+    public void setReservas(List<Reservas> reservas) { this.reservas = reservas; }
 }

@@ -1,0 +1,16 @@
+package sena.jj.com.controller;
+
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+
+@Controller
+@RequestMapping("/billar")
+public class BillarController {
+	
+	@GetMapping("/billar")
+	public String billar(){
+		return "/administrador/Billar";
+	}
+
+}

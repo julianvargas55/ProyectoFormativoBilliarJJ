@@ -1,0 +1,98 @@
+package sena.jj.com.controller;
+
+import sena.jj.com.model.Usuario;
+import sena.jj.com.service.IUsuarioService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
+import jakarta.servlet.http.HttpSession;
+
+@Controller
+public class LoginController {
+    
+    @Autowired
+    private IUsuarioService usuarioService;
+    
+    @GetMapping("/registro")
+    public String mostrarRegistro() {
+        return "usuario/REGISTRO";
+    }
+    
+    @PostMapping("/registro")
+    public String registrarUsuario(
+            @RequestParam String nombre,
+            @RequestParam String email,
+            @RequestParam String password,
+            RedirectAttributes redirectAttributes) {
+
+        try {
+            Usuario usuario = new Usuario();
+            usuario.setNombre(nombre);
+            usuario.setEmail(email);
+            usuario.setPassword(password);
+            usuarioService.guardarUsuario(usuario);
+            redirectAttributes.addFlashAttribute("exito", "¡Registro exitoso!");
+            return "redirect:/index";
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("error", "Error: " + e.getMessage());
+            return "redirect:/registro";
+        }
+    }
+    
+    @GetMapping("/index")
+    public String mostrarLogin() {
+        return "index";
+    }
+    
+    @PostMapping("/login")
+    public String procesarLogin(
+            @RequestParam String email,
+            @RequestParam String password,
+            HttpSession session,
+            RedirectAttributes redirectAttributes) {
+
+        try {
+            Usuario usuario = usuarioService.buscarPorEmailYPassword(email, password);
+            
+            if (usuario != null) {
+                session.setAttribute("usuario", usuario);
+                
+                // VERSIÓN SIMPLIFICADA - Solo por email
+                if (usuario.getEmail().toLowerCase().contains("admin")) {
+                    redirectAttributes.addFlashAttribute("exito", "¡Bienvenido Administrador " + usuario.getNombre() + "!");
+                    return "redirect:/administrador";
+                } else {
+                    redirectAttributes.addFlashAttribute("exito", "¡Bienvenido " + usuario.getNombre() + "!");
+                    return "redirect:/usuario/panel";
+                }
+            } else {
+                redirectAttributes.addFlashAttribute("error", "Email o contraseña incorrectos");
+                return "redirect:/index";
+            }
+            
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("error", "Error: " + e.getMessage());
+            return "redirect:/index";
+        }
+    }
+    
+    @GetMapping("/logout")
+    public String cerrarSesion(HttpSession session) {
+        session.invalidate();
+        return "redirect:/index";
+    }
+    
+    // Acceso directo al panel de administrador
+    @GetMapping("/administrador")
+    public String accesoAdministrador(HttpSession session, RedirectAttributes redirectAttributes) {
+        Usuario usuario = (Usuario) session.getAttribute("usuario");
+        if (usuario != null && usuario.getEmail().toLowerCase().contains("admin")) {
+            return "administrador/administrador";
+        } else {
+            redirectAttributes.addFlashAttribute("error", "Acceso denegado. Solo administradores.");
+            return "redirect:/index";
+        }
+    }
+}

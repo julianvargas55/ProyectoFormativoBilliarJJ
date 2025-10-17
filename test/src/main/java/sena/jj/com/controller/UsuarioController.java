@@ -1,21 +1,122 @@
 package sena.jj.com.controller;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
+import jakarta.servlet.http.HttpSession;
+import sena.jj.com.model.Pedido;
+import sena.jj.com.model.Usuario;
+import sena.jj.com.service.PedidoService;
+
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Controller
-@RequestMapping("/")
+@RequestMapping("/usuario")
 public class UsuarioController {
 
-	@GetMapping("")
-	public String index() {
-		return "index";
-	}
+    @Autowired
+    private PedidoService pedidoService;
 
-	@GetMapping("/registro")
-	public String registro() {
-		return "usuario/REGISTRO";
-	}
+    @GetMapping("/mis-pedidos")
+    public String misPedidos(HttpSession session, Model model) {
+        Usuario usuario = (Usuario) session.getAttribute("usuario");
+        if (usuario == null) {
+            return "redirect:/";
+        }
 
+        // Cargar pedidos del usuario
+        try {
+            List<Pedido> pedidosUsuario = pedidoService.findByUsuarioId(usuario.getId());
+            model.addAttribute("pedidos", pedidosUsuario);
+            model.addAttribute("usuario", usuario);
+        } catch (Exception e) {
+            model.addAttribute("error", "Error al cargar pedidos: " + e.getMessage());
+            model.addAttribute("pedidos", new ArrayList<>());
+        }
+
+        return "usuario/Usuario"; // Mantiene la misma vista
+    }
+
+    // MÉTODO MEJORADO: Procesar pedido desde el carrito
+    @PostMapping("/procesar-pedido")
+    public String procesarPedido(@RequestParam String pedidoData, 
+                                HttpSession session,
+                                RedirectAttributes redirectAttributes) {
+        Usuario usuario = (Usuario) session.getAttribute("usuario");
+        
+        if (usuario == null) {
+            return "redirect:/";
+        }
+
+        try {
+            // Parsear el JSON del carrito
+            Double totalCalculado = calcularTotalDesdeJSON(pedidoData);
+            
+            // Crear nuevo pedido
+            Pedido pedido = new Pedido();
+            pedido.setUsuario(usuario);
+            pedido.setProductos(pedidoData); // Guarda el JSON del carrito
+            pedido.setTotal(totalCalculado);
+            pedido.setEstado("PENDIENTE");
+            
+            // Guardar en base de datos
+            Pedido pedidoGuardado = pedidoService.guardarPedido(pedido);
+            
+            redirectAttributes.addFlashAttribute("exito", "¡Pedido realizado con éxito! Número de pedido: #" + pedidoGuardado.getId() + " - Total: $" + String.format("%.2f", totalCalculado));
+            
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("error", "Error al procesar el pedido: " + e.getMessage());
+        }
+        
+        return "redirect:/usuario/mis-pedidos";
+    }
+
+    @GetMapping("/perfil")
+    public String perfilUsuario(HttpSession session, Model model) {
+        Usuario usuario = (Usuario) session.getAttribute("usuario");
+        if (usuario == null) {
+            return "redirect:/";
+        }
+        model.addAttribute("usuario", usuario);
+        return "usuario/Usuario";
+    }
+    
+    // Método auxiliar para calcular el total desde el JSON
+    private Double calcularTotalDesdeJSON(String pedidoData) {
+        try {
+            // Parsear JSON simple para extraer el total
+            if (pedidoData.contains("\"total\":")) {
+                String[] parts = pedidoData.split("\"total\":");
+                if (parts.length > 1) {
+                    String totalPart = parts[1].split("[,\\}]")[0].trim();
+                    return Double.parseDouble(totalPart);
+                }
+            }
+            // Fallback: calcular desde productos individuales
+            return calcularTotalDesdeProductos(pedidoData);
+        } catch (Exception e) {
+            System.err.println("Error calculando total: " + e.getMessage());
+            return 0.0;
+        }
+    }
+    
+    private Double calcularTotalDesdeProductos(String pedidoData) {
+        try {
+            Double total = 0.0;
+            // Buscar todos los precios en el JSON
+            String[] lines = pedidoData.split("\"precio\":");
+            for (int i = 1; i < lines.length; i++) {
+                String precioStr = lines[i].split("[,\\}]")[0].trim();
+                total += Double.parseDouble(precioStr);
+            }
+            return total;
+        } catch (Exception e) {
+            return 0.0;
+        }
+    }
 }

@@ -1,0 +1,44 @@
+package sena.jj.com.model;
+
+import jakarta.persistence.*;
+import java.util.List;
+
+@Entity
+@Table(name = "servicios")
+public class Servicios {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer id;
+    
+    private String nombre;
+    private String descripcion;
+    
+    // RELACIÓN CORREGIDA - Si es ManyToMany
+    @ManyToMany
+    @JoinTable(
+        name = "servicio_producto",
+        joinColumns = @JoinColumn(name = "servicio_id"),
+        inverseJoinColumns = @JoinColumn(name = "producto_id")
+    )
+    private List<Producto> productos;
+    
+    // O si es OneToMany, sería:
+    // @OneToMany(mappedBy = "servicio")
+    // private List<Producto> productos;
+    
+    // Constructores, getters y setters
+    public Servicios() {}
+    
+    // Getters y setters...
+    public Integer getId() { return id; }
+    public void setId(Integer id) { this.id = id; }
+    
+    public String getNombre() { return nombre; }
+    public void setNombre(String nombre) { this.nombre = nombre; }
+    
+    public String getDescripcion() { return descripcion; }
+    public void setDescripcion(String descripcion) { this.descripcion = descripcion; }
+    
+    public List<Producto> getProductos() { return productos; }
+    public void setProductos(List<Producto> productos) { this.productos = productos; }
+}

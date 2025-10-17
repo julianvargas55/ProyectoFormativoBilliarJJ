@@ -1,0 +1,60 @@
+package sena.jj.com.controller;
+
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.ui.Model;
+
+import sena.jj.com.model.Usuario;
+import sena.jj.com.service.IUsuarioService;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import jakarta.servlet.http.HttpSession;
+
+@Controller
+public class LoginController {
+
+    @Autowired
+    private IUsuarioService usuarioService;
+
+    @GetMapping("/")
+    public String loginForm(Model model, @RequestParam(required = false) String error) {
+        if (error != null) {
+            model.addAttribute("error", "Credenciales incorrectas. Inténtalo de nuevo.");
+        }
+        return "index";
+    }
+
+    @PostMapping("/login")
+    public String login(@RequestParam String email, 
+                       @RequestParam String password, 
+                       HttpSession session,
+                       Model model) {
+        
+        try {
+            // CORRECCIÓN: Usar el método correcto del servicio
+            Usuario usuario = usuarioService.buscarForEmailYPassword(email, password);
+            
+            if (usuario != null) {
+                session.setAttribute("usuario", usuario);
+                
+                // CORRECCIÓN: Validar por rol "1" en lugar de "ADMIN"
+                if ("1".equals(usuario.getRol())) {
+                    return "redirect:/administrador";
+                } else {
+                    return "redirect:/usuario/mis-pedidos";
+                }
+            }
+        } catch (RuntimeException e) {
+            // Si hay error, redirigir con parámetro de error
+        }
+        return "redirect:/?error=true";
+    }
+
+    @GetMapping("/logout")
+    public String logout(HttpSession session) {
+        session.invalidate();
+        return "redirect:/";
+    }
+}

@@ -4,8 +4,8 @@
 	<section name="java.lang.Class">
 		<item key="replaceBarOpen" value="true"/>
 		<list key="replacehistory">
-			<item value="Integer"/>
 			<item value="th:href=&quot;@{/"/>
+			<item value="Integer"/>
 			<item value="href=&quot;@{/"/>
 			<item value="href"/>
 			<item value="th:href@{/"/>
@@ -19,9 +19,10 @@
 			<item value="rol"/>
 		</list>
 		<list key="findhistory">
+			<item value="tus"/>
+			<item value="href"/>
 			<item value="Long"/>
 			<item value="th:href=&quot;@{/"/>
-			<item value="href"/>
 			<item value="th:href=&quot;@{/assets"/>
 			<item value="href=&quot;assets"/>
 			<item value="img"/>

@@ -1,0 +1,38 @@
+package sena.jj.com.service;
+
+import sena.jj.com.model.Usuario;
+
+public interface IUsuarioService {
+    
+    /**
+     * Guarda un nuevo usuario en la base de datos
+     * @param usuario El usuario a guardar
+     * @return El usuario guardado
+     * @throws RuntimeException Si el email ya está registrado
+     */
+    Usuario guardarUsuario(Usuario usuario);
+    
+    /**
+     * Busca un usuario por email y contraseña para autenticación
+     * @param email El email del usuario
+     * @param password La contraseña del usuario
+     * @return El usuario si las credenciales son correctas
+     * @throws RuntimeException Si el usuario no existe o la contraseña es incorrecta
+     */
+    Usuario buscarForEmailYPassword(String email, String password);
+    
+    /**
+     * Busca un usuario por su email
+     * @param email El email a buscar
+     * @return El usuario si existe
+     * @throws RuntimeException Si el usuario no existe
+     */
+    Usuario buscarPorEmail(String email);
+    
+    /**
+     * Verifica si existe un usuario con el email especificado
+     * @param email El email a verificar
+     * @return true si el email existe, false en caso contrario
+     */
+    boolean existePorEmail(String email);
+}

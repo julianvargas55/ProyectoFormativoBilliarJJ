@@ -1,0 +1,22 @@
+package sena.jj.com.controller;
+
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.*;
+
+@Controller
+@RequestMapping("/administrador")
+public class AdministradorController {
+    
+    @GetMapping("/admin")
+    public String verTodosLosPedidos(Model model) {
+        model.addAttribute("mensaje", "Panel de administrador - Próximamente verás los pedidos aquí");
+        return "administrador/administrador";
+    }
+    
+    @GetMapping("/dashboard")
+    public String dashboard(Model model) {
+        model.addAttribute("mensaje", "Dashboard del administrador");
+        return "administrador/administrador";
+    }
+}

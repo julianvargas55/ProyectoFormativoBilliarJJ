@@ -1,0 +1,101 @@
+package sena.jj.com.controller;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import sena.jj.com.model.Pedido;
+import sena.jj.com.model.Producto;
+import sena.jj.com.model.Usuario;
+import sena.jj.com.repository.IPedidoRepository;
+import sena.jj.com.repository.IProductoRepository;
+import sena.jj.com.repository.IUsuarioRepository;
+
+import java.util.List;
+import java.util.Optional;
+
+@Controller
+@RequestMapping("/administrador")
+public class AdministradorController {
+
+    @Autowired
+    private IPedidoRepository pedidoRepo;
+    
+    @Autowired
+    private IProductoRepository productoRepo;
+    
+    @Autowired
+    private IUsuarioRepository usuarioRepo;
+
+    // Página principal del administrador
+    @GetMapping("")
+    public String administrador(Model model) {
+        // Obtener todos los pedidos ordenados por fecha descendente
+        List<Pedido> pedidos = pedidoRepo.findAllByOrderByFechaCreacionDesc();
+        model.addAttribute("pedidos", pedidos);
+        
+        // Obtener estadísticas
+        Long totalPedidos = pedidoRepo.count();
+        Long totalProductos = productoRepo.count();
+        Long totalUsuarios = usuarioRepo.count();
+        
+        model.addAttribute("totalPedidos", totalPedidos);
+        model.addAttribute("totalProductos", totalProductos);
+        model.addAttribute("totalUsuarios", totalUsuarios);
+        
+        return "administrador";
+    }
+
+    // Listar todos los productos
+    @GetMapping("/productos")
+    public String productos(Model model) {
+        List<Producto> productos = productoRepo.findAll();
+        model.addAttribute("productos", productos);
+        return "administrador/productos";
+    }
+
+    // Listar todos los usuarios
+    @GetMapping("/usuarios")
+    public String usuarios(Model model) {
+        List<Usuario> usuarios = usuarioRepo.findAll();
+        model.addAttribute("usuarios", usuarios);
+        return "administrador/usuarios";
+    }
+
+    // Cambiar estado de un pedido
+    @PostMapping("/pedido/estado/{id}")
+    public String cambiarEstadoPedido(@PathVariable Integer id, String nuevoEstado) {
+        Optional<Pedido> optionalPedido = pedidoRepo.findById(id);
+        
+        if (optionalPedido.isPresent()) {
+            Pedido pedido = optionalPedido.get();
+            pedido.setEstado(nuevoEstado);
+            pedidoRepo.save(pedido);
+        }
+        
+        return "redirect:/administrador";
+    }
+
+    // Ver detalles de un pedido
+    @GetMapping("/pedido/{id}")
+    public String verPedido(@PathVariable Integer id, Model model) {
+        Optional<Pedido> optionalPedido = pedidoRepo.findById(id);
+        
+        if (optionalPedido.isPresent()) {
+            model.addAttribute("pedido", optionalPedido.get());
+            return "administrador/detalle-pedido";
+        }
+        
+        return "redirect:/administrador";
+    }
+
+    // Eliminar un pedido
+    @PostMapping("/pedido/eliminar/{id}")
+    public String eliminarPedido(@PathVariable Integer id) {
+        pedidoRepo.deleteById(id);
+        return "redirect:/administrador";
+    }
+}

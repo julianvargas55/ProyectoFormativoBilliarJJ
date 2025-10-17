@@ -10,7 +10,6 @@ INDEX VERSION 1.134+C:\Users\Admin\OneDrive\Desktop\Fproyect\.metadata\.plugins\
 2759890971.index
 2235577527.index
 3023652871.index
-3271193799.index
 3253995166.index
 467523603.index
 3895855164.index

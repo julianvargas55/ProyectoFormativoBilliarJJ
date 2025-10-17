@@ -1,0 +1,65 @@
+package sena.jj.com.controller;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
+import jakarta.servlet.http.HttpSession;
+import sena.jj.com.model.Pedido;
+import sena.jj.com.model.Usuario;
+import sena.jj.com.service.IUsuarioService;
+import sena.jj.com.service.PedidoService; // ← IMPORTAR PedidoService
+
+@Controller
+@RequestMapping("/usuario")
+public class UsuarioController {
+
+    @Autowired
+    private IUsuarioService usuarioService;
+
+    @Autowired
+    private PedidoService pedidoService; // ← INYECTAR PedidoService
+
+    @GetMapping("")
+    public String panelUsuario(HttpSession session, Model model) {
+        Usuario usuario = (Usuario) session.getAttribute("usuario");
+        if (usuario == null) {
+            return "redirect:/";
+        }
+        model.addAttribute("usuario", usuario);
+        return "usuario/Usuario";
+    }
+
+    @PostMapping("/procesar-pedido")
+    public String procesarPedido(@RequestParam String pedidoData, 
+                                HttpSession session,
+                                RedirectAttributes redirect) {
+        try {
+            Usuario usuario = (Usuario) session.getAttribute("usuario");
+            if (usuario == null) {
+                return "redirect:/";
+            }
+            
+            // Crear y guardar el pedido en la base de datos
+            Pedido pedido = new Pedido();
+            pedido.setUsuario(usuario);
+            pedido.setDescripcion(pedidoData);
+            pedido.setTotal(0.0); // ← Puedes cambiar esto si tienes el total
+            pedido.setEstado("PENDIENTE");
+            
+            pedidoService.save(pedido);
+            
+            System.out.println("Pedido guardado ID: " + pedido.getId() + " - Usuario: " + usuario.getEmail());
+            
+            redirect.addFlashAttribute("exito", "¡Pedido realizado exitosamente! Pronto lo atendremos.");
+            
+        } catch (Exception e) {
+            redirect.addFlashAttribute("error", "Error al procesar el pedido: " + e.getMessage());
+        }
+        return "redirect:/usuario";
+    }
+
+    // ... resto de tus métodos igual
+}

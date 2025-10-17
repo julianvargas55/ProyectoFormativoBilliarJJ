@@ -1,0 +1,8 @@
+package sena.jj.com.service;
+
+import sena.jj.com.model.Usuario;
+
+public interface IUsuarioService {
+    Usuario registrarUsuario(Usuario usuario);
+    Usuario buscarPorEmail(String email);
+}

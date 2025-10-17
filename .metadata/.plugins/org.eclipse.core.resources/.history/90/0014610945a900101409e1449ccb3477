@@ -1,0 +1,34 @@
+package sena.jj.com.model;
+
+import jakarta.persistence.*;
+
+@Entity
+@Table(name = "facturacion")
+public class Facturacion {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer id;
+    
+    private String numeroFactura;
+    private Double monto;
+    private String estado;
+    
+    // COMENTA TODAS LAS RELACIONES TEMPORALMENTE
+    // @OneToMany(mappedBy = "facturacion")
+    // private List<Servicios> servicios;
+    
+    public Facturacion() {}
+    
+    // SOLO GETTERS Y SETTERS BÁSICOS
+    public Integer getId() { return id; }
+    public void setId(Integer id) { this.id = id; }
+    
+    public String getNumeroFactura() { return numeroFactura; }
+    public void setNumeroFactura(String numeroFactura) { this.numeroFactura = numeroFactura; }
+    
+    public Double getMonto() { return monto; }
+    public void setMonto(Double monto) { this.monto = monto; }
+    
+    public String getEstado() { return estado; }
+    public void setEstado(String estado) { this.estado = estado; }
+}

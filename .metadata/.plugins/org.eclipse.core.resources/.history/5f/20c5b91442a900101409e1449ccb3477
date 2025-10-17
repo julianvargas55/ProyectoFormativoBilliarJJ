@@ -1,0 +1,70 @@
+package sena.jj.com.controller;
+
+import sena.jj.com.model.Pedido;
+import sena.jj.com.model.Usuario;
+import sena.jj.com.service.PedidoService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.*;
+
+import jakarta.servlet.http.HttpSession;
+import java.util.List;
+
+@Controller
+@RequestMapping("/administrador")
+public class AdministradorController {
+    
+    @Autowired
+    private PedidoService pedidoService;
+    
+    @GetMapping("/panel")
+    public String panelAdministrador(HttpSession session, Model model) {
+        Usuario usuario = (Usuario) session.getAttribute("usuario");
+        if (usuario == null || !esAdministrador(usuario)) {
+            return "redirect:/index";
+        }
+        
+        try {
+            List<Pedido> pedidos = pedidoService.obtenerTodosLosPedidos();
+            Long pendientes = pedidoService.contarPedidosPendientes();
+            
+            model.addAttribute("pedidos", pedidos);
+            model.addAttribute("pendientes", pendientes);
+            model.addAttribute("totalPedidos", pedidos.size());
+            
+            return "administrador/administrador"; // Tu archivo existente
+        } catch (Exception e) {
+            model.addAttribute("error", "Error al cargar el panel: " + e.getMessage());
+            return "administrador/administrador";
+        }
+    }
+    
+    @GetMapping("/pedidos")
+    public String verTodosLosPedidos(HttpSession session, Model model) {
+        Usuario usuario = (Usuario) session.getAttribute("usuario");
+        if (usuario == null || !esAdministrador(usuario)) {
+            return "redirect:/index";
+        }
+        
+        try {
+            List<Pedido> pedidos = pedidoService.obtenerTodosLosPedidos();
+            Long pendientes = pedidoService.contarPedidosPendientes();
+            
+            model.addAttribute("pedidos", pedidos);
+            model.addAttribute("pendientes", pendientes);
+            
+            return "administrador/administrador"; // O crea una vista específica
+        } catch (Exception e) {
+            model.addAttribute("error", "Error al cargar los pedidos: " + e.getMessage());
+            return "administrador/administrador";
+        }
+    }
+    
+    // ... otros métodos del administrador
+    
+    private boolean esAdministrador(Usuario usuario) {
+        return usuario.getEmail().toLowerCase().contains("admin") || 
+               (usuario.getRol() != null && "ADMINISTRADOR".equals(usuario.getRol().getNombre()));
+    }
+}

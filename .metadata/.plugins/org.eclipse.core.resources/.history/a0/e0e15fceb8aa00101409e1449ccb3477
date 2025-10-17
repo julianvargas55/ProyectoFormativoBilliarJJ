@@ -1,0 +1,454 @@
+/* Variables CSS */
+:root {
+    --color-primary-dark: #1f1f1f; /* Fondo principal oscuro */
+    --color-secondary-dark: #2a2a2a; /* Elementos de fondo (cards, secciones) */
+    --color-accent-green: #00875a; /* Verde esmeralda (Acento principal) */
+    --color-accent-light: #00b875; /* Verde más claro para hover */
+    --color-text-light: #f5f5f5; /* Texto principal claro */
+    --color-text-muted: #aaaaaa; /* Texto secundario/sutil */
+    --color-divider: #444444; /* Líneas divisorias */
+    --font-heading: 'Georgia', serif;
+}
+
+/* Base y Tipografía */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Arial', sans-serif;
+}
+
+body {
+    background-color: var(--color-primary-dark);
+    color: var(--color-text-light);
+    line-height: 1.6;
+    scroll-behavior: smooth;
+}
+
+section {
+    padding: 80px 5%;
+}
+
+h2 {
+    font-size: 2.5em;
+    text-align: center;
+    margin-bottom: 40px;
+    color: var(--color-accent-green);
+    font-family: var(--font-heading);
+}
+
+h3 {
+    color: var(--color-accent-light);
+    margin-bottom: 15px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+/* ---------------------------------------------------- */
+
+/* Sección Hero (Carousel) */
+.hero-carousel {
+    height: 60vh; /* Altura de la vista */
+    background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.5)), url('ruta/a/tu/imagen-de-fondo.jpg') no-repeat center center/cover;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    color: var(--color-text-light);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+}
+
+.carousel-content h2 {
+    font-size: 3.5em;
+    margin-bottom: 10px;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.9);
+    color: var(--color-text-light);
+}
+
+.carousel-content p {
+    font-size: 1.5em;
+    font-style: italic;
+    color: var(--color-accent-light);
+}
+
+/* ---------------------------------------------------- */
+
+/* Barra de Navegación de Juegos (Fixed) */
+.navbar-games {
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    background-color: var(--color-secondary-dark);
+    display: flex;
+    justify-content: center;
+    padding: 15px 0;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
+}
+
+.navbar-games button {
+    background: none;
+    border: none;
+    color: var(--color-text-light);
+    font-size: 1em;
+    padding: 10px 20px;
+    margin: 0 10px;
+    cursor: pointer;
+    transition: color 0.3s ease, background-color 0.3s ease, border-radius 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    border-radius: 5px;
+}
+
+.navbar-games button:hover {
+    color: var(--color-accent-green);
+    background-color: var(--color-primary-dark);
+}
+
+.navbar-games button i {
+    font-size: 1.2em;
+}
+
+/* ---------------------------------------------------- */
+
+/* Sección de Información de Juegos */
+.games-info {
+    background-color: var(--color-primary-dark);
+    text-align: center;
+}
+
+.game-cards-container {
+    display: flex;
+    justify-content: center;
+    gap: 30px;
+    flex-wrap: wrap;
+}
+
+.game-card {
+    background-color: var(--color-secondary-dark);
+    padding: 25px;
+    border-radius: 12px;
+    width: 100%;
+    max-width: 350px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.4);
+   
+    text-align: left;
+}
+
+.game-card:hover {
+    transform: translateY(-5px);
+}
+
+.game-video-container {
+    position: relative;
+    width: 100%;
+    height: 0;
+    padding-bottom: 56.25%; /* Ratio 16:9 */
+    margin-bottom: 15px;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.game-video-container iframe {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
+
+.game-card p {
+    color: var(--color-text-muted);
+}
+
+.game-card p strong {
+    color: var(--color-text-light);
+}
+
+/* ---------------------------------------------------- */
+
+/* Panel de Usuario (Pedidos) */
+.user-panel-container {
+    background-color: var(--color-secondary-dark);
+    padding: 0;
+    max-width: 1200px;
+    margin: 0 auto;
+    border-radius: 10px;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.5);
+}
+
+.panel-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 30px;
+    border-bottom: 2px solid var(--color-divider);
+}
+
+.panel-title {
+    color: var(--color-accent-green);
+    font-size: 1.8em;
+}
+
+.logout-button {
+    background-color: #cc0000;
+    color: var(--color-text-light);
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background-color 0.3s ease;
+}
+
+.logout-button:hover {
+    background-color: #ff3333;
+}
+
+.content-container {
+    display: flex;
+}
+
+.products-section {
+    flex: 3;
+    padding: 30px;
+    border-right: 1px solid var(--color-divider);
+}
+
+.order-section {
+    flex: 1;
+    padding: 30px;
+    background-color: var(--color-primary-dark);
+}
+
+.products-section h2, .order-section h2 {
+    text-align: left;
+    margin-top: 0;
+    margin-bottom: 20px;
+    font-size: 1.8em;
+    color: var(--color-text-light);
+}
+
+.category {
+    margin-bottom: 30px;
+}
+
+.category h3 {
+    border-bottom: 1px solid var(--color-divider);
+    padding-bottom: 8px;
+    margin-bottom: 15px;
+    color: var(--color-text-light);
+    font-size: 1.4em;
+}
+
+.product-grid {
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+
+.product-card {
+    background-color: var(--color-secondary-dark);
+    border: 1px solid var(--color-divider);
+    border-radius: 8px;
+    overflow: hidden;
+    width: calc(33.333% - 13.333px); /* 3 por fila en escritorio */
+    text-align: center;
+    cursor: pointer;
+    transition: box-shadow 0.3s ease, transform 0.3s ease;
+}
+
+.product-card:hover {
+    box-shadow: 0 0 10px var(--color-accent-green);
+    transform: scale(1.02);
+}
+
+.product-card img {
+    width: 100%;
+    height: 120px;
+    object-fit: cover;
+}
+
+.product-card h4 {
+    margin: 10px 0 5px;
+    color: var(--color-text-light);
+}
+
+.product-card .product-price {
+    color: var(--color-accent-light);
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+/* Sección de Pedidos */
+.order-list {
+    min-height: 200px;
+    padding: 15px;
+    border: 1px solid var(--color-divider);
+    border-radius: 5px;
+    margin-bottom: 20px;
+    background-color: #222;
+}
+
+.order-summary {
+    display: flex;
+    justify-content: space-between;
+    font-size: 1.5em;
+    font-weight: bold;
+    margin-bottom: 20px;
+    padding-top: 10px;
+    border-top: 1px dashed var(--color-divider);
+}
+
+.total-price {
+    color: var(--color-accent-green);
+}
+
+.pay-button {
+    width: 100%;
+    padding: 15px;
+    background-color: var(--color-accent-green);
+    color: var(--color-primary-dark);
+    border: none;
+    border-radius: 5px;
+    font-size: 1.2em;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.pay-button:hover:not(:disabled) {
+    background-color: var(--color-accent-light);
+}
+
+.pay-button:disabled {
+    background-color: #555;
+    cursor: not-allowed;
+    color: var(--color-text-muted);
+}
+
+/* ---------------------------------------------------- */
+
+/* Sección Acerca de Nosotros */
+.about-us {
+    background-color: var(--color-primary-dark);
+    text-align: center;
+}
+
+.about-us-content {
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.about-us p {
+    font-size: 1.1em;
+    margin-bottom: 30px;
+    color: var(--color-text-muted);
+}
+
+.info-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 20px;
+}
+
+.info-item {
+    background-color: var(--color-secondary-dark);
+    padding: 20px;
+    border-radius: 8px;
+    text-align: left;
+}
+
+.info-item h4 {
+    color: var(--color-accent-green);
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.info-item h4 i {
+    font-size: 1.2em;
+}
+
+.info-item p {
+    margin: 0;
+    font-size: 1em;
+    color: var(--color-text-muted);
+}
+
+/* Línea divisoria */
+hr {
+    border: none;
+    border-top: 1px solid var(--color-divider);
+    margin: 0 5%;
+}
+
+/* ---------------------------------------------------- */
+
+/* Media Queries para Responsividad */
+@media (max-width: 1000px) {
+    .content-container {
+        flex-direction: column;
+    }
+
+    .products-section {
+        border-right: none;
+        border-bottom: 1px solid var(--color-divider);
+    }
+    
+    .order-section {
+        background-color: var(--color-secondary-dark); /* Unificar el fondo */
+    }
+}
+
+@media (max-width: 768px) {
+    h2 {
+        font-size: 2em;
+    }
+    
+    .hero-carousel {
+        height: 40vh;
+    }
+
+    .carousel-content h2 {
+        font-size: 2.5em;
+    }
+
+    .navbar-games {
+        justify-content: space-around;
+        flex-wrap: wrap;
+        padding: 10px 0;
+    }
+
+    .navbar-games button {
+        padding: 8px 12px;
+        margin: 5px;
+        font-size: 0.9em;
+    }
+
+    .game-cards-container {
+        gap: 20px;
+    }
+
+    .product-card {
+        width: calc(50% - 10px); /* 2 por fila en tablet */
+    }
+}
+
+@media (max-width: 500px) {
+    .product-card {
+        width: 100%; /* 1 por fila en móvil */
+    }
+
+    .game-card {
+        max-width: 100%;
+    }
+    
+    .panel-header {
+        flex-direction: column;
+        gap: 15px;
+        text-align: center;
+    }
+}

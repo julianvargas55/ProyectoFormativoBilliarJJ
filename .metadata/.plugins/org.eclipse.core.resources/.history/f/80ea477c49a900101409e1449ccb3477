@@ -1,0 +1,74 @@
+package sena.jj.com.controller;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
+import jakarta.servlet.http.HttpSession;
+import sena.jj.com.model.*;
+import sena.jj.com.service.*;
+
+import java.util.List;
+
+@Controller
+@RequestMapping("/administrador")
+public class AdministradorController {
+
+    @Autowired
+    private PedidoService pedidoService;
+    
+    @Autowired
+    private ProductoService productoService;
+    
+    @Autowired
+    private IUsuarioService usuarioService;
+
+    @GetMapping("")
+    public String administrador(Model model, HttpSession session) {
+        // Verificar sesión
+        if (session.getAttribute("usuario") == null) {
+            return "redirect:/login";
+        }
+
+        // Estadísticas
+        model.addAttribute("totalPedidos", pedidoService.findAll().size());
+        model.addAttribute("pedidosPendientes", pedidoService.contarPorEstado("PENDIENTE"));
+        model.addAttribute("totalProductos", productoService.findAll().size());
+        model.addAttribute("productosBajoStock", productoService.contarProductosBajoStock(10));
+        model.addAttribute("totalUsuarios", usuarioService.countUsuariosActivos());
+
+        // Datos para las tablas
+        model.addAttribute("pedidos", pedidoService.findAllOrderByFechaDesc());
+        model.addAttribute("productos", productoService.findAll());
+        model.addAttribute("usuarios", usuarioService.findAll());
+        
+        return "administrador";
+    }
+
+    @PostMapping("/pedido/actualizar-estado")
+    public String actualizarEstadoPedido(@RequestParam Integer pedidoId, 
+                                        @RequestParam String nuevoEstado,
+                                        RedirectAttributes redirect) {
+        // Lógica para actualizar estado del pedido
+        redirect.addFlashAttribute("mensaje", "Estado del pedido actualizado");
+        return "redirect:/administrador";
+    }
+
+    @PostMapping("/producto/guardar")
+    public String guardarProducto(@ModelAttribute Producto producto,
+                                 RedirectAttributes redirect) {
+        productoService.save(producto);
+        redirect.addFlashAttribute("mensaje", "Producto guardado exitosamente");
+        return "redirect:/administrador";
+    }
+
+    @PostMapping("/producto/eliminar")
+    public String eliminarProducto(@RequestParam Integer productoId,
+                                  RedirectAttributes redirect) {
+        productoService.deleteById(productoId);
+        redirect.addFlashAttribute("mensaje", "Producto eliminado");
+        return "redirect:/administrador";
+    }
+}

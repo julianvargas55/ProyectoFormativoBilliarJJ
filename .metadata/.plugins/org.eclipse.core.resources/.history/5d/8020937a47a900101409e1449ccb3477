@@ -1,0 +1,26 @@
+package sena.jj.com.service;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import sena.jj.com.model.Pedido;
+import sena.jj.com.repository.PedidoRepository;
+
+import java.util.List;
+
+@Service
+public class PedidoService {
+
+    @Autowired
+    private PedidoRepository pedidoRepository;
+
+    public List<Pedido> obtenerPedidosPorUsuario(Integer usuarioId) {
+        // Usa el método corregido
+        return pedidoRepository.findByUsuarioIdOrderByFechaCreacionDesc(usuarioId);
+        
+        // O usa una alternativa temporal
+        // return pedidoRepository.findAll().stream()
+        //     .filter(p -> p.getUsuario().getId().equals(usuarioId))
+        //     .sorted((p1, p2) -> p2.getFechaCreacion().compareTo(p1.getFechaCreacion()))
+        //     .collect(Collectors.toList());
+    }
+}

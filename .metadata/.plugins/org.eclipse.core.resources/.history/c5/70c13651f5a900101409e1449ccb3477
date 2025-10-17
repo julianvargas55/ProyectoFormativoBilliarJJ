@@ -1,0 +1,48 @@
+package sena.jj.com.controller;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.*;
+import sena.jj.com.model.Usuario;
+import sena.jj.com.service.IUsuarioService;
+
+@Controller
+public class LoginController {
+
+    @Autowired
+    private IUsuarioService usuarioService;
+
+    @GetMapping("/")
+    public String index(Model model) {
+        return "index";
+    }
+
+    @PostMapping("/login")
+    public String procesarLogin(
+            @RequestParam String email,
+            @RequestParam String password,
+            Model model) {
+        
+        try {
+            // Autenticar usuario
+            Usuario usuario = usuarioService.buscarForEmailYPassword(email, password);
+            
+            // Redirigir según el rol de MySQL - USA LAS RUTAS QUE YA TIENES
+            String rol = usuario.getRol();
+            
+            if ("ADMIN".equals(rol)) {
+                return "redirect:/administrador/administrador";  // Esta ruta YA existe
+            } else if ("USUARIO".equals(rol)) {
+                return "redirect:/usuario/Usuario";  // Esta ruta YA existe
+            } else {
+                model.addAttribute("error", "Rol no reconocido: " + rol);
+                return "index";
+            }
+            
+        } catch (RuntimeException e) {
+            model.addAttribute("error", "Credenciales incorrectas: " + e.getMessage());
+            return "index";
+        }
+    }
+}

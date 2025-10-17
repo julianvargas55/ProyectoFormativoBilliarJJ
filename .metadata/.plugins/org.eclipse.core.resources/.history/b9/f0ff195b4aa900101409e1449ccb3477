@@ -1,0 +1,33 @@
+    return "administrador";
+}
+
+@PostMapping("/pedido/actualizar-estado")
+public String actualizarEstadoPedido(@RequestParam Integer pedidoId,
+                                    @RequestParam String estado,
+                                    RedirectAttributes redirect) {
+    try {
+        Pedido pedido = pedidoService.findById(pedidoId); // Corregido: "pedido" no "pedido_pedido"
+        if (pedido != null) {
+            pedido.setEstado(estado);
+            pedidoService.save(pedido);
+            redirect.addFlashAttribute("exito", "Estado actualizado exitosamente");
+        } else {
+            redirect.addFlashAttribute("error", "Pedido no encontrado");
+        }
+    } catch (Exception e) {
+        redirect.addFlashAttribute("error", "Error al actualizar estado: " + e.getMessage());
+    }
+    return "redirect:/administrador";
+}
+
+@PostMapping("/producto/guardar")
+public String guardarProducto(@ModelAttribute Producto producto, // Corregido: "@ModelAttribute" no "@NodeAttribute"
+                             RedirectAttributes redirect) {
+    try {
+        productoService.save(producto);
+        redirect.addFlashAttribute("exito", "Producto guardado exitosamente");
+    } catch (Exception e) {
+        redirect.addFlashAttribute("error", "Error al guardar producto: " + e.getMessage());
+    }
+    return "redirect:/administrador";
+}

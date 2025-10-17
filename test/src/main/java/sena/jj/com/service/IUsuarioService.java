@@ -2,11 +2,11 @@ package sena.jj.com.service;
 
 import sena.jj.com.model.Usuario;
 import java.util.List;
-import java.util.Optional;
 
 public interface IUsuarioService {
-    Usuario save(Usuario usuario);
-    Optional<Usuario> findByEmail(String email);
+    Usuario guardarUsuario(Usuario usuario);
+    Usuario buscarForEmailYPassword(String email, String password); // Nombre corregido
     List<Usuario> findAll();
-    boolean existsByEmail(String email);
+    boolean existePorEmail(String email);
+    Usuario buscarPorEmail(String email);
 }

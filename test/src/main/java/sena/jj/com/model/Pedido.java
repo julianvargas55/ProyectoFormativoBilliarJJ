@@ -10,69 +10,37 @@ public class Pedido {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
     
-    @Column(nullable = false)
-    private String mesa;
-    
-    @Column(nullable = false)
+    private String productos; // JSON con los productos del carrito
     private Double total;
-    
-    @Column(nullable = false)
     private String estado;
+    private LocalDateTime fechaCreacion;
     
-    @Column(nullable = false)
-    private LocalDateTime fechaHora;
+    @ManyToOne
+    @JoinColumn(name = "usuario_id")
+    private Usuario usuario;
     
-    // CONSTRUCTORES
+    // Constructor
     public Pedido() {
-       
+        this.estado = "PENDIENTE";
+        this.fechaCreacion = LocalDateTime.now();
     }
     
-    public Pedido(String mesa, Double total) {
-        this();
-        this.mesa = mesa;
-        this.total = total;
-    }
-
-	public Integer getId() {
-		return id;
-	}
-
-	public void setId(Integer id) {
-		this.id = id;
-	}
-
-	public String getMesa() {
-		return mesa;
-	}
-
-	public void setMesa(String mesa) {
-		this.mesa = mesa;
-	}
-
-	public Double getTotal() {
-		return total;
-	}
-
-	public void setTotal(Double total) {
-		this.total = total;
-	}
-
-	public String getEstado() {
-		return estado;
-	}
-
-	public void setEstado(String estado) {
-		this.estado = estado;
-	}
-
-	public LocalDateTime getFechaHora() {
-		return fechaHora;
-	}
-
-	public void setFechaHora(LocalDateTime fechaHora) {
-		this.fechaHora = fechaHora;
-	}
+    // Getters y Setters
+    public Integer getId() { return id; }
+    public void setId(Integer id) { this.id = id; }
     
-    // GETTERS Y SETTERS
-   
+    public String getProductos() { return productos; }
+    public void setProductos(String productos) { this.productos = productos; }
+    
+    public Double getTotal() { return total; }
+    public void setTotal(Double total) { this.total = total; }
+    
+    public String getEstado() { return estado; }
+    public void setEstado(String estado) { this.estado = estado; }
+    
+    public LocalDateTime getFechaCreacion() { return fechaCreacion; }
+    public void setFechaCreacion(LocalDateTime fechaCreacion) { this.fechaCreacion = fechaCreacion; }
+    
+    public Usuario getUsuario() { return usuario; }
+    public void setUsuario(Usuario usuario) { this.usuario = usuario; }
 }

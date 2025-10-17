@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Billar JJ - Acceso Usuarios</title>
+    <link rel="stylesheet" th:href="@{/assets/css/login.css}">
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+</head>
+<body>
+    <div class="header">
+        <div class="logo">
+            <img th:src="@{/assets/images/logo.png}" alt="Logo Billar JJ" onerror="this.src='https://via.placeholder.com/150x50?text=BILLAR+JJ'">
+        </div>
+		<h1> ¡BIENVENIDO A TU LUGAR FAMILIAR! <h1>
+
+    </div>
+
+    <div class="container">
+        <!-- Mensajes de éxito/error -->
+        <div th:if="${exito}" class="mensaje-exito">
+            <p th:text="${exito}"></p>
+        </div>
+        <div th:if="${error}" class="mensaje-error">
+            <p th:text="${error}"></p>
+        </div>
+
+        <div class="login-panel">
+            <div class="login-form">
+                <i class='bx bx-user-circle' style="font-size: 80px; color: #fff;"></i>
+                
+                <!-- FORMULARIO DE LOGIN FUNCIONAL -->
+                <form th:action="@{/login}" method="post">
+                    <label class="access-label" for="tipo"><i class='bx bx-user' style="font-size: 24px; color: var(--accent-color);"></i> Ingresar:</label>
+                    
+                    <div class="input-group">
+                        <i class='bx bx-user icon'></i>
+                        <input type="email" placeholder="Email" name="email" required value="admin@billarjj.com">
+                    </div>
+                    <div class="input-group">
+                        <i class='bx bx-lock-alt icon'></i>
+                        <input type="password" placeholder="Contraseña" name="password" required value="admin123">
+                    </div>
+                    
+                    <!-- BOTÓN DE LOGIN CORREGIDO -->
+                    <button type="submit">Iniciar Sesión</button>
+                    
+                    <div class="options">
+                        <a href="#">Acuérdate de mí</a>
+                        <span class="separator">|</span>
+                        <a th:href="@{/usuario/olvcontraseña}">¿Olvidaste tu contraseña?</a>
+                    </div>
+                </form>
+
+                <!-- Credenciales de prueba (opcional, quitar en producción) -->
+                <div style="margin-top: 20px; padding: 15px; background: rgba(255,255,255,0.1); border-radius: 5px; font-size: 12px;">
+                    <p style="margin: 0; color: #fff; text-align: center;">
+                        <p>Contactanos a la linea: 321654987<p>
+                        
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <div class="info-panel">
+            <h1>BILLAR JJ</h1>
+            <p class="quote">
+                No se trata de suerte, se trata de precisión. El que domina el taco, domina la mesa.
+            </p>
+            <p class="register-link">
+                ¿No tienes una cuenta? <a th:href="@{/registro}">Regístrate aquí</a>
+            </p>
+        </div>
+    </div>
+
+    <style>
+        /* Estilos para mensajes */
+        .mensaje-exito {
+            background-color: #d4edda;
+            color: #155724;
+            padding: 12px;
+            border-radius: 5px;
+            margin: 10px 20px;
+            border: 1px solid #c3e6cb;
+            text-align: center;
+        }
+        
+        .mensaje-error {
+            background-color: #f8d7da;
+            color: #721c24;
+            padding: 12px;
+            border-radius: 5px;
+            margin: 10px 20px;
+            border: 1px solid #f5c6cb;
+            text-align: center;
+        }
+        
+        /* Asegurar que el botón se vea bien */
+        button[type="submit"] {
+            width: 100%;
+            padding: 12px;
+            background: var(--accent-color);
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+        
+        button[type="submit"]:hover {
+            background: #0056b3;
+        }
+    </style>
+</body>
+</html>

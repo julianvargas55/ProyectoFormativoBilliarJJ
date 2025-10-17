@@ -1,0 +1,11 @@
+package sena.jj.com.repository;
+
+import org.springframework.data.jpa.repository.JpaRepository;
+import sena.jj.com.model.Producto;
+import java.util.List;
+
+public interface IProductoRepository extends JpaRepository<Producto, Integer> {
+    List<Producto> findByCategoria(String categoria);
+    List<Producto> findByActivoTrue();
+    Long countByStockLessThan(Integer stockMinimo);
+}

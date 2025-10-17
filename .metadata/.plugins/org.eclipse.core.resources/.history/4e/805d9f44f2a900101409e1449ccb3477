@@ -1,0 +1,45 @@
+package sena.jj.com.controller;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.*;
+import sena.jj.com.model.Usuario;
+import sena.jj.com.service.IUsuarioService;
+
+@Controller
+public class RegistroController {
+
+    @Autowired
+    private IUsuarioService usuarioService;
+
+    @GetMapping("/registro")
+    public String mostrarRegistro(Model model) {
+        model.addAttribute("usuario", new Usuario());
+        return "registro";
+    }
+
+    @PostMapping("/registro")
+    public String registrarUsuario(@ModelAttribute Usuario usuario, Model model) {
+        try {
+            System.out.println("Intentando registrar usuario: " + usuario.getEmail());
+            
+            // Asignar rol por defecto
+            usuario.setRol("USER");
+            
+            // Guardar usuario
+            Usuario usuarioGuardado = usuarioService.guardarUsuario(usuario);
+            
+            System.out.println("Usuario registrado exitosamente: " + usuarioGuardado.getId());
+            model.addAttribute("exito", "¡Registro exitoso! Ahora puedes iniciar sesión.");
+            
+        } catch (RuntimeException e) {
+            System.out.println("Error al registrar: " + e.getMessage());
+            model.addAttribute("error", e.getMessage());
+        }
+        
+        // Siempre devolver el objeto usuario para el formulario
+        model.addAttribute("usuario", new Usuario());
+        return "registro";
+    }
+}

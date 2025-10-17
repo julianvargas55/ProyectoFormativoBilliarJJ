@@ -1,0 +1,53 @@
+package sena.jj.com.model;
+
+import jakarta.persistence.*;
+
+@Entity
+@Table(name = "detalle_pedido") // Asegúrate que coincida con tu BD
+public class DetallePedido {
+    
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer id;
+    
+    @ManyToOne
+    @JoinColumn(name = "pedido_id")
+    private Pedido pedido;
+    
+    private String productoNombre;
+    private Double precio;
+    private Integer cantidad;
+    
+    // Constructores
+    public DetallePedido() {
+        this.cantidad = 1; // Valor por defecto
+    }
+    
+    public DetallePedido(String productoNombre, Double precio, Integer cantidad) {
+        this();
+        this.productoNombre = productoNombre;
+        this.precio = precio;
+        this.cantidad = cantidad;
+    }
+    
+    // Getters y Setters
+    public Integer getId() { return id; }
+    public void setId(Integer id) { this.id = id; }
+    
+    public Pedido getPedido() { return pedido; }
+    public void setPedido(Pedido pedido) { this.pedido = pedido; }
+    
+    public String getProductoNombre() { return productoNombre; }
+    public void setProductoNombre(String productoNombre) { this.productoNombre = productoNombre; }
+    
+    public Double getPrecio() { return precio; }
+    public void setPrecio(Double precio) { this.precio = precio; }
+    
+    public Integer getCantidad() { return cantidad; }
+    public void setCantidad(Integer cantidad) { this.cantidad = cantidad; }
+    
+    // Método para calcular subtotal
+    public Double getSubtotal() {
+        return precio * cantidad;
+    }
+}

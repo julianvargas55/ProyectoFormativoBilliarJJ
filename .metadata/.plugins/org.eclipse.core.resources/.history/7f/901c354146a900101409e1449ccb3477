@@ -1,0 +1,22 @@
+package sena.jj.com.repository;
+
+import sena.jj.com.model.Pedido;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import java.util.List;
+
+public interface PedidoRepository extends JpaRepository<Pedido, Integer> {
+    
+    // Encontrar pedidos por usuario
+    List<Pedido> findByUsuarioIdOrderByFechaPedidoDesc(Integer usuarioId);
+    
+    // Encontrar todos los pedidos ordenados por fecha (más recientes primero)
+    List<Pedido> findAllByOrderByFechaPedidoDesc();
+    
+    // Encontrar pedidos por estado
+    List<Pedido> findByEstadoOrderByFechaPedidoDesc(String estado);
+    
+    // Contar pedidos pendientes
+    @Query("SELECT COUNT(p) FROM Pedido p WHERE p.estado = 'PENDIENTE'")
+    Long countPedidosPendientes();
+}

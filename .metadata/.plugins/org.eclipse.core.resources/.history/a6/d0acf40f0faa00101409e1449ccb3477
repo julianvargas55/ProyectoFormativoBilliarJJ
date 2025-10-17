@@ -1,0 +1,26 @@
+package sena.jj.com.controller;
+
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import jakarta.servlet.http.HttpSession;
+import sena.jj.com.model.Usuario;
+
+@Controller
+@RequestMapping("/administrador")
+public class AdministradorController {
+
+    @GetMapping
+    public String dashboard(HttpSession session, Model model) {
+        Usuario usuario = (Usuario) session.getAttribute("usuario");
+        
+        // CORRECCIÓN: Validar por rol "1" en lugar de "ADMIN"
+        if (usuario == null || !"1".equals(usuario.getRol())) {
+            return "redirect:/";
+        }
+        
+        model.addAttribute("usuario", usuario);
+        return "administrador/administrador";
+    }
+}

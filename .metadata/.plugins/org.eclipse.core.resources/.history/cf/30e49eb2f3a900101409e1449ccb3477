@@ -1,0 +1,35 @@
+package sena.jj.com.controller;
+
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+
+@Controller
+public class LoginController {
+
+    // Página principal (login)
+    @GetMapping("/")
+    public String index(Model model) {
+        return "index"; // Esto carga templates/index.html (si existe)
+        // Si no existe index.html, usa:
+        // return "usuario/login"; // y crea templates/usuario/login.html
+    }
+
+    // Procesar login
+    @PostMapping("/login")
+    public String procesarLogin(
+            @RequestParam String email,
+            @RequestParam String password,
+            Model model) {
+        
+        // Lógica de autenticación
+        if ("admin@billarjj.com".equals(email) && "admin123".equals(password)) {
+            return "redirect:/administrador/administrador";
+        } else {
+            model.addAttribute("error", "Credenciales incorrectas");
+            return "index"; // o return "usuario/login";
+        }
+    }
+}

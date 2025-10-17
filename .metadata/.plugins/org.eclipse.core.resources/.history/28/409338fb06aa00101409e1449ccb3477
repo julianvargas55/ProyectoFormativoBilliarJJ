@@ -1,0 +1,55 @@
+package sena.jj.com.controller;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.*;
+import jakarta.servlet.http.HttpSession;
+import sena.jj.com.model.Usuario;
+import sena.jj.com.service.IUsuarioService;
+import java.util.List;
+
+@Controller
+@RequestMapping("/administrador")
+public class AdministradorController {
+
+    @Autowired
+    private IUsuarioService usuarioService;
+
+    @GetMapping("")
+    public String administrador(Model model, HttpSession session) {
+        Usuario usuario = (Usuario) session.getAttribute("usuario");
+        if (usuario == null) {
+            return "redirect:/";
+        }
+
+        // SOLO permite acceso si el rol es "1"
+        if (!"1".equals(usuario.getRol())) {
+            return "redirect:/usuario";
+        }
+
+        try {
+            List<Usuario> usuarios = usuarioService.findAll();
+            model.addAttribute("usuarios", usuarios);
+            model.addAttribute("totalUsuarios", usuarios.size());
+            
+            // Datos simulados
+            model.addAttribute("totalPedidos", 0);
+            model.addAttribute("pedidosPendientes", 0);
+            model.addAttribute("totalProductos", 0);
+            model.addAttribute("productosBajoStock", 0);
+            model.addAttribute("ingresosDia", 0);
+            model.addAttribute("mesasActivas", 0);
+            model.addAttribute("pedidos", List.of());
+            model.addAttribute("productos", List.of());
+            
+        } catch (Exception e) {
+            model.addAttribute("error", "Error al cargar datos: " + e.getMessage());
+            model.addAttribute("usuarios", List.of());
+            model.addAttribute("totalUsuarios", 0);
+            // ... resto de datos vacíos
+        }
+        
+        return "administrador/administrador";
+    }
+}

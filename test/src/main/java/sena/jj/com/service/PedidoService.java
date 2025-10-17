@@ -1,6 +1,7 @@
 package sena.jj.com.service;
 
 import sena.jj.com.model.Pedido;
+
 import sena.jj.com.repository.PedidoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -16,7 +17,15 @@ public class PedidoService {
         return pedidoRepository.save(pedido);
     }
     
-    public List<Pedido> obtenerPedidosRecientes() {
-        return pedidoRepository.findPedidosRecientes();
+    public List<Pedido> findByUsuarioId(Integer usuarioId) {
+        return pedidoRepository.findByUsuarioId(usuarioId);
+    }
+    
+    public List<Pedido> findAll() {
+        return pedidoRepository.findAll();
+    }
+    
+    public Pedido findById(Integer id) {
+        return pedidoRepository.findById(id).orElse(null);
     }
 }

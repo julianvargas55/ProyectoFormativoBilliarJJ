@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registro - BILLAR JJ</title>
+    <link rel="stylesheet" href="/assets/css/REGISTRO.CSS">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <header class="navbar">
+            <div class="logo">
+                <span>BILLAR JJ</span>
+            </div>
+            <nav>
+                <ul>
+                    <!-- Menú vacío como en tu original -->
+                </ul>
+            </nav>
+            <button><a th:href="@{/index}">Iniciar Sesión</a></button>
+        </header>
+        
+        <div class="main-content">
+            <!-- Mensajes de éxito/error -->
+            <div th:if="${exito}" class="mensaje-exito">
+                <p th:text="${exito}"></p>
+            </div>
+            <div th:if="${error}" class="mensaje-error">
+                <p th:text="${error}"></p>
+            </div>
+
+            <div class="register-panel">
+                <div class="profile-icon">
+                    <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M12 4a4 4 0 100 8 4 4 0 000-8zM12 14a8 8 0 00-8 8h16a8 8 0 00-8-8z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                </div>
+                
+                <!-- FORMULARIO CORREGIDO -->
+                <form class="register-form" th:action="@{/registro}" method="post">
+                    <div class="input-group">
+                        <input type="text" name="nombre" placeholder="Nombre Completo" required>
+                    </div>
+                    <div class="input-group">
+                        <input type="email" name="email" placeholder="Email" required>
+                    </div>
+                    <div class="input-group">
+                        <input type="password" name="password" placeholder="Contraseña" required>
+                    </div>
+                    <button type="submit" class="register-btn">Registrarse</button>
+                    
+                    <div class="options">
+                        <a th:href="@{/index}">¿Ya tienes una cuenta?</a>
+                    </div>
+                </form>
+            </div>
+            
+            <div class="welcome-section">
+                <div class="gradient-bg"></div>
+                <div class="text-content">
+                    <h1>REGÍSTRATE</h1>
+                    <p>Crea tu cuenta para explorar todas las funciones que tenemos para ofrecer.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <style>
+        /* Estilos para mensajes */
+        .mensaje-exito {
+            background-color: #d4edda;
+            color: #155724;
+            padding: 12px;
+            border-radius: 5px;
+            margin: 10px 0;
+            border: 1px solid #c3e6cb;
+        }
+        
+        .mensaje-error {
+            background-color: #f8d7da;
+            color: #721c24;
+            padding: 12px;
+            border-radius: 5px;
+            margin: 10px 0;
+            border: 1px solid #f5c6cb;
+        }
+        
+        /* Asegurar que los enlaces se vean bien */
+        .navbar button a {
+            color: inherit;
+            text-decoration: none;
+        }
+        
+        .options a {
+            color: #007bff;
+            text-decoration: none;
+        }
+        
+        .options a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</body>
+</html>

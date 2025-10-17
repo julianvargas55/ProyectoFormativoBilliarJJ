@@ -1,0 +1,93 @@
+package sena.jj.com.controller;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
+import jakarta.servlet.http.HttpSession;
+import sena.jj.com.model.Usuario;
+import sena.jj.com.service.IUsuarioService;
+
+import java.util.List;
+
+@Controller
+@RequestMapping("/administrador")
+public class AdministradorController {
+
+    @Autowired
+    private IUsuarioService usuarioService;
+
+    @GetMapping("")
+    public String administrador(Model model, HttpSession session) {
+        // Verificar sesión
+        Usuario usuario = (Usuario) session.getAttribute("usuario");
+        if (usuario == null) {
+            return "redirect:/";
+        }
+
+        // Verificar que es administrador
+        if (!"ADMIN".equals(usuario.getRol())) {
+            return "redirect:/usuario";
+        }
+
+        try {
+            // Solo cargar usuarios (esto SÍ funciona)
+            List<Usuario> usuarios = usuarioService.findAll();
+            model.addAttribute("usuarios", usuarios);
+            model.addAttribute("totalUsuarios", usuarios.size());
+            
+            // Datos simulados para las secciones que no funcionan
+            model.addAttribute("totalPedidos", 0);
+            model.addAttribute("pedidosPendientes", 0);
+            model.addAttribute("totalProductos", 0);
+            model.addAttribute("productosBajoStock", 0);
+            model.addAttribute("ingresosDia", 0);
+            model.addAttribute("mesasActivas", 0);
+            model.addAttribute("pedidos", List.of()); // Lista vacía
+            model.addAttribute("productos", List.of()); // Lista vacía
+            
+        } catch (Exception e) {
+            // Si hay error, mostrar datos vacíos
+            model.addAttribute("error", "Error al cargar datos: " + e.getMessage());
+            model.addAttribute("usuarios", List.of());
+            model.addAttribute("totalUsuarios", 0);
+            model.addAttribute("totalPedidos", 0);
+            model.addAttribute("pedidosPendientes", 0);
+            model.addAttribute("totalProductos", 0);
+            model.addAttribute("productosBajoStock", 0);
+            model.addAttribute("ingresosDia", 0);
+            model.addAttribute("mesasActivas", 0);
+            model.addAttribute("pedidos", List.of());
+            model.addAttribute("productos", List.of());
+        }
+        
+        return "administrador/administrador";  // ← CAMBIADO: con carpeta
+    }
+
+    // Métodos comentados hasta que tengas la base de datos
+    /*
+    @PostMapping("/pedido/actualizar-estado")
+    public String actualizarEstadoPedido(@RequestParam Integer pedidoId,
+                                        @RequestParam String estado,
+                                        RedirectAttributes redirect) {
+        // Este método requiere la tabla de pedidos
+        return "redirect:/administrador";
+    }
+
+    @PostMapping("/producto/guardar")
+    public String guardarProducto(@ModelAttribute Producto producto,
+                                 RedirectAttributes redirect) {
+        // Este método requiere la tabla de productos
+        return "redirect:/administrador";
+    }
+
+    @PostMapping("/producto/eliminar")
+    public String eliminarProducto(@RequestParam Integer productoId,
+                                  RedirectAttributes redirect) {
+        // Este método requiere la tabla de productos
+        return "redirect:/administrador";
+    }
+    */
+}

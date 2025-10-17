@@ -1,0 +1,51 @@
+package sena.jj.com.model;
+
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
+
+@Entity
+@Table(name = "detalle_pedido")
+public class DetallePedido {
+
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long id;
+
+	@ManyToOne
+	@JoinColumn(name = "pedido_id")
+	private Pedido pedido;
+
+	private String nombreProducto;
+
+	private Double precioUnitario;
+
+	private int cantidad = 1;
+
+	public void setPedido(Pedido pedidoGuardado) {
+
+	}
+
+	public void setNombreProducto(String string) {
+		
+
+	}
+
+	public void setPrecioUnitario(double d) {
+		
+
+	}
+
+	public int getCantidad() {
+		return cantidad;
+	}
+
+	public void setCantidad(int cantidad) {
+		this.cantidad = cantidad;
+	}
+
+}

@@ -1,82 +1,41 @@
 package sena.jj.com.model;
 
+import jakarta.persistence.*;
 import java.util.List;
-
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.Table;
 
 @Entity
 @Table(name = "trabajadores")
 public class Trabajador {
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Integer id;
-	private String cargo;
-	private String salario;
-	private String horasExtras;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer id;
 
-	@ManyToOne
-	private Horario horario;
+    private String nombre;
+    private String email;
+    private String telefono;
+    private String cargo;
 
-	@OneToMany(mappedBy = "trabajador")
-	private List<Producto> producto;
+    @OneToMany(mappedBy = "trabajador")
+    private List<Facturacion> facturacion;
 
-	@OneToMany(mappedBy = "trabajador")
-	private List<Facturacion> facturacion;
+    @OneToMany(mappedBy = "trabajador")
+    private List<Horario> horario;
 
-	public Trabajador() {
+    public Trabajador() {}
 
-	}
-
-	public Trabajador(Integer id, String cargo, String salario, String horasExtras) {
-		super();
-		this.id = id;
-		this.cargo = cargo;
-		this.salario = salario;
-		this.horasExtras = horasExtras;
-	}
-
-	public Integer getId() {
-		return id;
-	}
-
-	public void setId(Integer id) {
-		this.id = id;
-	}
-
-	public String getCargo() {
-		return cargo;
-	}
-
-	public void setCargo(String cargo) {
-		this.cargo = cargo;
-	}
-
-	public String getSalario() {
-		return salario;
-	}
-
-	public void setSalario(String salario) {
-		this.salario = salario;
-	}
-
-	public String getHorasExtras() {
-		return horasExtras;
-	}
-
-	public void setHorasExtras(String horasExtras) {
-		this.horasExtras = horasExtras;
-	}
-
-	@Override
-	public String toString() {
-		return "Trabajador [id=" + id + ", cargo=" + cargo + ", salario=" + salario + ", horasExtras=" + horasExtras
-				+ "]";
-	}
-
+    // Getters y setters
+    public Integer getId() { return id; }
+    public void setId(Integer id) { this.id = id; }
+    public String getNombre() { return nombre; }
+    public void setNombre(String nombre) { this.nombre = nombre; }
+    public String getEmail() { return email; }
+    public void setEmail(String email) { this.email = email; }
+    public String getTelefono() { return telefono; }
+    public void setTelefono(String telefono) { this.telefono = telefono; }
+    public String getCargo() { return cargo; }
+    public void setCargo(String cargo) { this.cargo = cargo; }
+    public List<Facturacion> getFacturacion() { return facturacion; }
+    public void setFacturacion(List<Facturacion> facturacion) { this.facturacion = facturacion; }
+    public List<Horario> getHorario() { return horario; }
+    public void setHorario(List<Horario> horario) { this.horario = horario; }
 }

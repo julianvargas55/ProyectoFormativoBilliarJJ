@@ -1,64 +1,27 @@
 package sena.jj.com.model;
 
-import java.util.List;
-
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 
 @Entity
 @Table(name = "beneficios")
 public class Beneficios {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer id;
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Integer id;
-	private String nomBeneficio;
+    private String nombre;
+    private String descripcion;
+    private String tipo;
 
-	@OneToMany(mappedBy = "beneficios")
-	private List<Cliente> cliente;
-
-	public Beneficios() {
-
-	}
-
-	public Beneficios(Integer id, String nomBeneficio, List<Cliente> cliente) {
-		super();
-		this.id = id;
-		this.nomBeneficio = nomBeneficio;
-		this.cliente = cliente;
-	}
-
-	public Integer getId() {
-		return id;
-	}
-
-	public void setId(Integer id) {
-		this.id = id;
-	}
-
-	public String getNomBeneficio() {
-		return nomBeneficio;
-	}
-
-	public void setNomBeneficio(String nomBeneficio) {
-		this.nomBeneficio = nomBeneficio;
-	}
-
-	public List<Cliente> getCliente() {
-		return cliente;
-	}
-
-	public void setCliente(List<Cliente> cliente) {
-		this.cliente = cliente;
-	}
-
-	@Override
-	public String toString() {
-		return "Beneficios [id=" + id + ", nomBeneficio=" + nomBeneficio + "]";
-	}
-
+    public Beneficios() {}
+    
+    // Getters y setters
+    public Integer getId() { return id; }
+    public void setId(Integer id) { this.id = id; }
+    public String getNombre() { return nombre; }
+    public void setNombre(String nombre) { this.nombre = nombre; }
+    public String getDescripcion() { return descripcion; }
+    public void setDescripcion(String descripcion) { this.descripcion = descripcion; }
+    public String getTipo() { return tipo; }
+    public void setTipo(String tipo) { this.tipo = tipo; }
 }

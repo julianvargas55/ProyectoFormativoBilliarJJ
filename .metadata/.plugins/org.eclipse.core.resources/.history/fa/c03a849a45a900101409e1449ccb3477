@@ -1,0 +1,23 @@
+package sena.jj.com.repository;
+
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import sena.jj.com.model.Pedido;
+
+import java.util.List;
+
+public interface IPedidoRepository extends JpaRepository<Pedido, Integer> {
+    
+    // Encontrar pedidos ordenados por fecha descendente
+    List<Pedido> findAllByOrderByFechaCreacionDesc();
+    
+    // Encontrar pedidos por estado
+    List<Pedido> findByEstado(String estado);
+    
+    // Contar pedidos por estado
+    Long countByEstado(String estado);
+    
+    // Pedidos recientes (últimos 7 días)
+    @Query("SELECT p FROM Pedido p WHERE p.fechaCreacion >= CURRENT_DATE - 7 ORDER BY p.fechaCreacion DESC")
+    List<Pedido> findPedidosRecientes();
+}

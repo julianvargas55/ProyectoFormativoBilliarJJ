@@ -1,0 +1,567 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard | Billar JJ - Administración</title>
+    <link rel="stylesheet" th:href="@{/assets/css/Billar.css}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        /* Estilos adicionales para funcionalidad */
+        .table-item {
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        .table-item:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+        .action-btn {
+            transition: all 0.3s ease;
+        }
+        .action-btn:hover {
+            background: #007bff !important;
+            color: white !important;
+        }
+        .metric-card {
+            transition: transform 0.3s ease;
+        }
+        .metric-card:hover {
+            transform: translateY(-5px);
+        }
+        .live-indicator {
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            background: #28a745;
+            border-radius: 50%;
+            margin-right: 8px;
+            animation: pulse 2s infinite;
+        }
+        @keyframes pulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.5; }
+            100% { opacity: 1; }
+        }
+        .status-indicator {
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+        .status-occupied {
+            background: #dc3545;
+            color: white;
+        }
+        .status-available {
+            background: #28a745;
+            color: white;
+        }
+        .status-reserved {
+            background: #ffc107;
+            color: #212529;
+        }
+        
+        /* Estilos para controles y modal */
+        .table-controls {
+            margin-bottom: 20px;
+            display: flex;
+            gap: 10px;
+        }
+        
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-primary {
+            background: #007bff;
+            color: white;
+        }
+        
+        .btn-secondary {
+            background: #6c757d;
+            color: white;
+        }
+        
+        .btn-success {
+            background: #28a745;
+            color: white;
+        }
+        
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
+        
+        .modal {
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+        }
+        
+        .modal-content {
+            background-color: #fefefe;
+            margin: 5% auto;
+            padding: 20px;
+            border-radius: 10px;
+            width: 90%;
+            max-width: 500px;
+            position: relative;
+        }
+        
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        
+        .close:hover {
+            color: black;
+        }
+        
+        .form-group {
+            margin-bottom: 15px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+        
+        .time-display {
+            font-family: 'Courier New', monospace;
+            font-weight: bold;
+            color: #007bff;
+        }
+        
+        .table-status {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="main-dashboard-container">
+        
+        <aside class="sidebar-menu">
+            <div class="logo-sidebar">
+                <i class="fas fa-billiard"></i> Billar JJ
+            </div>
+            <nav>
+                <ul>
+                    <li class="active"><a th:href="@{#}"><i class="fas fa-home"></i> Resumen General</a></li>
+                    
+                </ul>
+            </nav>
+            <div class="sidebar-footer">
+                <a th:href="@{/=#}"><i class="fas fa-sign-out-alt"></i> Cerrar Sesión</a>
+            </div>
+        </aside>
+
+        <main class="dashboard-content">
+            
+            <header class="dashboard-header">
+                <h1>Panel de Control de Billar</h1>
+                <div class="user-info">
+                    <i class="fas fa-user-circle"></i> 
+                    <span>Admin: [Nombre]</span>
+                </div>
+            </header>
+
+            <section class="metrics-grid">
+                <div class="metric-card">
+                    <i class="fas fa-table card-icon green"></i>
+                    <h2>Mesas Ocupadas</h2>
+                    <p class="value" id="occupied-tables">0 / 10</p>
+                    <span class="live-indicator"></span><small>Actualizado en vivo</small>
+                </div>
+                <div class="metric-card">
+                    <i class="fas fa-clock card-icon blue"></i>
+                    <h2>Tiempo Acumulado</h2>
+                    <p class="value" id="total-time">00:00:00</p>
+                    <span class="live-indicator"></span><small>En tiempo real</small>
+                </div>
+                <div class="metric-card">
+                    <i class="fas fa-dollar-sign card-icon yellow"></i>
+                    <h2>Ingresos del Día</h2>
+                    <p class="value" id="daily-income">$0.00</p>
+                    <small>Actualizado cada minuto</small>
+                </div>
+                <div class="metric-card">
+                    <i class="fas fa-users card-icon red"></i>
+                    <h2>Jugadores Activos</h2>
+                    <p class="value" id="active-players">0</p>
+                    <span class="live-indicator"></span><small>En línea</small>
+                </div>
+            </section>
+
+            <section class="live-tables">
+                <h2><i class="fas fa-billiard"></i> Gestión de Mesas <span class="live-indicator"></span></h2>
+                
+                <div class="table-controls">
+                    <button class="btn btn-primary" onclick="iniciarNuevoJuego()">
+                        <i class="fas fa-play"></i> Nuevo Juego
+                    </button>
+                    <button class="btn btn-secondary" onclick="actualizarEstados()">
+                        <i class="fas fa-sync"></i> Actualizar
+                    </button>
+                </div>
+                
+                <div class="table-list" id="table-list">
+                    <!-- Las mesas se generarán dinámicamente aquí -->
+                </div>
+            </section>
+
+            <!-- Modal para nuevo juego -->
+            <div id="game-modal" class="modal" style="display: none;">
+                <div class="modal-content">
+                    <span class="close" onclick="cerrarModal()">&times;</span>
+                    <h3><i class="fas fa-billiard"></i> Iniciar Nuevo Juego</h3>
+                    <form id="new-game-form">
+                        <div class="form-group">
+                            <label>Seleccionar Mesa:</label>
+                            <select id="table-select" required>
+                                <option value="">-- Seleccionar mesa --</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Nombre del Jugador:</label>
+                            <input type="text" id="player-name" placeholder="Nombre del jugador" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Tipo de Juego:</label>
+                            <select id="game-type" required>
+                                <option value="pool">Pool (Bola 8)</option>
+                                <option value="carambola">Carambola (3 Bandas)</option>
+                                <option value="snooker">Snooker</option>
+                            </select>
+                        </div>
+                        <button type="submit" class="btn btn-success">
+                            <i class="fas fa-play"></i> Iniciar Juego
+                        </button>
+                    </form>
+                </div>
+            </div>
+
+        </main>
+    </div>
+
+    <!-- JavaScript funcional para el sistema de billar -->
+    <script>
+        // Sistema de gestión de mesas de billar
+        class BillarManager {
+            constructor() {
+                this.mesas = [];
+                this.totalIngresos = 0;
+                this.init();
+            }
+
+            init() {
+                this.crearMesas();
+                this.renderMesas();
+                this.actualizarMetricas();
+                this.iniciarCronometros();
+                this.setupEventListeners();
+            }
+
+            crearMesas() {
+                // Crear 10 mesas de billar
+                for (let i = 1; i <= 10; i++) {
+                    this.mesas.push({
+                        id: i,
+                        numero: i,
+                        estado: Math.random() > 0.6 ? 'ocupada' : 'disponible', // 40% ocupadas
+                        jugador: null,
+                        tipoJuego: null,
+                        inicioTiempo: null,
+                        tiempoTranscurrido: 0,
+                        ingresos: 0
+                    });
+                }
+            }
+
+            renderMesas() {
+                const tableList = document.getElementById('table-list');
+                tableList.innerHTML = '';
+
+                this.mesas.forEach(mesa => {
+                    const tableItem = document.createElement('div');
+                    tableItem.className = `table-item ${mesa.estado}`;
+                    
+                    let statusHtml = '';
+                    let timeHtml = '';
+                    let actionHtml = '';
+
+                    if (mesa.estado === 'ocupada') {
+                        statusHtml = `<span class="status-indicator status-occupied">Ocupada</span>`;
+                        timeHtml = `<span class="time-display" id="time-${mesa.id}">${this.formatearTiempo(mesa.tiempoTranscurrido)}</span>`;
+                        actionHtml = `<button class="action-btn" onclick="billarManager.terminarJuego(${mesa.id})">
+                                        <i class="fas fa-stop"></i> Terminar
+                                     </button>`;
+                    } else {
+                        statusHtml = `<span class="status-indicator status-available">Disponible</span>`;
+                        timeHtml = `<span>Libre</span>`;
+                        actionHtml = `<button class="action-btn" onclick="billarManager.iniciarJuegoModal(${mesa.id})">
+                                        <i class="fas fa-play"></i> Iniciar
+                                     </button>`;
+                    }
+
+                    tableItem.innerHTML = `
+                        <div class="table-status">
+                            <span class="table-number">Mesa #${mesa.numero}</span>
+                            ${statusHtml}
+                        </div>
+                        <div class="time-elapsed">
+                            <i class="fas fa-clock"></i> ${timeHtml}
+                        </div>
+                        <div class="table-info">
+                            ${mesa.jugador ? `<small>Jugador: ${mesa.jugador}</small><br>` : ''}
+                            ${mesa.tipoJuego ? `<small>Tipo: ${mesa.tipoJuego}</small>` : ''}
+                        </div>
+                        ${actionHtml}
+                    `;
+
+                    tableList.appendChild(tableItem);
+                });
+            }
+
+            actualizarMetricas() {
+                const ocupadas = this.mesas.filter(m => m.estado === 'ocupada').length;
+                const totalTiempo = this.mesas.reduce((sum, m) => sum + m.tiempoTranscurrido, 0);
+                const jugadoresActivos = this.mesas.filter(m => m.estado === 'ocupada').length * 2; // 2 jugadores por mesa
+
+                document.getElementById('occupied-tables').textContent = `${ocupadas} / 10`;
+                document.getElementById('total-time').textContent = this.formatearTiempo(totalTiempo);
+                document.getElementById('daily-income').textContent = `$${this.totalIngresos.toFixed(2)}`;
+                document.getElementById('active-players').textContent = jugadoresActivos;
+            }
+
+            iniciarCronometros() {
+                setInterval(() => {
+                    this.mesas.forEach(mesa => {
+                        if (mesa.estado === 'ocupada' && mesa.inicioTiempo) {
+                            mesa.tiempoTranscurrido = Date.now() - mesa.inicioTiempo;
+                            const timeElement = document.getElementById(`time-${mesa.id}`);
+                            if (timeElement) {
+                                timeElement.textContent = this.formatearTiempo(mesa.tiempoTranscurrido);
+                            }
+                        }
+                    });
+                    this.actualizarMetricas();
+                }, 1000);
+            }
+
+            formatearTiempo(milisegundos) {
+                const segundos = Math.floor(milisegundos / 1000);
+                const horas = Math.floor(segundos / 3600);
+                const minutos = Math.floor((segundos % 3600) / 60);
+                const segs = segundos % 60;
+                
+                return `${horas.toString().padStart(2, '0')}:${minutos.toString().padStart(2, '0')}:${segs.toString().padStart(2, '0')}`;
+            }
+
+            iniciarJuegoModal(mesaId) {
+                const mesa = this.mesas.find(m => m.id === mesaId);
+                if (mesa && mesa.estado === 'disponible') {
+                    // Llenar select con mesas disponibles
+                    const tableSelect = document.getElementById('table-select');
+                    tableSelect.innerHTML = '<option value="">-- Seleccionar mesa --</option>';
+                    this.mesas.filter(m => m.estado === 'disponible').forEach(m => {
+                        const option = document.createElement('option');
+                        option.value = m.id;
+                        option.textContent = `Mesa #${m.numero}`;
+                        if (m.id === mesaId) option.selected = true;
+                        tableSelect.appendChild(option);
+                    });
+                    
+                    document.getElementById('game-modal').style.display = 'block';
+                }
+            }
+
+            iniciarJuego(mesaId, jugador, tipoJuego) {
+                const mesa = this.mesas.find(m => m.id === mesaId);
+                if (mesa && mesa.estado === 'disponible') {
+                    mesa.estado = 'ocupada';
+                    mesa.jugador = jugador;
+                    mesa.tipoJuego = tipoJuego;
+                    mesa.inicioTiempo = Date.now();
+                    mesa.tiempoTranscurrido = 0;
+                    
+                    this.cerrarModal();
+                    this.renderMesas();
+                    this.actualizarMetricas();
+                    
+                    this.mostrarNotificacion(`✅ Juego iniciado en Mesa #${mesa.numero}`, 'success');
+                }
+            }
+
+            terminarJuego(mesaId) {
+                const mesa = this.mesas.find(m => m.id === mesaId);
+                if (mesa && mesa.estado === 'ocupada') {
+                    // Calcular costo (ejemplo: $5 por hora)
+                    const horasJugadas = mesa.tiempoTranscurrido / (1000 * 60 * 60);
+                    const costo = Math.ceil(horasJugadas) * 5; // $5 por hora redondeado hacia arriba
+                    
+                    mesa.estado = 'disponible';
+                    mesa.ingresos += costo;
+                    this.totalIngresos += costo;
+                    
+                    const mensaje = `🏁 Juego terminado en Mesa #${mesa.numero}\n💰 Costo: $${costo.toFixed(2)}\n⏱️ Tiempo: ${this.formatearTiempo(mesa.tiempoTranscurrido)}`;
+                    
+                    // Resetear mesa
+                    mesa.jugador = null;
+                    mesa.tipoJuego = null;
+                    mesa.inicioTiempo = null;
+                    mesa.tiempoTranscurrido = 0;
+                    
+                    this.renderMesas();
+                    this.actualizarMetricas();
+                    
+                    this.mostrarNotificacion(mensaje, 'info');
+                }
+            }
+
+            cerrarModal() {
+                document.getElementById('game-modal').style.display = 'none';
+                document.getElementById('new-game-form').reset();
+            }
+
+            mostrarNotificacion(mensaje, tipo = 'info') {
+                const colors = {
+                    success: '#28a745',
+                    info: '#17a2b8',
+                    warning: '#ffc107',
+                    error: '#dc3545'
+                };
+
+                const notification = document.createElement('div');
+                notification.style.cssText = `
+                    position: fixed;
+                    top: 20px;
+                    right: 20px;
+                    background: ${colors[tipo] || colors.info};
+                    color: white;
+                    padding: 15px 20px;
+                    border-radius: 8px;
+                    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+                    z-index: 2000;
+                    font-weight: bold;
+                    max-width: 300px;
+                    white-space: pre-line;
+                    animation: slideIn 0.3s ease-out;
+                `;
+                notification.textContent = mensaje;
+                
+                document.body.appendChild(notification);
+                
+                setTimeout(() => {
+                    notification.style.animation = 'slideOut 0.3s ease-in';
+                    setTimeout(() => {
+                        if (document.body.contains(notification)) {
+                            document.body.removeChild(notification);
+                        }
+                    }, 300);
+                }, 4000);
+            }
+
+            setupEventListeners() {
+                // Formulario de nuevo juego
+                document.getElementById('new-game-form').addEventListener('submit', (e) => {
+                    e.preventDefault();
+                    const mesaId = parseInt(document.getElementById('table-select').value);
+                    const jugador = document.getElementById('player-name').value;
+                    const tipoJuego = document.getElementById('game-type').value;
+                    
+                    if (mesaId && jugador && tipoJuego) {
+                        this.iniciarJuego(mesaId, jugador, tipoJuego);
+                    }
+                });
+
+                // Cerrar modal al hacer clic fuera
+                document.getElementById('game-modal').addEventListener('click', (e) => {
+                    if (e.target.id === 'game-modal') {
+                        this.cerrarModal();
+                    }
+                });
+            }
+
+            actualizarEstados() {
+                this.renderMesas();
+                this.actualizarMetricas();
+                this.mostrarNotificacion('🔄 Estados actualizados', 'info');
+            }
+        }
+
+        // Funciones globales
+        let billarManager;
+
+        function iniciarNuevoJuego() {
+            const mesasDisponibles = billarManager.mesas.filter(m => m.estado === 'disponible');
+            if (mesasDisponibles.length === 0) {
+                billarManager.mostrarNotificacion('❌ No hay mesas disponibles', 'warning');
+                return;
+            }
+            
+            const tableSelect = document.getElementById('table-select');
+            tableSelect.innerHTML = '<option value="">-- Seleccionar mesa --</option>';
+            mesasDisponibles.forEach(mesa => {
+                const option = document.createElement('option');
+                option.value = mesa.id;
+                option.textContent = `Mesa #${mesa.numero}`;
+                tableSelect.appendChild(option);
+            });
+            
+            document.getElementById('game-modal').style.display = 'block';
+        }
+
+        function cerrarModal() {
+            billarManager.cerrarModal();
+        }
+
+        function actualizarEstados() {
+            billarManager.actualizarEstados();
+        }
+
+        // Inicializar cuando se carga la página
+        document.addEventListener('DOMContentLoaded', () => {
+            billarManager = new BillarManager();
+            
+            // Agregar estilos de animación
+            const style = document.createElement('style');
+            style.textContent = `
+                @keyframes slideIn {
+                    from { transform: translateX(100%); opacity: 0; }
+                    to { transform: translateX(0); opacity: 1; }
+                }
+                @keyframes slideOut {
+                    from { transform: translateX(0); opacity: 1; }
+                    to { transform: translateX(100%); opacity: 0; }
+                }
+            `;
+            document.head.appendChild(style);
+        });
+    </script>
+</body>
+</html>

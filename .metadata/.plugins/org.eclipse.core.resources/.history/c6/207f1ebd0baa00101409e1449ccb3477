@@ -1,0 +1,73 @@
+package sena.jj.com.controller;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.*;
+import jakarta.servlet.http.HttpSession;
+import sena.jj.com.model.Usuario;
+import sena.jj.com.service.IUsuarioService;
+
+@Controller
+public class LoginController {
+
+    @Autowired
+    private IUsuarioService usuarioService;
+
+    @GetMapping("/")
+    public String index(Model model) {
+        return "index";
+    }
+
+    @PostMapping("/login")
+    public String procesarLogin(
+            @RequestParam String email,
+            @RequestParam String password,
+            HttpSession session,
+            Model model) {
+        
+        try {
+            // Autenticar usuario
+            Usuario usuario = usuarioService.buscarForEmailYPassword(email, password);
+            
+            // Guardar usuario en sesión
+            session.setAttribute("usuario", usuario);
+            
+            // DEBUG MEJORADO
+            System.out.println("=== DEBUG LOGIN ===");
+            System.out.println("Email: " + usuario.getEmail());
+            System.out.println("Rol: " + usuario.getRol());
+            System.out.println("Tipo de rol: " + (usuario.getRol() != null ? usuario.getRol().getClass().getName() : "NULL"));
+            System.out.println("Rol como String: '" + String.valueOf(usuario.getRol()) + "'");
+            System.out.println("¿Es igual a '1'? " + "1".equals(usuario.getRol()));
+            System.out.println("¿Es igual a 'ADMIN'? " + "ADMIN".equals(usuario.getRol()));
+            System.out.println("===================");
+            
+            String rol = String.valueOf(usuario.getRol()).trim();
+            
+            // SOLUCIÓN SEGURA - Por email específico
+            if ("julian12.andres0@gmail.com".equals(email) || 
+                "ADMIN".equalsIgnoreCase(rol) || 
+                "1".equals(rol)) {
+                System.out.println("✓ Redirigiendo a ADMINISTRADOR");
+                return "redirect:/administrador";
+            } 
+            // Cualquier otro usuario va a usuario
+            else {
+                System.out.println("→ Redirigiendo a USUARIO");
+                return "redirect:/usuario";
+            }
+            
+        } catch (RuntimeException e) {
+            model.addAttribute("error", "Credenciales incorrectas: " + e.getMessage());
+            return "index";
+        }
+    }
+
+    @GetMapping("/logout")
+    public String logout(HttpSession session) {
+        session.removeAttribute("usuario");
+        session.invalidate();
+        return "redirect:/";
+    }
+}
